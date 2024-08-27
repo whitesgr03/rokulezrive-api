@@ -1,0 +1,33 @@
+{
+	"name": "local-file-uploader",
+	"version": "1.0.0",
+	"description": "This is a stripped down version of Google Drive.",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"start": "NODE_ENV=production node index",
+		"pro": "NODE_ENV=production node --env-file=.env --env-file=.env.development --watch index",
+		"dev": "NODE_ENV=development node --env-file=.env --env-file=.env.development --watch index"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@prisma/client": "^5.18.0",
+		"bcrypt": "^5.1.1",
+		"compression": "^1.7.4",
+		"cors": "^2.8.5",
+		"csrf": "^3.1.0",
+		"debug": "^4.3.6",
+		"express": "^4.19.2",
+		"express-async-handler": "^1.2.0",
+		"express-validator": "^7.2.0",
+		"helmet": "^7.1.0",
+		"http-errors": "^2.0.0",
+		"morgan": "^1.10.0",
+		"passport": "^0.7.0",
+		"passport-local": "^1.0.0",
+		"prisma": "^5.18.0",
+		"pug": "^3.0.3"
+	}
+}
