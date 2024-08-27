@@ -1,0 +1,9 @@
+model Sharing {
+    pk       Int      @id @default(autoincrement())
+    id       String
+    duration DateTime
+    members  User[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
