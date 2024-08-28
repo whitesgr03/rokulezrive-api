@@ -5,7 +5,7 @@ import app from "./app.js";
 
 const serverLog = debug("Server");
 
-const port = process.env.PORT || "3000";
+const port = process.env.PORT || "3240";
 
 const handleServer = async () => {
 	const handleListening = async () => {
