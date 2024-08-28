@@ -1,0 +1,37 @@
+header
+	button.menu(type="button", tabindex)
+		div
+			span.line
+			span.line
+			span.line
+		| Menu
+	nav
+		ul
+			li #[a(href="/drive") #[span.icon.home] Home]
+			li #[a(href="/drive") #[span.icon.drive] My Drive]
+			li #[a(href="/drive") #[span.icon.share] Shared with me]
+	.logo
+		a(href="/drive")
+			h1 Drive
+	ul.features
+		li.theme
+			button(type="button", tabindex)
+				.toggle
+					span.icon(class=darkTheme ? "moon" : "sun")
+					div
+						div
+				span #{ darkTheme ? "Dark" : "Light" } mode
+		li.account #[button(type="button", tabindex) #[span.icon.user] Account]
+	ul.dropdown
+		li.theme
+			button(type="button", tabindex)
+				span.icon(class=darkTheme ? "moon" : "sun")
+				span #{ darkTheme ? "Dark" : "Light" } mode
+				.toggle
+					div
+						div
+
+		li
+			button(type="button", tabindex)
+				span.icon(class=false ? "logout" : "login")
+				| #{ false ? 'Logout' : 'Login' }
