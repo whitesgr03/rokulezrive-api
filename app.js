@@ -19,8 +19,30 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const helmetOptions = {
 	contentSecurityPolicy: {
 		directives: {
-			styleSrc: ["'self'", "fonts.googleapis.com", "necolas.github.io"],
+			defaultSrc: ["'none'"],
+			imgSrc: ["'self'", "data:", "blob:"],
+			styleSrc: [
+				"'self'",
+				"fonts.googleapis.com",
+				"necolas.github.io",
+				(req, res) => `'nonce-${res.locals.cspNonce}'`,
+			],
+			formAction: [
+				"'self'",
+				`${process.env.NODE_ENV === "development" ? "http" : "https"}:`,
+			],
+			frameAncestors: ["'none'"],
+			baseUri: ["'none'"],
+			objectSrc: ["'none'"],
+			scriptSrc: [
+				(req, res) => `'nonce-${res.locals.cspNonce}'`,
+				"strict-dynamic",
+			],
 		},
+	},
+	xFrameOptions: { action: "deny" },
+	referrerPolicy: {
+		policy: ["no-referrer"],
 	},
 };
 const staticOptions = {
