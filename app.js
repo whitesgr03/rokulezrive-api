@@ -1,5 +1,6 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { randomBytes } from "node:crypto";
 
 import express from "express";
 import createError from "http-errors";
@@ -15,6 +16,11 @@ import fileUploadRouter from "./routes/fileUpload.js";
 const app = express();
 const errorLog = debug("ServerError");
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+app.use((req, res, next) => {
+	res.locals.cspNonce = randomBytes(16).toString("base64");
+	next();
+});
 
 const helmetOptions = {
 	contentSecurityPolicy: {
