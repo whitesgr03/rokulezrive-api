@@ -1,3 +1,5 @@
+"use strict";
+
 const handleClick = e => {
 	const menu = document.querySelector(".menu");
 	const features = document.querySelector(".features");
