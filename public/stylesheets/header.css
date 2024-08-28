@@ -63,7 +63,7 @@ header > nav {
 	transition: transform 0.3s ease;
 }
 
-header .menu.active + nav {
+.menu.active + nav {
 	transform: translateX(0%);
 	transition: transform 0.1s ease;
 }
