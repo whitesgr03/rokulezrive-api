@@ -1,7 +1,7 @@
 extends layout
 
 block head
-	link(rel="stylesheet", href="/stylesheets/error.css")
+	link(rel="stylesheet", href="/stylesheets/error.css", nonce=cspNonce)
 
 block content
 	.error
