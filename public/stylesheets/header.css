@@ -196,3 +196,7 @@ header {
 		)
 	);
 }
+
+.dark .dropdown {
+	background-color: var(--dark-scheme-input-bgc);
+}
