@@ -143,6 +143,7 @@ img {
 	background-color: var(--light-scheme-main-bgc);
 	padding-bottom: var(--mobile-nav-height);
 	flex: 1 1 100%;
+	color: var(--light-scheme-color);
 }
 
 .container {
@@ -192,5 +193,6 @@ main > * {
 }
 
 .dark .app {
+	color: var(--dark-scheme-color);
 	background-color: var(--dark-scheme-layout-bgc);
 }
