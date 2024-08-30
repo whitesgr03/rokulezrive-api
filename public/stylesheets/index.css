@@ -196,3 +196,7 @@ main > * {
 	color: var(--dark-scheme-color);
 	background-color: var(--dark-scheme-layout-bgc);
 }
+
+.dark a {
+	color: var(--dark-scheme-color);
+}
