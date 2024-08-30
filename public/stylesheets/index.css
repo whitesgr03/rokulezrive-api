@@ -52,8 +52,8 @@
 	--dark-scheme-error-rgb: 236, 116, 116;
 
 	/* icon */
-	--icon-size-mobile: 45px;
-	--icon-size-desktop: 25px;
+	--icon-size-mobile: 40px;
+	--icon-size-desktop: 30px;
 
 	--mobile-nav-height: 65px;
 }
