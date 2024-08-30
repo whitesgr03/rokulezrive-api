@@ -1,31 +1,17 @@
 "use strict";
 
 const handleClick = e => {
-	const menu = document.querySelector(".menu");
-	const features = document.querySelector(".features");
+	const dropdown = document.querySelector(".dropdown");
 
-	const handleCloseMenu = () => {
-		menu.classList.remove("active");
-	};
 	const handleCloseAccountList = () => {
-		features.classList.remove("active");
-	};
-
-	const handleActiveMenu = () => {
-		menu.classList.toggle("active");
-		handleCloseAccountList();
+		dropdown.classList.remove("active");
 	};
 	const handleActiveAccountList = () => {
-		features.classList.toggle("active");
-		handleCloseMenu();
+		dropdown.classList.toggle("active");
+		dropdown.classList.add("slide");
 	};
-
 	const handleClose = e => {
-		!e.target.closest(".menu") &&
-			!e.target.closest("nav") &&
-			handleCloseMenu();
-
-		!e.target.closest(".features") &&
+		!e.target.closest(".account") &&
 			!e.target.closest(".dropdown") &&
 			handleCloseAccountList();
 	};
@@ -34,8 +20,7 @@ const handleClick = e => {
 		localStorage.setItem("darkScheme", JSON.stringify(darkTheme));
 	};
 
-	e.target.closest(".menu") && handleActiveMenu();
-	e.target.closest(".features") && handleActiveAccountList();
+	e.target.closest(".account") && handleActiveAccountList();
 	e.target.closest(".theme") && handleDarkTheme();
 	handleClose(e);
 };
