@@ -1,0 +1,49 @@
+nav.mobile {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: var(--light-scheme-layout-bgc);
+	box-shadow: 0px -5px 5px 1px var(--light-scheme-layout-shadow);
+	height: var(--mobile-nav-height);
+	max-height: var(--mobile-nav-height);
+}
+
+.mobile ul {
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	height: 100%;
+}
+
+.mobile li {
+	height: 100%;
+}
+
+.mobile li > * {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	row-gap: 5px;
+	height: 100%;
+	padding: 0 20px;
+}
+.mobile .home {
+	--size: var(--icon-size-desktop);
+	height: var(--size);
+	width: var(--size);
+	mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='208' height='208' viewBox='0 0 512 512'%3E%3Cpath fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='32' d='M80 212v236a16 16 0 0 0 16 16h96V328a24 24 0 0 1 24-24h80a24 24 0 0 1 24 24v136h96a16 16 0 0 0 16-16V212'/%3E%3Cpath fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='32' d='M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256m368-77V64h-48v69'/%3E%3C/svg%3E");
+}
+.mobile .drive {
+	--size: var(--icon-size-desktop);
+	height: var(--size);
+	width: var(--size);
+	mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='208' height='208' viewBox='0 0 2048 2048'%3E%3Cpath fill='%23000' d='M1664 1536h-128v-128h128zm-256 0h-128v-128h128zm256-512h-128V896h128zm-256 0h-128V896h128zm320-896q40 0 75 15t61 41t41 61t15 75v1472H128V320q0-40 15-75t41-61t61-41t75-15zm64 1152H256v384h1536zm0-512H256v384h1536zm0-128V320q0-26-19-45t-45-19H320q-26 0-45 19t-19 45v320zm-256-256h128v128h-128zm-256 0h128v128h-128z'/%3E%3C/svg%3E");
+}
+.mobile .share {
+	--size: var(--icon-size-desktop);
+	height: var(--size);
+	width: var(--size);
+	mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='208' height='208' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M2 11c2.332-2.442 5.643-2.557 8 0M8.495 4.5c0 1.38-1.12 2.5-2.503 2.5a2.5 2.5 0 0 1-2.504-2.5c0-1.38 1.12-2.5 2.504-2.5a2.5 2.5 0 0 1 2.503 2.5M14 22c2.332-2.442 5.643-2.557 8 0m-1.505-6.5c0 1.38-1.12 2.5-2.504 2.5a2.5 2.5 0 0 1-2.503-2.5c0-1.38 1.12-2.5 2.503-2.5a2.5 2.5 0 0 1 2.504 2.5M3 14c0 3.87 3.13 7 7 7l-1-2m6-16h6m-6 3h6m-6 3h3.5' color='%23000'/%3E%3C/svg%3E");
+}
