@@ -1,18 +1,6 @@
 header
-	button.menu(type="button", tabindex)
-		div
-			span.line
-			span.line
-			span.line
-		| Menu
-	nav
-		ul
-			li #[a(href="/drive") #[span.icon.home] Home]
-			li #[a(href="/drive") #[span.icon.drive] My Drive]
-			li #[a(href="/drive") #[span.icon.share] Shared with me]
 	.logo
-		a(href="/drive")
-			h1 Drive
+		a(href="/drive") #[h1 Drive]
 	ul.features
 		li.theme
 			button(type="button", tabindex)
@@ -30,7 +18,6 @@ header
 				.toggle
 					div
 						div
-
 		li
 			button(type="button", tabindex)
 				span.icon(class=false ? "logout" : "login")
