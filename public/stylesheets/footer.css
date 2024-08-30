@@ -7,20 +7,17 @@ footer {
 	flex: 1 0 auto;
 	border-top: 1px solid var(--light-scheme-color);
 }
-	align-items: center;
-	background-color: var(--light-scheme-layout-bgc);
-	box-shadow: 0px -5px 5px 1px var(--light-scheme-layout-shadow);
-}
 
-footer a {
+address ul {
 	display: flex;
 	align-items: center;
-	column-gap: 10px;
+	column-gap: 30px;
 }
 
-address a em {
-	text-decoration: underline;
-	text-underline-offset: 3px;
+address a {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .email {
