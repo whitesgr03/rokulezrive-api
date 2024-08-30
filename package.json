@@ -10,7 +10,9 @@
 	"scripts": {
 		"start": "NODE_ENV=production node index",
 		"pro": " NODE_ENV=production nodemon --env-file=.env --env-file=.env.development",
-		"dev": " NODE_ENV=development nodemon --env-file=.env --env-file=.env.development"
+		"dev": " NODE_ENV=development nodemon --env-file=.env --env-file=.env.development",
+		"prepare": "husky",
+		"commitlint": "commitlint --edit"
 	},
 	"keywords": [],
 	"author": "",
@@ -35,6 +37,9 @@
 		"pug": "^3.0.3"
 	},
 	"devDependencies": {
+		"@commitlint/cli": "^19.4.1",
+		"@commitlint/config-conventional": "^19.4.1",
+		"husky": "^9.1.5",
 		"nodemon": "^3.1.4"
 	}
 }
