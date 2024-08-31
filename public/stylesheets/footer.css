@@ -34,6 +34,10 @@ address a {
 
 /* Dark scheme classes */
 
+.dark footer {
+	border: 0;
+}
+
 .dark footer.content {
 	background-color: var(--dark-scheme-layout-bgc);
 	box-shadow: none;
