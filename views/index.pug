@@ -1,4 +1,35 @@
 extends layout
 
+block head
+	link(rel="stylesheet", href="/stylesheets/home.css", nonce=cspNonce)
+
 block content
-	.home Hello World
+	.file
+		h3 Files
+		ul
+			li
+				button.info(type="button")
+					.icon.image
+					.wrap
+						p new image file
+						.detail
+							div
+								span.icon.size
+								span 19 KB
+							div
+								span.icon.date
+								span Jan 9, 2024
+				button.optionBtn(type="button") #[span.icon.options]
+			li
+				button.info(type="button")
+					.icon.pdf
+					.wrap
+						p new pdf file
+						.detail
+							div
+								span.icon.size
+								span 130 KB
+							div
+								span.icon.date
+								span Aug 25, 2024
+				button.optionBtn(type="button") #[span.icon.options]
