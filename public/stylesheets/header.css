@@ -42,7 +42,6 @@ header {
 .features li > * {
 	padding: 0 20px;
 	height: 100%;
-	color: inherit;
 }
 
 .features .theme {
