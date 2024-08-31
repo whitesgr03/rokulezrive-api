@@ -110,6 +110,7 @@ button {
 	background-color: transparent;
 	border: 0;
 	cursor: pointer;
+	color: var(--light-scheme-color);
 }
 
 li {
@@ -198,5 +199,9 @@ main > * {
 }
 
 .dark a {
+	color: var(--dark-scheme-color);
+}
+
+.dark button {
 	color: var(--dark-scheme-color);
 }
