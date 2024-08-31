@@ -55,11 +55,10 @@
 	padding: 10px;
 	background-color: var(--light-scheme-highlight);
 	border: 1px solid var(--light-scheme-color);
-	box-shadow: 0px 0px 2px 3px var(--light-scheme-layout-shadow);
+	box-shadow: 0px 0px 3px 3px rgba(var(--light-scheme-color-rgb), 0.3);
 	border-radius: 100%;
 	display: flex;
 	align-items: center;
-	justify-self: unset;
 	color: var(--light-scheme-google-bgc);
 }
 .plus {
