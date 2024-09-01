@@ -94,7 +94,7 @@
 	color: var(--dark-scheme-color);
 }
 
-.dark .userForm > .container .container {
+.dark .userForm > .container {
 	border-color: var(--dark-scheme-color);
 }
 
