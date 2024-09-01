@@ -183,10 +183,12 @@ header {
 .dark .toggle > div {
 	background-color: var(--dark-scheme-switch-bgc);
 	border-color: var(--dark-scheme-color);
+	border-width: 1px;
 }
 
 .dark .toggle > div > div {
-	border: 2px solid var(--dark-scheme-color);
+	border-width: 1px;
+	border-color: var(--dark-scheme-color);
 	background-color: var(--dark-scheme-layout-bgc);
 	transform: translateX(
 		calc(
@@ -197,5 +199,7 @@ header {
 }
 
 .dark .dropdown {
+	border-width: 1px;
+	border-color: var(--dark-scheme-color);
 	background-color: var(--dark-scheme-input-bgc);
 }
