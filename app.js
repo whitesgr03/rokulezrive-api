@@ -3,6 +3,9 @@ import { fileURLToPath } from "node:url";
 import { randomBytes } from "node:crypto";
 
 import express from "express";
+import session from "express-session";
+import { PrismaSessionStore } from "@quixo3/prisma-session-store";
+import { PrismaClient } from "@prisma/client";
 import createError from "http-errors";
 import morgan from "morgan";
 import debug from "debug";
@@ -56,12 +59,30 @@ const staticOptions = {
 	index: false,
 	redirect: false,
 };
+const sessionOptions = {
+	secret: process.env.SESSION_SECRETS.split(","),
+	resave: false,
+	saveUninitialized: false,
+	store: new PrismaSessionStore(new PrismaClient(), {
+		checkPeriod: 60 * 60 * 1000, //ms
+		dbRecordIdIsSessionId: true,
+		dbRecordIdFunction: undefined,
+	}),
+	cookie: {
+		sameSite: "Lax",
+		httpOnly: true,
+		secure: true,
+		maxAge: 7 * 24 * 60 * 60 * 1000,
+	},
+	name: "local-drive.connect.sid",
+};
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
 app.use(helmet(helmetOptions));
+app.use(session(sessionOptions));
 app.use(express.static(path.join(__dirname, "public"), staticOptions));
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan(process.env.production ? "common" : "dev"));
