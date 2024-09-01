@@ -1,7 +1,7 @@
 model Folder {
     pk    Int    @id @default(autoincrement())
     id    String @unique @default(uuid())
-    name  String @default("default")
+    name  String
     files File[]
 
     owner   User @relation(fields: [ownerId], references: [id])

@@ -15,7 +15,7 @@ CREATE TABLE "File" (
 CREATE TABLE "Folder" (
     "pk" SERIAL NOT NULL,
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL DEFAULT 'default',
+    "name" TEXT NOT NULL,
     "ownerId" INTEGER NOT NULL,
     "parentId" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
