@@ -9,3 +9,5 @@ nodemon.json
 *.pem
 
 *example*
+
+seed.js
