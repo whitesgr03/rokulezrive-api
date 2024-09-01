@@ -2,7 +2,7 @@
 	padding: 20px;
 }
 
-.file ul {
+.file .fileList {
 	display: flex;
 	flex-direction: column;
 	margin-top: 20px;
@@ -10,7 +10,8 @@
 	padding: 0 10px;
 }
 
-.file li {
+.file .fileItem {
+	position: relative;
 	display: flex;
 	align-items: center;
 	column-gap: 10px;
