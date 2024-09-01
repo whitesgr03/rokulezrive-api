@@ -11,7 +11,7 @@ import helmet from "helmet";
 
 // routes
 import indexRouter from "./routes/index.js";
-import fileUploadRouter from "./routes/fileUpload.js";
+import driveRouter from "./routes/drive.js";
 
 const app = express();
 const errorLog = debug("ServerError");
@@ -68,7 +68,7 @@ app.use(compression());
 
 app.get("/favicon.ico", (req, res) => res.status(204));
 app.use("/", indexRouter);
-app.use("/drive", fileUploadRouter);
+app.use("/drive", driveRouter);
 
 // unknown routes handler
 app.use((req, res, next) => {

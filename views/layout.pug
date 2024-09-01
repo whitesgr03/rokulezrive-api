@@ -14,12 +14,16 @@ html(lang="en")
 			href="https://necolas.github.io/normalize.css/latest/normalize.css"
 		)
 		link(rel="stylesheet", href="/stylesheets/index.css", nonce=cspNonce)
-		link(rel="stylesheet", href="/stylesheets/header.css", nonce=cspNonce)
-		link(rel="stylesheet", href="/stylesheets/footer.css", nonce=cspNonce)
-		link(rel="stylesheet", href="/stylesheets/mobile-nav.css", nonce=cspNonce)
+		link(rel="stylesheet", href="/stylesheets/layout_header.css", nonce=cspNonce)
+		link(rel="stylesheet", href="/stylesheets/layout_footer.css", nonce=cspNonce)
+		link(
+			rel="stylesheet",
+			href="/stylesheets/layout_mobile-nav.css",
+			nonce=cspNonce
+		)
 		script(
 			type="text/javascript",
-			src="/javascripts/handleColorTheme.js",
+			src="/javascripts/handle_color_theme.js",
 			nonce=cspNonce,
 			defer
 		)
@@ -33,9 +37,9 @@ html(lang="en")
 		title Local Drive
 	body
 		.app
-			include header
+			include layout_header
 			.container
 				main
 					block content
-				include footer
-			include mobile-nav
+				include layout_footer
+			include layout_mobile-nav
