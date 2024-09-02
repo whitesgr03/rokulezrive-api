@@ -11,13 +11,13 @@ block content
 				input(name="csrfToken", type="hidden", value=csrfToken)
 				div
 					label(for="email", class=inputErrors && inputErrors.email ? "error" : "") Email
-					input#email(
-						type="text",
-						name="email",
-						value=user ? user.email : "",
-						title="The email is required and must be standard format.",
-						required
-					)
+						input#email(
+							type="text",
+							name="email",
+							value=data ? data.email : "",
+							title="The email is required and must be standard format.",
+							required
+						)
 					.placeholder
 						span.icon.alert
 						p= inputErrors && inputErrors.email ? inputErrors.email.msg : "Message placeholder"
@@ -26,13 +26,13 @@ block content
 						for="password",
 						class=inputErrors && inputErrors.password ? "error" : ""
 					) Password
-					input#password(
-						type="password",
-						name="password",
-						value=user ? user.password : "",
-						title="The password is required.",
-						required
-					)
+						input#password(
+							type="password",
+							name="password",
+							value=data ? data.password : "",
+							title="The password is required.",
+							required
+						)
 					.placeholder
 						span.icon.alert
 						p= inputErrors && inputErrors.password ? inputErrors.password.msg : "Message placeholder"
