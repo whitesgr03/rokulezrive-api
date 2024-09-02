@@ -18,6 +18,7 @@ header
 					div
 						div
 		li
-			a(href="/account/login")
-				span.icon(class=false ? "logout" : "login")
-				| #{ false ? 'Logout' : 'Login' }
+			if user
+				a(href="/account/logout") #[span.icon.logout] Logout
+			else
+				a(href="/account/login") #[span.icon.login] Login
