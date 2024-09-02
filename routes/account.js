@@ -12,4 +12,6 @@ router
 	.route("/register")
 	.get(userControllers.registerGet)
 	.post(userControllers.registerPost);
+
+router.get("/logout", userControllers.logout);
 export default router;
