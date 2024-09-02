@@ -10,18 +10,6 @@ block content
 			form(method="POST")
 				input(name="csrfToken", type="hidden", value=csrfToken)
 				div
-					label(for="name", class=inputErrors && inputErrors.name ? "error" : "") Name
-						input#name(
-							type="text",
-							name="name",
-							value=user ? user.name : "",
-							title="The name must be less than 30 long.",
-							required
-						)
-					.placeholder
-						span.icon.alert
-						p= inputErrors && inputErrors.name ? inputErrors.name.msg : "Message placeholder"
-				div
 					label(for="email", class=inputErrors && inputErrors.email ? "error" : "") Email
 						input#email(
 							type="text",
