@@ -17,6 +17,41 @@ const loginGet = asyncHandler(async (req, res) => {
 		csrfToken: csrf.create(secret),
 	});
 });
+const loginPost = [
+	verifyCsrf,
+	verifyFormData({
+		schema: {
+			email: {
+				trim: true,
+				toLowerCase: true,
+				notEmpty: {
+					errorMessage: "The email is required.",
+					bail: true,
+				},
+				isEmail: {
+					errorMessage: "The email must be in the correct format.",
+					bail: true,
+				},
+				normalizeEmail: {
+					errorMessage: "The email must be in standard format.",
+					bail: true,
+				},
+			},
+			password: {
+				notEmpty: {
+					errorMessage: "The password is required.",
+					bail: true,
+				},
+				isLength: {
+					options: { min: 8 },
+					errorMessage: "The password is incorrect.",
+				},
+			},
+		},
+		template: "login",
+	}),
+	authenticate,
+];
 const registerGet = asyncHandler(async (req, res) => {
 	const secret = await csrf.secret();
 	req.session.csrf = secret;
@@ -96,5 +131,6 @@ const registerPost = [
 
 export {
 	loginGet,
+	loginPost,
 	registerGet, registerPost,
 };
