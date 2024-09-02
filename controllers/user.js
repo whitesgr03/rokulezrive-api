@@ -9,6 +9,14 @@ import authenticate from "../middlewares/authenticate.js";
 
 const prisma = new PrismaClient();
 const csrf = new Csrf();
+
+const loginGet = asyncHandler(async (req, res) => {
+	const secret = await csrf.secret();
+	req.session.csrf = secret;
+	res.render("login", {
+		csrfToken: csrf.create(secret),
+	});
+});
 const registerGet = asyncHandler(async (req, res) => {
 	const secret = await csrf.secret();
 	req.session.csrf = secret;
