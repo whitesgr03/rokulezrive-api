@@ -4,6 +4,7 @@ import { randomBytes } from "node:crypto";
 
 import express from "express";
 import session from "express-session";
+import passport from "./config/passport.js";
 import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 import { PrismaClient } from "@prisma/client";
 import createError from "http-errors";
@@ -83,10 +84,16 @@ app.set("view engine", "pug");
 
 app.use(helmet(helmetOptions));
 app.use(session(sessionOptions));
+app.use(passport.session());
 app.use(express.static(path.join(__dirname, "public"), staticOptions));
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan(process.env.production ? "common" : "dev"));
 app.use(compression());
+
+app.use((req, res, next) => {
+	req.isAuthenticated() && (res.locals.user = true);
+	next();
+});
 
 app.get("/favicon.ico", (req, res) => res.status(204));
 app.use("/", indexRouter);
