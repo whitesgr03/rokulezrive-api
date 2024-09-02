@@ -7,6 +7,7 @@ const router = express.Router();
 router
 	.route("/login")
 	.get(userControllers.loginGet)
+	.post(userControllers.loginPost);
 router
 	.route("/register")
 	.get(userControllers.registerGet)
