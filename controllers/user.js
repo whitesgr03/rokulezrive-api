@@ -128,9 +128,10 @@ const registerPost = [
 	}),
 	authenticate,
 ];
+const logout = asyncHandler(async (req, res) => {
+	req.isAuthenticated()
+		? req.logout(err => (err ? next(err) : res.redirect("/")))
+		: res.redirect("/drive/files");
+});
 
-export {
-	loginGet,
-	loginPost,
-	registerGet, registerPost,
-};
+export { loginGet, loginPost, registerGet, registerPost, logout };
