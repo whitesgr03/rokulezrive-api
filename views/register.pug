@@ -14,7 +14,7 @@ block content
 						input#email(
 							type="text",
 							name="email",
-							value=user ? user.email : "",
+							value=data ? data.email : "",
 							title="The email is required and must be standard format.",
 							required
 						)
@@ -29,7 +29,7 @@ block content
 						input#password(
 							type="password",
 							name="password",
-							value=user ? user.password : "",
+							value=data ? data.password : "",
 							title="The password is required.",
 							required
 						)
@@ -44,7 +44,7 @@ block content
 						input#confirmPassword(
 							type="password",
 							name="confirmPassword",
-							value=user ? user.confirmPassword : "",
+							value=data ? data.confirmPassword : "",
 							title="The confirm password must be the same as the password.",
 							required
 						) 
