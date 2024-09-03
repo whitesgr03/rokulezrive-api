@@ -1,5 +1,9 @@
 extends layout
 
+block head
+	link(rel="stylesheet", href="/stylesheets/drive.css", nonce=cspNonce)
+	link(rel="stylesheet", href="/stylesheets/file_list.css", nonce=cspNonce)
+
 block content
 	.drive
 		h2 My Drive
