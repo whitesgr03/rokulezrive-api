@@ -50,8 +50,8 @@
 
 .uploadBtn {
 	position: absolute;
-	bottom: 130%;
-	right: 5%;
+	bottom: 120%;
+	right: 1%;
 	padding: 10px;
 	background-color: var(--light-scheme-highlight);
 	border: 1px solid var(--light-scheme-color);
