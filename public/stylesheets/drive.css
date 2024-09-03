@@ -81,6 +81,11 @@
 	z-index: 1;
 }
 
+.drive .optionBtn.active .optionList {
+	opacity: 1;
+	visibility: visible;
+}
+
 .drive .optionList li > * {
 	display: flex;
 	align-items: center;
