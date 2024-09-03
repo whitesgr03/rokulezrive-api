@@ -1,0 +1,10 @@
+extends layout
+
+block content
+	.drive
+		h2 My Drive
+		if shared
+			include shared
+
+		if files
+			include file_list
