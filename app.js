@@ -70,7 +70,7 @@ const sessionOptions = {
 		dbRecordIdFunction: undefined,
 	}),
 	cookie: {
-		sameSite: "Lax",
+		sameSite: "Strict",
 		httpOnly: true,
 		secure: true,
 		maxAge: 7 * 24 * 60 * 60 * 1000,
