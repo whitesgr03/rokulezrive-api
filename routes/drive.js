@@ -1,5 +1,9 @@
 import express from "express";
+
+import * as fileControllers from "../controllers/file.js";
+
 const router = express.Router();
-router.get("/", (req, res) => res.render("index"));
-router.get("/files", (req, res) => res.render("file_list"));
+
+router.get("/", fileControllers.index);
+
 export default router;
