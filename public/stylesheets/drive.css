@@ -93,6 +93,7 @@
 	padding: 10px;
 	width: 100%;
 	color: inherit;
+	text-wrap: nowrap;
 }
 
 .drive .image {
