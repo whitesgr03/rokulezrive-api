@@ -13,16 +13,15 @@ header {
 }
 
 .logo {
-	flex: 1 0 auto;
-	height: 100%;
-}
-
-.logo a {
 	display: flex;
 	align-items: center;
 	height: 100%;
-	padding: 0 20px;
-	color: var(--light-scheme-highlight);
+	margin-left: 20px;
+}
+
+.logo img {
+	width: var(--icon-size-mobile);
+	border-radius: 100%;
 }
 
 .features {
