@@ -4,6 +4,9 @@ import * as fileControllers from "../controllers/file.js";
 
 const router = express.Router();
 
+router.get("/files", fileControllers.fileList);
+
+
 router.get("/", fileControllers.index);
 
 export default router;
