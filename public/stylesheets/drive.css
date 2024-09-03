@@ -14,7 +14,6 @@
 }
 
 .drive .item {
-	position: relative;
 	display: flex;
 	align-items: center;
 	column-gap: 10px;
@@ -61,6 +60,10 @@
 .drive .detail > div > span {
 	font-size: var(--detail-size);
 	font-weight: 300;
+}
+
+.drive .optionBtn {
+	position: relative;
 }
 
 .drive .optionList {
