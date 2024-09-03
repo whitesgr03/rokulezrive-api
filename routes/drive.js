@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.get("/files", fileControllers.fileList);
 
+router.get("/shared", fileControllers.sharedList);
 
 router.get("/", fileControllers.index);
 
