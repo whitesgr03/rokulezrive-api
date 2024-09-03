@@ -17,49 +17,83 @@ const handleClick = e => {
 		dropdown.classList.add("slide");
 	};
 
-	const handleCreateOptionList = e => {
-		handleDeleteOptionList();
+	const handleActiveOptionList = e => {
 		handleCloseAccountList();
-		const parent = e.target.closest(".fileItem");
-		const items = [
-			{
-				class: "share",
-				text: "Share",
-			},
-			{
-				class: "download",
-				text: "Download",
-			},
-			{
-				class: "edit",
-				text: "Rename",
-			},
-			{
-				class: "delete",
-				text: "Remove",
-			},
-		];
 
-		const list = document.createElement("ul");
-		list.classList.add("optionList");
+		const optionBtn = e.target.closest(".optionBtn");
+		const optionList = optionBtn.querySelector(".optionList");
 
-		const createItem = item => {
-			const content = `
+		const handleCreateList = () => {
+			handleCloseCurrentActiveOptionList();
+			const parent =
+				(e.target.closest(".shared") && "shared") ||
+				(e.target.closest(".file") && "file");
+
+			const options = {
+				shared: [
+					{
+						class: "link",
+						text: "Copy link",
+					},
+					{
+						class: "download",
+						text: "Download",
+					},
+					{
+						class: "delete",
+						text: "Remove",
+					},
+				],
+				file: [
+					{
+						class: "share",
+						text: "Share",
+					},
+					{
+						class: "download",
+						text: "Download",
+					},
+					{
+						class: "edit",
+						text: "Rename",
+					},
+					{
+						class: "delete",
+						text: "Remove",
+					},
+				],
+			};
+
+			const list = document.createElement("ul");
+			list.classList.add("optionList");
+
+			const createItem = item => {
+				const content = `
 				<button type="button">
 					<span class="icon ${item.class}"><span/>
 				</button>
 			`;
 
-			const listItem = document.createElement("li");
-			listItem.innerHTML = content;
-			listItem.querySelector("button").append(item.text);
+				const listItem = document.createElement("li");
+				listItem.innerHTML = content;
+				listItem.querySelector("button").append(item.text);
 
-			return listItem;
+				return listItem;
+			};
+
+			options[parent].forEach(item => list.append(createItem(item)));
+
+			optionBtn.append(list);
+			optionBtn.classList.add("active");
 		};
 
-		items.forEach(item => list.append(createItem(item)));
+		const handleActive = () => {
+			activeOptionBtn !== optionBtn &&
+				activeOptionBtn?.classList.remove("active");
+			optionBtn.classList.toggle("active");
+		};
 
-		parent.append(list);
+		optionList ? handleActive() : handleCreateList();
 	};
 
 	const handleClose = e => {
