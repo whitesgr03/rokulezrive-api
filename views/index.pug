@@ -1,0 +1,25 @@
+extends layout
+
+block head
+	link(rel="stylesheet", href="/stylesheets/home.css", nonce=cspNonce)
+
+block content
+	.home
+		.hero
+			h1 #[span Local Drive] easy to store your content
+			p Manage file from your mobile device or computer and sharing file to anyone.
+			a(href="/account/register") Try Local Drive for free
+		.container
+			.introduce
+				.image #[img(src="/images/share.svg", alt="Introduce of share file")]
+				div
+					h2 Share files and folders with your friend
+					p Even people without an account can easily access your shared files or folders.
+			.introduce
+				.image #[img(src="/images/manage.svg", alt="Introduce of manage file")]
+				div
+					h2 Be in manage of your folders
+					p When sharing, your're still in control. You can set expired links to limit who can access your files or folders.
+			.getStarted
+				h3 Ready to get started?
+				a(href="/account/register") Sign up Local Drive

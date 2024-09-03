@@ -1,0 +1,94 @@
+.home {
+	display: flex;
+	flex-direction: column;
+	padding: 20px;
+}
+
+.home a {
+	color: var(--dark-scheme-color);
+	background-color: var(--light-scheme-highlight);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 5px;
+	min-height: 45px;
+	border: 2px solid var(--light-scheme-color);
+	padding: 10px;
+}
+
+.hero {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-evenly;
+	height: calc(100vh - 50px - 20px);
+	padding-bottom: 20px;
+	text-align: center;
+}
+
+.hero span {
+	color: var(--light-scheme-highlight);
+	font-weight: inherit;
+}
+
+.hero > p {
+	font-size: 1.2rem;
+}
+
+.active-mobile-nav .hero {
+	height: calc(100vh - 50px - 20px - var(--mobile-nav-height));
+}
+
+.home .container {
+	display: flex;
+	flex-direction: column;
+	row-gap: 50px;
+}
+
+.introduce {
+	display: flex;
+	flex-direction: column;
+	row-gap: 20px;
+}
+
+.introduce div {
+	display: flex;
+	flex-direction: column;
+	row-gap: 20px;
+}
+
+.introduce .image {
+	position: relative;
+	width: 100%;
+	padding-top: 56.25%;
+}
+
+.introduce .image > img {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 10px;
+}
+
+.getStarted {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	row-gap: 20px;
+}
+
+/* Dark scheme classes */
+
+.dark .home a {
+	color: var(--light-scheme-color);
+	background-color: var(--dark-scheme-highlight);
+	border: 0;
+}
+
+.dark .hero span {
+	color: var(--dark-scheme-highlight);
+}
