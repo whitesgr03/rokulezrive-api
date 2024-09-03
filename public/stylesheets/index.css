@@ -142,9 +142,12 @@ img {
 	flex-direction: column;
 	justify-content: space-between;
 	background-color: var(--light-scheme-main-bgc);
-	padding-bottom: var(--mobile-nav-height);
 	flex: 1 1 100%;
 	color: var(--light-scheme-color);
+}
+
+.app.active-mobile-nav {
+	padding-bottom: var(--mobile-nav-height);
 }
 
 .app > .container {
