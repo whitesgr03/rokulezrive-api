@@ -19,7 +19,7 @@ const authenticate = asyncHandler((req, res, next) => {
 
 		const handleLogin = () => {
 			const cb = () => {
-				res.redirect(`/drive/files`);
+				res.redirect(`/drive`);
 			};
 
 			req.login(user, cb);
