@@ -4,6 +4,10 @@ import * as fileControllers from "../controllers/file.js";
 
 const router = express.Router();
 
+router.use((req, res, next) => {
+	req.isAuthenticated() ? next() : res.redirect("/");
+});
+
 router.get("/files", fileControllers.fileList);
 
 router.get("/shared", fileControllers.sharedList);
