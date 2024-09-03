@@ -56,4 +56,5 @@ html(lang="en")
 				main
 					block content
 				include layout_footer
-			include layout_mobile-nav
+			if user
+				include layout_mobile-nav
