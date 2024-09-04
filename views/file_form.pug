@@ -1,0 +1,29 @@
+extends layout
+
+block head
+	link(rel="stylesheet", href="/stylesheets/file_form.css", nonce=cspNonce)
+	link(rel="stylesheet", href="/stylesheets/form.css", nonce=cspNonce)
+
+block content
+	.fileForm
+		h3.title Upload File
+		.formContainer
+			form(method="POST")
+				input(name="csrfToken", type="hidden", value=csrfToken)
+				label(class=errors && errors.image ? "error" : "", for="product_image")
+					input#product_image(
+						type="file",
+						name="image",
+						accept="image/jpeg",
+						title="The image is required, size must be less than 1 mb.",
+						require
+					)
+
+					.image(class=product && product.imageUrl ? "preview" : "")
+						span.icon.outline
+						h5 Click here to upload
+					p ( File as you like up to 1 MB )
+				.placeholder
+					span.icon.alert
+					p= inputErrors && inputErrors.image ? inputErrors.image.msg : "Message placeholder"
+				button(type="submit") Save
