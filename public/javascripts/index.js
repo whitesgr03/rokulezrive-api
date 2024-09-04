@@ -19,10 +19,7 @@ const handleClick = e => {
 		dropdown.classList.toggle("active");
 		dropdown.classList.add("slide");
 	};
-
 	const handleActiveOptionList = e => {
-		handleCloseAccountList();
-
 		const optionBtn = e.target.closest(".optionBtn");
 		const optionList = optionBtn.querySelector(".optionList");
 
