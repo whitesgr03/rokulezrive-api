@@ -3,6 +3,7 @@ nav.mobile
 		li #[a(href="/drive") #[span.icon.home]Home]
 		li #[a(href="/drive/shared") #[span.icon.shared]Shared]
 		li #[a(href="/drive/files") #[span.icon.drive]Files]
+	if files || shared
 		.upload
 			button.uploadBtn(type="button") #[span.icon.plus]
 			ul.uploadList
