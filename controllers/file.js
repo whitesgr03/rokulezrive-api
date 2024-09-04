@@ -1,4 +1,7 @@
 import asyncHandler from "express-async-handler";
+const fileCreateGet = asyncHandler((req, res) => {
+	res.render("file_form");
+});
 const fileList = asyncHandler((req, res) =>
 	res.render("drive", { files: true }),
 );
@@ -13,6 +16,7 @@ const index = asyncHandler((req, res) =>
 );
 
 export {
+	fileCreateGet,
 	fileList,
 	sharedList,
 	index,
