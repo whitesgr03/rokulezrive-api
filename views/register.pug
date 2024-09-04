@@ -2,11 +2,12 @@ extends layout
 
 block head
 	link(rel="stylesheet", href="/stylesheets/user_form.css", nonce=cspNonce)
+	link(rel="stylesheet", href="/stylesheets/form.css", nonce=cspNonce)
 
 block content
 	.userForm
 		h3.title User Register
-		.container
+		.formContainer
 			form(method="POST")
 				input(name="csrfToken", type="hidden", value=csrfToken)
 				div
