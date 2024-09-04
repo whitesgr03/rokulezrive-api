@@ -12,7 +12,7 @@ const handleClick = e => {
 		activeOptionBtn && activeOptionBtn.classList.remove("active");
 	};
 	const handleCloseUploadList = () => {
-		uploadBtn.classList.remove("active");
+		uploadBtn?.classList.remove("active");
 	};
 
 	const handleActiveAccountList = () => {
