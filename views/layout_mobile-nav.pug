@@ -3,4 +3,8 @@ nav.mobile
 		li #[a(href="/drive") #[span.icon.home]Home]
 		li #[a(href="/drive/shared") #[span.icon.shared]Shared]
 		li #[a(href="/drive/files") #[span.icon.drive]Files]
-	button.uploadBtn(type="button") #[span.icon.plus]
+	.upload
+		button.uploadBtn(type="button") #[span.icon.plus]
+		ul.uploadList
+			li #[button #[span.icon.uploadFile]Upload File] 
+			li #[button #[span.icon.createFolder]Create Folder]
