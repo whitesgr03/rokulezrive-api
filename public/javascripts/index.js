@@ -16,7 +16,6 @@ const handleClick = e => {
 	};
 
 	const handleActiveAccountList = () => {
-		handleCloseCurrentActiveOptionList();
 		dropdown.classList.toggle("active");
 		dropdown.classList.add("slide");
 	};
