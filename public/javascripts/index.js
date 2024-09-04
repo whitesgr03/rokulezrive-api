@@ -2,6 +2,7 @@
 
 const handleClick = e => {
 	const dropdown = document.querySelector(".dropdown");
+	const uploadBtn = document.querySelector(".uploadBtn");
 	const activeOptionBtn = document.querySelector(".optionBtn.active");
 
 	const handleCloseAccountList = () => {
@@ -9,6 +10,9 @@ const handleClick = e => {
 	};
 	const handleCloseCurrentActiveOptionList = () => {
 		activeOptionBtn && activeOptionBtn.classList.remove("active");
+	};
+	const handleCloseUploadList = () => {
+		uploadBtn.classList.remove("active");
 	};
 
 	const handleActiveAccountList = () => {
@@ -95,6 +99,9 @@ const handleClick = e => {
 
 		optionList ? handleActive() : handleCreateList();
 	};
+	const handleActiveUploadList = () => {
+		uploadBtn.classList.toggle("active");
+	};
 
 	const handleClose = e => {
 		!e.target.closest(".account") &&
@@ -104,6 +111,10 @@ const handleClick = e => {
 		!e.target.closest(".optionBtn") &&
 			!e.target.closest(".optionList") &&
 			handleCloseCurrentActiveOptionList();
+
+		!e.target.closest(".uploadBtn") &&
+			!e.target.closest(".uploadList") &&
+			handleCloseUploadList();
 	};
 	const handleDarkTheme = () => {
 		const darkTheme = document.body.classList.toggle("dark");
@@ -111,10 +122,12 @@ const handleClick = e => {
 	};
 
 	e.target.closest(".account") && handleActiveAccountList();
+	e.target.closest(".uploadBtn") && handleActiveUploadList();
 	!e.target.closest(".optionList") &&
 		e.target.closest(".optionBtn") &&
 		handleActiveOptionList(e);
 	e.target.closest(".theme") && handleDarkTheme();
+
 	handleClose(e);
 };
 
