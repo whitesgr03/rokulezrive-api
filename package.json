@@ -21,7 +21,6 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"@prettier/plugin-pug": "^3.0.0",
 		"@prisma/client": "^5.18.0",
 		"@quixo3/prisma-session-store": "^3.1.13",
 		"bcrypt": "^5.1.1",
@@ -48,6 +47,7 @@
 		"@prettier/plugin-pug": "^3.0.0",
 		"globals": "^15.9.0",
 		"husky": "^9.1.5",
+		"nodemon": "^3.1.4",
 		"postcss": "^8.4.45",
 		"prettier-plugin-css-order": "^2.1.2",
 		"stylelint-config-standard": "^36.0.1"
