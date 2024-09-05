@@ -45,6 +45,7 @@
 		"@commitlint/cli": "^19.4.1",
 		"@commitlint/config-conventional": "^19.4.1",
 		"@eslint/js": "^9.9.1",
+		"@prettier/plugin-pug": "^3.0.0",
 		"globals": "^15.9.0",
 		"husky": "^9.1.5",
 		"stylelint-config-standard": "^36.0.1"
