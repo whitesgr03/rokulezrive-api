@@ -2,7 +2,7 @@ node_modules
 
 *env*
 
-*prettierrc
+*prettier*
 
 nodemon.json
 
@@ -14,4 +14,4 @@ nodemon.json
 
 *example*
 
-seed.js
+seed*
