@@ -48,6 +48,8 @@
 		"@prettier/plugin-pug": "^3.0.0",
 		"globals": "^15.9.0",
 		"husky": "^9.1.5",
+		"postcss": "^8.4.45",
+		"prettier-plugin-css-order": "^2.1.2",
 		"stylelint-config-standard": "^36.0.1"
 	}
 }
