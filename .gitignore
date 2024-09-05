@@ -6,6 +6,10 @@ node_modules
 
 nodemon.json
 
+*stylelint*
+
+*eslint*
+
 *.pem
 
 *example*
