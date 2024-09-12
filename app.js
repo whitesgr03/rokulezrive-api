@@ -105,7 +105,9 @@ app.use((req, res, next) => {
 });
 
 // error handler
+/* eslint-disable no-unused-vars */
 app.use((err, req, res, next) => {
+	/* eslint-enable */
 	errorLog(err);
 
 	err.status ?? (err = createError(500));
