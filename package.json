@@ -1,5 +1,5 @@
 {
-	"name": "local-file-node",
+	"name": "local-drive-node",
 	"version": "1.0.0",
 	"description": "This is a stripped down version of Google Drive.",
 	"main": "index.js",
