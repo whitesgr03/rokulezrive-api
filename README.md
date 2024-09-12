@@ -1,2 +1,2 @@
-# local-file-uploader
+# local-drive
 This is a stripped down version of Google Drive.
