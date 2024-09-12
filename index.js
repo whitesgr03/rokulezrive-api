@@ -26,9 +26,11 @@ const handleServer = async () => {
 			case 'EACCES':
 				serverLog(`Port ${port} requires elevated privileges`);
 				app.close();
+				break;
 			case 'EADDRINUSE':
 				serverLog(`Port ${port} is already in use`);
 				app.close();
+				break;
 			default:
 				serverLog(error);
 		}
