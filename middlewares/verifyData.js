@@ -1,12 +1,9 @@
-import asyncHandler from 'express-async-handler';
 import { validationResult, checkSchema, matchedData } from 'express-validator';
-import Csrf from 'csrf';
 
-export const verifyData = ({ schema, template }) => {
-	return asyncHandler(async (req, res, next) => {
-		await checkSchema(schema, ['body']).run(req);
+export const verifyData = schema => async (req, res, next) => {
+	await checkSchema(schema, ['body']).run(req);
 
-		const schemaErrors = validationResult(req);
+	const schemaErrors = validationResult(req);
 
 		const handleSchemaErrors = async () => {
 			const inputErrors = schemaErrors.mapped();
@@ -22,11 +19,10 @@ export const verifyData = ({ schema, template }) => {
 			});
 		};
 
-		const setMatchData = () => {
-			req.data = matchedData(req);
-			next();
-		};
+	const setMatchData = () => {
+		req.data = matchedData(req);
+		next();
+	};
 
-		schemaErrors.isEmpty() ? setMatchData() : handleSchemaErrors();
-	});
+	schemaErrors.isEmpty() ? setMatchData() : handleSchemaErrors();
 };
