@@ -2,13 +2,13 @@ import asyncHandler from 'express-async-handler';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
-import verifyFormData from '../middlewares/verifyFormData.js';
+import verifyData from '../middlewares/verifyData.js';
 import authenticate from '../middlewares/authenticate.js';
 
 const prisma = new PrismaClient();
 
 const loginPost = [
-	verifyFormData({
+	verifyData({
 		schema: {
 			email: {
 				trim: true,
@@ -42,7 +42,7 @@ const loginPost = [
 	authenticate,
 ];
 const registerPost = [
-	verifyFormData({
+	verifyData({
 		schema: {
 			email: {
 				trim: true,
@@ -115,4 +115,4 @@ const logout = asyncHandler(async (req, res) => {
 		: res.redirect('/drive/files');
 });
 
-export { loginGet, loginPost, registerGet, registerPost, logout };
+export { loginPost, registerPost, logout };
