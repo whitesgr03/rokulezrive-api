@@ -8,6 +8,7 @@ import morgan from 'morgan';
 import debug from 'debug';
 import compression from 'compression';
 import helmet from 'helmet';
+import cors from 'cors';
 
 // routes
 import accountRouter from './routes/account.js';
@@ -16,6 +17,11 @@ import driveRouter from './routes/drive.js';
 export const app = express();
 const errorLog = debug('ServerError');
 
+const corsOptions = {
+	methods: ['GET', 'PUT', 'POST', 'DELETE'],
+	allowedHeaders: ['Content-Type'],
+	maxAge: 3600,
+};
 const helmetOptions = {
 	contentSecurityPolicy: {
 		directives: {
@@ -55,6 +61,7 @@ const sessionOptions = {
 	name: 'local-drive.connect.sid',
 };
 
+app.use(cors(corsOptions));
 app.use(helmet(helmetOptions));
 app.use(session(sessionOptions));
 app.use(passport.session());
