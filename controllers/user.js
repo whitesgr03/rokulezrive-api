@@ -2,8 +2,8 @@ import asyncHandler from 'express-async-handler';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
-import verifyData from '../middlewares/verifyData.js';
-import authenticate from '../middlewares/authenticate.js';
+import { verifyData } from '../middlewares/verifyData.js';
+import { authenticate } from '../middlewares/authenticate.js';
 
 const prisma = new PrismaClient();
 
