@@ -14,7 +14,6 @@ import compression from 'compression';
 import helmet from 'helmet';
 
 // routes
-import indexRouter from './routes/index.js';
 import accountRouter from './routes/account.js';
 import driveRouter from './routes/drive.js';
 
@@ -95,7 +94,7 @@ app.use((req, res, next) => {
 	next();
 });
 
-app.use('/', indexRouter);
+
 app.use('/account', accountRouter);
 app.use('/drive', driveRouter);
 
