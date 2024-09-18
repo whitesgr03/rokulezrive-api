@@ -5,19 +5,14 @@ export const verifyData = schema => async (req, res, next) => {
 
 	const schemaErrors = validationResult(req);
 
-		const handleSchemaErrors = async () => {
-			const inputErrors = schemaErrors.mapped();
+	const handleSchemaErrors = async () => {
+		const inputErrors = schemaErrors.mapped();
 
-			const csrf = new Csrf();
-			const secret = await csrf.secret();
-			req.session.csrf = secret;
-
-			res.render(template, {
-				data: req.body,
-				csrfToken: csrf.create(secret),
-				inputErrors,
-			});
-		};
+		res.status(req.schema?.isConflict ? 409 : 400).json({
+			success: false,
+			inputErrors,
+		});
+	};
 
 	const setMatchData = () => {
 		req.data = matchedData(req);
