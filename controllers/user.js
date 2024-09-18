@@ -7,7 +7,7 @@ import authenticate from '../middlewares/authenticate.js';
 
 const prisma = new PrismaClient();
 
-const loginPost = [
+export const loginPost = [
 	verifyData({
 		schema: {
 			email: {
@@ -41,7 +41,7 @@ const loginPost = [
 	}),
 	authenticate,
 ];
-const registerPost = [
+export const registerPost = [
 	verifyData({
 		schema: {
 			email: {
@@ -109,10 +109,9 @@ const registerPost = [
 	}),
 	authenticate,
 ];
-const logout = asyncHandler(async (req, res) => {
+export const logout = asyncHandler(async (req, res, next) => {
 	req.isAuthenticated()
 		? req.logout(err => (err ? next(err) : res.redirect('/')))
 		: res.redirect('/drive/files');
 });
 
-export { loginPost, registerPost, logout };
