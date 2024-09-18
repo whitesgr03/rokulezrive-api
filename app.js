@@ -65,7 +65,7 @@ app.use(cors(corsOptions));
 app.use(helmet(helmetOptions));
 app.use(session(sessionOptions));
 app.use(passport.session());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 app.use(morgan(process.env.production ? 'common' : 'dev'));
 app.use(compression());
 
