@@ -1,24 +1,13 @@
 import asyncHandler from 'express-async-handler';
 import { PrismaClient } from '@prisma/client';
-import Csrf from 'csrf';
 import bcrypt from 'bcrypt';
 
-import verifyCsrf from '../middlewares/verifyCsrf.js';
 import verifyFormData from '../middlewares/verifyFormData.js';
 import authenticate from '../middlewares/authenticate.js';
 
 const prisma = new PrismaClient();
-const csrf = new Csrf();
 
-const loginGet = asyncHandler(async (req, res) => {
-	const secret = await csrf.secret();
-	req.session.csrf = secret;
-	res.render('login', {
-		csrfToken: csrf.create(secret),
-	});
-});
 const loginPost = [
-	verifyCsrf,
 	verifyFormData({
 		schema: {
 			email: {
@@ -52,15 +41,7 @@ const loginPost = [
 	}),
 	authenticate,
 ];
-const registerGet = asyncHandler(async (req, res) => {
-	const secret = await csrf.secret();
-	req.session.csrf = secret;
-	res.render('register', {
-		csrfToken: csrf.create(secret),
-	});
-});
 const registerPost = [
-	verifyCsrf,
 	verifyFormData({
 		schema: {
 			email: {
