@@ -9,35 +9,32 @@ const prisma = new PrismaClient();
 
 export const loginPost = [
 	verifyData({
-		schema: {
-			email: {
-				trim: true,
-				toLowerCase: true,
-				notEmpty: {
-					errorMessage: 'The email is required.',
-					bail: true,
-				},
-				isEmail: {
-					errorMessage: 'The email must be in the correct format.',
-					bail: true,
-				},
-				normalizeEmail: {
-					errorMessage: 'The email must be in standard format.',
-					bail: true,
-				},
+		email: {
+			trim: true,
+			toLowerCase: true,
+			notEmpty: {
+				errorMessage: 'The email is required.',
+				bail: true,
 			},
-			password: {
-				notEmpty: {
-					errorMessage: 'The password is required.',
-					bail: true,
-				},
-				isLength: {
-					options: { min: 8 },
-					errorMessage: "The password is incorrect.",
-				},
+			isEmail: {
+				errorMessage: 'The email must be in the correct format.',
+				bail: true,
+			},
+			normalizeEmail: {
+				errorMessage: 'The email must be in standard format.',
+				bail: true,
 			},
 		},
-		template: 'login',
+		password: {
+			notEmpty: {
+				errorMessage: 'The password is required.',
+				bail: true,
+			},
+			isLength: {
+				options: { min: 8 },
+				errorMessage: 'The password is incorrect.',
+			},
+		},
 	}),
 	authenticate,
 ];
@@ -114,4 +111,3 @@ export const logout = asyncHandler(async (req, res, next) => {
 		? req.logout(err => (err ? next(err) : res.redirect('/')))
 		: res.redirect('/drive/files');
 });
-
