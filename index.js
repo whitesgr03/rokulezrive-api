@@ -3,7 +3,7 @@ import debug from 'debug';
 import { createServer } from 'node:https';
 import { readFileSync } from 'node:fs';
 
-import app from './app.js';
+import { app } from './app.js';
 
 const serverLog = debug('Server');
 
@@ -13,7 +13,7 @@ const develop = process.env.NODE_ENV === 'development';
 const handleServer = async () => {
 	const handleListening = async () => {
 		const IP_Address = networkInterfaces().en0.find(
-			internet => internet.family === 'IPv4',
+			internet => internet.family === 'IPv4'
 		).address;
 
 		const scheme = `http${develop ? 's' : ''}`;

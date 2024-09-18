@@ -1,7 +1,3 @@
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { randomBytes } from 'node:crypto';
-
 import express from 'express';
 import session from 'express-session';
 import passport from './config/passport.js';
@@ -17,26 +13,15 @@ import helmet from 'helmet';
 import accountRouter from './routes/account.js';
 import driveRouter from './routes/drive.js';
 
-const app = express();
+export const app = express();
 const errorLog = debug('ServerError');
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-app.use((req, res, next) => {
-	res.locals.cspNonce = randomBytes(16).toString('base64');
-	next();
-});
 
 const helmetOptions = {
 	contentSecurityPolicy: {
 		directives: {
 			defaultSrc: ["'none'"],
 			imgSrc: ["'self'", 'data:', 'blob:'],
-			styleSrc: [
-				"'self'",
-				'fonts.googleapis.com',
-				'necolas.github.io',
-				(req, res) => `'nonce-${res.locals.cspNonce}'`,
-			],
+			styleSrc: ["'self'", 'fonts.googleapis.com', 'necolas.github.io'],
 			formAction: [
 				"'self'",
 				`${process.env.NODE_ENV === 'development' ? 'http' : 'https'}:`,
@@ -44,10 +29,7 @@ const helmetOptions = {
 			frameAncestors: ["'none'"],
 			baseUri: ["'none'"],
 			objectSrc: ["'none'"],
-			scriptSrc: [
-				(req, res) => `'nonce-${res.locals.cspNonce}'`,
-				'strict-dynamic',
-			],
+			scriptSrc: ['strict-dynamic'],
 		},
 	},
 	xFrameOptions: { action: 'deny' },
@@ -55,16 +37,12 @@ const helmetOptions = {
 		policy: ['no-referrer'],
 	},
 };
-const staticOptions = {
-	index: false,
-	redirect: false,
-};
 const sessionOptions = {
 	secret: process.env.SESSION_SECRETS.split(','),
 	resave: false,
 	saveUninitialized: false,
 	store: new PrismaSessionStore(new PrismaClient(), {
-		checkPeriod: 60 * 60 * 1000, //ms
+		checkPeriod: 60 * 60 * 1000, // ms
 		dbRecordIdIsSessionId: true,
 		dbRecordIdFunction: undefined,
 	}),
@@ -77,14 +55,9 @@ const sessionOptions = {
 	name: 'local-drive.connect.sid',
 };
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
-
 app.use(helmet(helmetOptions));
 app.use(session(sessionOptions));
 app.use(passport.session());
-app.use(express.static(path.join(__dirname, 'public'), staticOptions));
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan(process.env.production ? 'common' : 'dev'));
 app.use(compression());
@@ -93,7 +66,6 @@ app.use((req, res, next) => {
 	req.isAuthenticated() && (res.locals.user = true);
 	next();
 });
-
 
 app.use('/account', accountRouter);
 app.use('/drive', driveRouter);
@@ -113,5 +85,3 @@ app.use((err, req, res, next) => {
 
 	res.render('error', { message: err.message });
 });
-
-export default app;
