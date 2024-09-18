@@ -2,11 +2,11 @@ import express from 'express';
 
 import * as fileControllers from '../controllers/file.js';
 
+import { verifyCredentials } from '../middlewares/verifyCredentials.js';
+
 const router = express.Router();
 
-router.use((req, res, next) => {
-	req.isAuthenticated() ? next() : res.redirect("/");
-});
+router.use(verifyCredentials);
 
 router
   .route('/files/create')
