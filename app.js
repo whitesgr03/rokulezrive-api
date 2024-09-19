@@ -68,7 +68,7 @@ app.use(helmet(helmetOptions));
 app.use(session(sessionOptions));
 app.use(passport.session());
 app.use(express.json());
-app.use(morgan(process.env.production ? 'common' : 'dev'));
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev'));
 app.use(compression());
 
 app.use((req, res, next) => {
