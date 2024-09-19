@@ -103,8 +103,15 @@ export const register = [
 	}),
 	authenticate,
 ];
-export const logout = asyncHandler(async (req, res, next) => {
-	req.isAuthenticated()
-		? req.logout(err => (err ? next(err) : res.redirect('/')))
-		: res.redirect('/drive/files');
-});
+export const logout = [
+	(req, res, next) => {
+		req.logout(err =>
+			err
+				? next(err)
+				: res.json({
+						success: true,
+						message: 'User logout successfully.',
+				  })
+		);
+	},
+];
