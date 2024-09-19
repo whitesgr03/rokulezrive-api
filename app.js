@@ -57,7 +57,7 @@ const sessionOptions = {
 	cookie: {
 		sameSite: 'Strict',
 		httpOnly: true,
-		secure: true,
+		secure: process.env.NODE_ENV === 'production',
 		maxAge: 7 * 24 * 60 * 60 * 1000,
 	},
 	name: 'local-drive.connect.sid',
