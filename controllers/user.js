@@ -7,7 +7,7 @@ import { authenticate } from '../middlewares/authenticate.js';
 
 const prisma = new PrismaClient();
 
-export const loginPost = [
+export const login = [
 	verifyData({
 		email: {
 			trim: true,
@@ -38,7 +38,7 @@ export const loginPost = [
 	}),
 	authenticate,
 ];
-export const registerPost = [
+export const register = [
 	verifyData({
 		schema: {
 			email: {
