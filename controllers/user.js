@@ -8,6 +8,27 @@ import { verifyCredentials } from '../middlewares/verifyCredentials.js';
 
 const prisma = new PrismaClient();
 
+export const userInfo = [
+	verifyCredentials,
+	asyncHandler(async (req, res) => {
+		const { id } = req.user;
+		const user = await prisma.user.findFirst({
+			where: { id },
+			select: { email: true, id: true },
+		});
+
+		res
+			.header({
+				'Cache-Control': 'no-store',
+			})
+			.json({
+				success: true,
+				message: 'Get user info successfully.',
+				data: user,
+			});
+	}),
+];
+
 export const login = [
 	verifyData({
 		email: {
