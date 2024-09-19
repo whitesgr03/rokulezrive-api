@@ -71,11 +71,6 @@ app.use(express.json());
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev'));
 app.use(compression());
 
-app.use((req, res, next) => {
-	req.isAuthenticated() && (res.locals.user = true);
-	next();
-});
-
 app.use('/account', accountRouter);
 app.use('/drive', driveRouter);
 
