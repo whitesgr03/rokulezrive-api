@@ -1,34 +1,35 @@
 import passport from '../config/passport.js';
 
-const authenticate = asyncHandler((req, res, next) => {
-	const cb = async (err, user, failInfo) => {
+export const authenticate = (req, res, next) => {
+	const cb = (err, user, failInfo) => {
 		const handleError = async () => {
-			const csrf = new Csrf();
-			const secret = await csrf.secret();
-			req.session.csrf = secret;
-			res.render("login", {
-				data: req.data,
-				csrfToken: csrf.create(secret),
-				inputErrors: {
+			res.status(404).json({
+				success: false,
+				message: {
 					email: { msg: failInfo },
 				},
 			});
 		};
 
 		const handleLogin = () => {
-			const cb = () => {
-				res.redirect(`/drive`);
-			};
-
-			req.login(user, cb);
+			req.login(user, () => {
+				res.json({
+					success: true,
+					data: {
+						user,
+					},
+					cookie: {
+						exp: req.session.cookie._expires,
+					},
+					message: 'User login successfully.',
+				});
+			});
 		};
 
 		err && next(err);
-		failInfo && (await handleError());
+		failInfo && handleError();
 		user && handleLogin();
 	};
 
-	passport.authenticate("local", cb)(req, res, next);
-});
-
-export default authenticate;
+	passport.authenticate('local', cb)(req, res, next);
+};
