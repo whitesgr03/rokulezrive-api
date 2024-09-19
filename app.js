@@ -18,8 +18,10 @@ export const app = express();
 const errorLog = debug('ServerError');
 
 const corsOptions = {
+	origin: process.env.APP_URL,
 	methods: ['GET', 'PUT', 'POST', 'DELETE'],
 	allowedHeaders: ['Content-Type'],
+	credentials: true,
 	maxAge: 3600,
 };
 const helmetOptions = {
