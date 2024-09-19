@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 
 import { verifyData } from '../middlewares/verifyData.js';
 import { authenticate } from '../middlewares/authenticate.js';
+import { verifyCredentials } from '../middlewares/verifyCredentials.js';
 
 const prisma = new PrismaClient();
 
@@ -104,6 +105,7 @@ export const register = [
 	authenticate,
 ];
 export const logout = [
+	verifyCredentials,
 	(req, res, next) => {
 		req.logout(err =>
 			err
