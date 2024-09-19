@@ -5,12 +5,10 @@ export const verifyData = schema => async (req, res, next) => {
 
 	const schemaErrors = validationResult(req);
 
-	const handleSchemaErrors = async () => {
-		const inputErrors = schemaErrors.mapped();
-
+	const handleSchemaErrors = () => {
 		res.status(req.schema?.isConflict ? 409 : 400).json({
 			success: false,
-			inputErrors,
+			message: schemaErrors.mapped(),
 		});
 	};
 
