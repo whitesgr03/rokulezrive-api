@@ -40,58 +40,55 @@ export const login = [
 ];
 export const register = [
 	verifyData({
-		schema: {
-			email: {
-				trim: true,
-				toLowerCase: true,
-				notEmpty: {
-					errorMessage: 'The email is required.',
-					bail: true,
-				},
-				isEmail: {
-					errorMessage: 'The email must be in the correct format.',
-					bail: true,
-				},
-				normalizeEmail: {
-					errorMessage: 'The email must be in standard format.',
-					bail: true,
-				},
-				custom: {
-					options: email =>
-						new Promise(async (resolve, reject) => {
-							const existingEmail = await prisma.user.findFirst({
-								where: { email },
-							});
+		email: {
+			trim: true,
+			toLowerCase: true,
+			notEmpty: {
+				errorMessage: 'The email is required.',
+				bail: true,
+			},
+			isEmail: {
+				errorMessage: 'The email must be in the correct format.',
+				bail: true,
+			},
+			normalizeEmail: {
+				errorMessage: 'The email must be in standard format.',
+				bail: true,
+			},
+			custom: {
+				options: email =>
+					new Promise((resolve, reject) => {
+						const existingEmail = prisma.user.findFirst({
+							where: { email },
+						});
 
-							existingEmail ? reject() : resolve();
-						}),
-					errorMessage: 'The email is been used.',
-				},
-			},
-			password: {
-				notEmpty: {
-					errorMessage: 'The password is required.',
-					bail: true,
-				},
-				isStrongPassword: {
-					errorMessage:
-						'The password must contain one or more numbers, special symbols, lowercase and uppercase characters, and at least 8 characters.',
-				},
-			},
-			confirmPassword: {
-				notEmpty: {
-					errorMessage: 'The confirm password is required.',
-					bail: true,
-				},
-				custom: {
-					options: (confirmPassword, { req }) =>
-						confirmPassword === req.body.password,
-					errorMessage:
-						'The confirmation password is not the same as the password.',
-				},
+						existingEmail ? reject() : resolve();
+					}),
+				errorMessage: 'The email is been used.',
 			},
 		},
-		template: 'register',
+		password: {
+			notEmpty: {
+				errorMessage: 'The password is required.',
+				bail: true,
+			},
+			isStrongPassword: {
+				errorMessage:
+					'The password must contain one or more numbers, special symbols, lowercase and uppercase characters, and at least 8 characters.',
+			},
+		},
+		confirmPassword: {
+			notEmpty: {
+				errorMessage: 'The confirm password is required.',
+				bail: true,
+			},
+			custom: {
+				options: (confirmPassword, { req }) =>
+					confirmPassword === req.body.password,
+				errorMessage:
+					'The confirmation password is not the same as the password.',
+			},
+		},
 	}),
 	asyncHandler(async (req, res, next) => {
 		const { email, password } = req.data;
