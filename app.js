@@ -20,7 +20,7 @@ const errorLog = debug('ServerError');
 const corsOptions = {
 	origin: process.env.APP_URL,
 	methods: ['GET', 'PUT', 'POST', 'DELETE'],
-	allowedHeaders: ['Content-Type'],
+	allowedHeaders: ['Content-Type', 'Authorization'],
 	credentials: true,
 	maxAge: 3600,
 };
