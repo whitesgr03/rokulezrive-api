@@ -9,6 +9,6 @@ router.post('/login', userControllers.login);
 router.post('/register', userControllers.register);
 router.get('/logout', userControllers.logout);
 
-router.post('/login/google', userControllers.googleUserLogin);
-router.post('/register/google', userControllers.googleUserRegister);
+router.post('/login/google', userControllers.googleLogin);
+router.post('/register/google', userControllers.googleRegister);
 export default router;

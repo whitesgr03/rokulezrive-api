@@ -135,7 +135,7 @@ export const logout = [
 		);
 	},
 ];
-export const googleUserLogin = [
+export const googleLogin = [
 	(req, res, next) => {
 		const { authorization } = req.headers;
 
@@ -213,7 +213,7 @@ export const googleUserLogin = [
 			: handleSetSession();
 	}),
 ];
-export const googleUserRegister = [
+export const googleRegister = [
 	(req, res, next) => {
 		const { subject } = req.session;
 
