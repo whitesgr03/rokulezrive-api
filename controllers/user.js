@@ -1,7 +1,9 @@
+// Packages
 import asyncHandler from 'express-async-handler';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
+// Middlewares
 import { verifyData } from '../middlewares/verifyData.js';
 import { authenticate } from '../middlewares/authenticate.js';
 import { verifyCredentials } from '../middlewares/verifyCredentials.js';
@@ -11,12 +13,6 @@ const prisma = new PrismaClient();
 export const userInfo = [
 	verifyCredentials,
 	asyncHandler(async (req, res) => {
-		const { id } = req.user;
-		const user = await prisma.user.findFirst({
-			where: { id },
-			select: { email: true, id: true },
-		});
-
 		res
 			.header({
 				'Cache-Control': 'no-store',
@@ -24,11 +20,10 @@ export const userInfo = [
 			.json({
 				success: true,
 				message: 'Get user info successfully.',
-				data: user,
+				data: req.user,
 			});
 	}),
 ];
-
 export const login = [
 	verifyData({
 		email: {
