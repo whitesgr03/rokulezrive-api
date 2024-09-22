@@ -1,6 +1,14 @@
 model User {
-  credential Credential?
+  pk       Int     @id @default(autoincrement())
+  id       String  @unique @default(uuid())
+  username String  @unique
+  email    String? @unique
+  password String?
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  credential Credential?
+  folders    Folder[]
+  shared     Sharing[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

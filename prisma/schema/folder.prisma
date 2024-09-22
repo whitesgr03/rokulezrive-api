@@ -4,8 +4,8 @@ model Folder {
     name  String
     files File[]
 
-    owner   User @relation(fields: [ownerId], references: [id])
-    ownerId Int
+  owner   User @relation(fields: [ownerId], references: [pk])
+  ownerId Int
 
     parent   Folder? @relation("Folder_Children", fields: [parentId], references: [pk])
     parentId Int?
