@@ -2,6 +2,7 @@
 import asyncHandler from 'express-async-handler';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import { OAuth2Client } from 'google-auth-library';
 
 // Middlewares
 import { verifyData } from '../middlewares/verifyData.js';
@@ -9,6 +10,7 @@ import { authenticate } from '../middlewares/authenticate.js';
 import { verifyCredentials } from '../middlewares/verifyCredentials.js';
 
 const prisma = new PrismaClient();
+const google = new OAuth2Client();
 
 export const userInfo = [
 	verifyCredentials,
@@ -132,4 +134,82 @@ export const logout = [
 				  })
 		);
 	},
+];
+export const googleUserLogin = [
+	(req, res, next) => {
+		const { authorization } = req.headers;
+
+		const token = authorization && authorization.split(' ')[1];
+
+		const handleSetToken = () => {
+			req.token = token;
+			next();
+		};
+
+		token
+			? handleSetToken()
+			: res.status(400).json({
+					success: false,
+					message: 'The provided Google token is malformed.',
+			  });
+	},
+	async (req, res, next) => {
+		try {
+			const ticket = await google.verifyIdToken({
+				idToken: req.token,
+				audience: process.env.APP_GOOGLE_CLIENT_ID,
+			});
+
+			const { sub: subject } = ticket.getPayload();
+
+			req.subject = subject;
+
+			next();
+		} catch (err) {
+			err &&
+				res.status(401).json({
+					success: false,
+					message: 'Google login is invalid.',
+				});
+		}
+	},
+	asyncHandler(async (req, res) => {
+		const provider = 'https://accounts.google.com';
+		const { subject } = req;
+
+		const credential = await prisma.credential.findFirst({
+			where: { provider, subject },
+			select: {
+				user: {
+					select: {
+						id: true,
+						username: true,
+					},
+				},
+			},
+		});
+
+		const handleSetSession = () => {
+			req.session.subject = subject;
+			res.json({
+				success: true,
+				message: 'Google login successfully.',
+			});
+		};
+
+		credential
+			? req.login(credential.user, () => {
+					res.json({
+						success: true,
+						data: {
+							user: credential.user,
+						},
+						cookie: {
+							exp: req.session.cookie._expires,
+						},
+						message: 'Google login successfully.',
+					});
+			  })
+			: handleSetSession();
+	}),
 ];
