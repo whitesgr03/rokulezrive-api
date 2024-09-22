@@ -275,6 +275,7 @@ export const googleRegister = [
 		});
 
 		req.login(user, () => {
+			delete req.session.subject;
 			res.json({
 				success: true,
 				data: {
