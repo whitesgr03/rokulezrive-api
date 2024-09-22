@@ -213,3 +213,78 @@ export const googleUserLogin = [
 			: handleSetSession();
 	}),
 ];
+export const googleUserRegister = [
+	(req, res, next) => {
+		const { subject } = req.session;
+
+		subject
+			? next()
+			: res.status(401).json({
+					success: true,
+					message: 'The provided Google token is malformed.',
+			  });
+	},
+	verifyData({
+		username: {
+			trim: true,
+			notEmpty: {
+				errorMessage: 'Username is required.',
+				bail: true,
+			},
+			isLength: {
+				options: { min: 4, max: 25 },
+				errorMessage: 'Username must be between 4 and 25 letters.',
+				bail: true,
+			},
+			matches: {
+				options: /^\w+$/,
+				errorMessage:
+					'Username must only contain alphanumeric and underline characters.',
+				bail: true,
+			},
+			custom: {
+				options: username =>
+					/* eslint-disable no-async-promise-executor */
+					new Promise(async (resolve, reject) => {
+						const existingUsername = await prisma.user.findFirst({
+							where: { username },
+						});
+						existingUsername ? reject() : resolve();
+					}),
+				errorMessage: 'Username is been used.',
+			},
+		},
+	}),
+	asyncHandler(async (req, res) => {
+		const provider = 'https://accounts.google.com';
+		const { username } = req.body;
+		const { subject } = req.session;
+
+		const user = await prisma.user.create({
+			data: {
+				username,
+			},
+		});
+
+		await prisma.credential.create({
+			data: {
+				provider,
+				subject,
+				userId: user.pk,
+			},
+		});
+
+		req.login(user, () => {
+			res.json({
+				success: true,
+				data: {
+					user,
+				},
+				cookie: {
+					exp: req.session.cookie._expires,
+				},
+				message: 'Google login successfully.',
+			});
+		});
+	}),
+];
