@@ -1,17 +1,17 @@
 model Folder {
-    pk    Int    @id @default(autoincrement())
-    id    String @unique @default(uuid())
-    name  String
-    files File[]
+  pk    Int    @id @default(autoincrement())
+  id    String @unique @default(uuid())
+  name  String
+  files File[]
 
   owner   User @relation(fields: [ownerId], references: [pk])
   ownerId Int
 
-    parent   Folder? @relation("Folder_Children", fields: [parentId], references: [pk])
-    parentId Int?
+  parent   Folder? @relation("Folder_Children", fields: [parentId], references: [pk])
+  parentId Int?
 
-    children Folder[] @relation("Folder_Children")
+  children Folder[] @relation("Folder_Children")
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
