@@ -9,8 +9,8 @@
 	},
 	"scripts": {
 		"start": "NODE_ENV=production node index",
-		"pro": " NODE_ENV=production nodemon --env-file=.env --env-file=.env.development",
-		"dev": " NODE_ENV=development nodemon --env-file=.env --env-file=.env.development",
+		"pro": "USE_HTTPS=true nodemon --env-file=.env",
+		"dev": "NODE_ENV=development nodemon --env-file=.env",
 		"prepare": "husky",
 		"commitlint": "commitlint --edit"
 	},
