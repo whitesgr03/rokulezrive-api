@@ -8,7 +8,7 @@ import { app } from './app.js';
 const serverLog = debug('Server');
 
 const port = process.env.PORT || '3000';
-const develop = process.env.NODE_ENV === 'development';
+const use_https = process.env.USE_HTTPS === 'true';
 
 const handleServer = async () => {
 	const handleListening = async () => {
@@ -16,7 +16,7 @@ const handleServer = async () => {
 			internet => internet.family === 'IPv4'
 		).address;
 
-		const scheme = `http${develop ? 's' : ''}`;
+		const scheme = `http${use_https ? 's' : ''}`;
 
 		serverLog(`Listening on Local:         ${scheme}://localhost:${port}`);
 		serverLog(`Listening on Your Network:  ${scheme}://${IP_Address}:${port}`);
@@ -47,10 +47,10 @@ const handleServer = async () => {
 		return createServer(options, app);
 	};
 
-	const server = develop ? handleHTTPS() : app;
+	const server = use_https ? handleHTTPS() : app;
 
 	server
-		.listen(port, develop && handleListening)
+		.listen(port, !use_https && handleListening)
 		.on('error', handleError)
 		.on('close', handleClose);
 };
