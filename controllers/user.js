@@ -288,3 +288,156 @@ export const googleRegister = [
 		});
 	}),
 ];
+export const facebookLogin = [
+	(req, res, next) => {
+		const { authorization } = req.headers;
+
+		const token = authorization && authorization.split(' ')[1];
+
+		const handleSetToken = () => {
+			req.token = token;
+			next();
+		};
+
+		token
+			? handleSetToken()
+			: res.status(400).json({
+					success: false,
+					message: 'The provided Google token is malformed.',
+			  });
+	},
+	asyncHandler(async (req, res, next) => {
+		const tokenResponse = await fetch(
+			`https://graph.facebook.com/debug_token?input_token=${req.token}&access_token=818458357029166|c776f420aaf467241b7e85a3fc4a3717`
+		);
+		const { data } = await tokenResponse.json();
+		const { user_id: subject, is_valid } = data;
+
+		const handleValid = () => {
+			req.subject = subject;
+			next();
+		};
+
+		is_valid
+			? handleValid()
+			: res.status(401).json({
+					success: false,
+					message: 'Facebook login is invalid.',
+			  });
+	}),
+	asyncHandler(async (req, res) => {
+		const provider = 'https://connect.facebook.net';
+		const { subject } = req;
+
+		const credential = await prisma.credential.findFirst({
+			where: { provider, subject },
+			select: {
+				user: {
+					select: {
+						id: true,
+						username: true,
+					},
+				},
+			},
+		});
+
+		const handleSetSession = () => {
+			req.session.subject = subject;
+			res.json({
+				success: true,
+				message: 'Facebook login successfully.',
+			});
+		};
+
+		credential
+			? req.login(credential.user, () => {
+					res.json({
+						success: true,
+						data: {
+							user: credential.user,
+						},
+						cookie: {
+							exp: req.session.cookie._expires,
+						},
+						message: 'Google login successfully.',
+					});
+			  })
+			: handleSetSession();
+	}),
+];
+export const facebookRegister = [
+	(req, res, next) => {
+		const { subject } = req.session;
+
+		subject
+			? next()
+			: res.status(401).json({
+					success: true,
+					message: 'The provided Facebook token is malformed.',
+			  });
+	},
+	verifyData({
+		username: {
+			trim: true,
+			notEmpty: {
+				errorMessage: 'Username is required.',
+				bail: true,
+			},
+			isLength: {
+				options: { min: 4, max: 25 },
+				errorMessage: 'Username must be between 4 and 25 letters.',
+				bail: true,
+			},
+			matches: {
+				options: /^\w+$/,
+				errorMessage:
+					'Username must only contain alphanumeric and underline characters.',
+				bail: true,
+			},
+			custom: {
+				options: username =>
+					/* eslint-disable no-async-promise-executor */
+					new Promise(async (resolve, reject) => {
+						const existingUsername = await prisma.user.findFirst({
+							where: { username },
+						});
+						existingUsername ? reject() : resolve();
+					}),
+				errorMessage: 'Username is been used.',
+			},
+		},
+	}),
+	asyncHandler(async (req, res) => {
+		const provider = 'https://connect.facebook.net';
+		const { username } = req.body;
+		const { subject } = req.session;
+
+		const user = await prisma.user.create({
+			data: {
+				username,
+			},
+		});
+
+		await prisma.credential.create({
+			data: {
+				provider,
+				subject,
+				userId: user.pk,
+			},
+		});
+
+		req.login(user, () => {
+			delete req.session.subject;
+			res.json({
+				success: true,
+				data: {
+					user,
+				},
+				cookie: {
+					exp: req.session.cookie._expires,
+				},
+				message: 'Facebook login successfully.',
+			});
+		});
+	}),
+];

@@ -11,4 +11,7 @@ router.get('/logout', userControllers.logout);
 
 router.post('/login/google', userControllers.googleLogin);
 router.post('/register/google', userControllers.googleRegister);
+router.post('/login/facebook', userControllers.facebookLogin);
+router.post('/register/facebook', userControllers.facebookRegister);
+
 export default router;
