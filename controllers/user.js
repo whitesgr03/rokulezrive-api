@@ -59,6 +59,35 @@ export const login = [
 ];
 export const register = [
 	verifyData({
+		username: {
+			trim: true,
+			notEmpty: {
+				errorMessage: 'Username is required.',
+				bail: true,
+			},
+			isLength: {
+				options: { min: 4, max: 25 },
+				errorMessage: 'Username must be between 4 and 25 letters.',
+				bail: true,
+			},
+			matches: {
+				options: /^(?=.*[a-zA-Z0-9]_?)/,
+				errorMessage:
+					'Username must only contain alphanumeric and underline characters.',
+				bail: true,
+			},
+			custom: {
+				options: username =>
+					/* eslint-disable no-async-promise-executor */
+					new Promise(async (resolve, reject) => {
+						const existingUsername = await prisma.user.findFirst({
+							where: { username },
+						});
+						existingUsername ? reject() : resolve();
+					}),
+				errorMessage: 'Username is been used.',
+			},
+		},
 		email: {
 			trim: true,
 			toLowerCase: true,
