@@ -139,12 +139,16 @@ export const register = [
 		},
 	}),
 	asyncHandler(async (req, res, next) => {
-		const { email, password } = req.data;
+		const { username, email, password } = req.data;
 		const randomSalt = 10;
 		await prisma.user.create({
 			data: {
+				username,
 				email,
 				password: await bcrypt.hash(password, randomSalt),
+				folders: {
+					create: [{ name: 'Default' }],
+				},
 			},
 		});
 		next();
