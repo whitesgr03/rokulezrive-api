@@ -296,6 +296,9 @@ export const googleRegister = [
 		const user = await prisma.user.create({
 			data: {
 				username,
+				folders: {
+					create: [{ name: 'Default' }],
+				},
 			},
 		});
 
@@ -454,6 +457,9 @@ export const facebookRegister = [
 		const user = await prisma.user.create({
 			data: {
 				username,
+				folders: {
+					create: [{ name: 'Default' }],
+				},
 			},
 		});
 
