@@ -18,6 +18,7 @@ passport.use(
 
 				match
 					? done(null, {
+							pk: user.pk,
 							id: user.id,
 							username: user.username,
 					  })

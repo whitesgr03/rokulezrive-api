@@ -216,6 +216,7 @@ export const googleLogin = [
 			select: {
 				user: {
 					select: {
+						pk: true,
 						id: true,
 						username: true,
 					},
@@ -231,12 +232,14 @@ export const googleLogin = [
 			});
 		};
 
+		const { pk, ...rest } = credential.user;
+
 		credential
-			? req.login(credential.user, () => {
+			? req.login({ id: pk }, () => {
 					res.json({
 						success: true,
 						data: {
-							user: credential.user,
+							user: rest,
 						},
 						cookie: {
 							exp: req.session.cookie._expires,
@@ -311,16 +314,13 @@ export const googleRegister = [
 			},
 		});
 
-		const serializeUser = {
-			id: user.id,
-			username: user.username,
-		};
+		const { pk, ...rest } = user;
 
 		const loginCallback = () => {
 			delete req.session.subject;
 			res.json({
 				success: true,
-				data: serializeUser,
+				data: rest,
 				cookie: {
 					exp: req.session.cookie._expires,
 				},
@@ -328,7 +328,7 @@ export const googleRegister = [
 			});
 		};
 
-		req.login(serializeUser, loginCallback);
+		req.login(pk, loginCallback);
 	}),
 ];
 export const facebookLogin = [
@@ -377,6 +377,7 @@ export const facebookLogin = [
 			select: {
 				user: {
 					select: {
+						pk: true,
 						id: true,
 						username: true,
 					},
@@ -392,12 +393,14 @@ export const facebookLogin = [
 			});
 		};
 
+		const { pk, ...rest } = credential.user;
+
 		credential
-			? req.login(credential.user, () => {
+			? req.login(pk, () => {
 					res.json({
 						success: true,
 						data: {
-							user: credential.user,
+							user: rest,
 						},
 						cookie: {
 							exp: req.session.cookie._expires,
@@ -472,16 +475,13 @@ export const facebookRegister = [
 			},
 		});
 
-		const serializeUser = {
-			id: user.id,
-			username: user.username,
-		};
+		const { pk, ...rest } = user;
 
 		const loginCallback = () => {
 			delete req.session.subject;
 			res.json({
 				success: true,
-				data: serializeUser,
+				data: rest,
 				cookie: {
 					exp: req.session.cookie._expires,
 				},
@@ -489,6 +489,6 @@ export const facebookRegister = [
 			});
 		};
 
-		req.login(serializeUser, loginCallback);
+		req.login(pk, loginCallback);
 	}),
 ];

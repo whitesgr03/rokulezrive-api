@@ -12,12 +12,12 @@ export const authenticate = (req, res, next) => {
 		};
 
 		const handleLogin = () => {
-			req.login(user, () => {
+			const { pk, ...rest } = user;
+
+			req.login(pk, () => {
 				res.json({
 					success: true,
-					data: {
-						user,
-					},
+					data: rest,
 					cookie: {
 						exp: req.session.cookie._expires,
 					},
