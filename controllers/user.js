@@ -15,6 +15,15 @@ const google = new OAuth2Client();
 export const userInfo = [
 	verifyCredentials,
 	asyncHandler(async (req, res) => {
+		const { id: pk } = req.user;
+		const user = await prisma.user.findFirst({
+			where: { pk },
+			select: {
+				id: true,
+				username: true,
+			},
+		});
+
 		res
 			.header({
 				'Cache-Control': 'no-store',
@@ -22,7 +31,7 @@ export const userInfo = [
 			.json({
 				success: true,
 				message: 'Get user info successfully.',
-				data: req.user,
+				data: user,
 			});
 	}),
 ];
