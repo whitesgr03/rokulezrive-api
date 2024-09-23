@@ -274,19 +274,24 @@ export const googleRegister = [
 			},
 		});
 
-		req.login(user, () => {
+		const serializeUser = {
+			id: user.id,
+			username: user.username,
+		};
+
+		const loginCallback = () => {
 			delete req.session.subject;
 			res.json({
 				success: true,
-				data: {
-					user,
-				},
+				data: serializeUser,
 				cookie: {
 					exp: req.session.cookie._expires,
 				},
 				message: 'Google login successfully.',
 			});
-		});
+		};
+
+		req.login(serializeUser, loginCallback);
 	}),
 ];
 export const facebookLogin = [
@@ -427,18 +432,23 @@ export const facebookRegister = [
 			},
 		});
 
-		req.login(user, () => {
+		const serializeUser = {
+			id: user.id,
+			username: user.username,
+		};
+
+		const loginCallback = () => {
 			delete req.session.subject;
 			res.json({
 				success: true,
-				data: {
-					user,
-				},
+				data: serializeUser,
 				cookie: {
 					exp: req.session.cookie._expires,
 				},
 				message: 'Facebook login successfully.',
 			});
-		});
+		};
+
+		req.login(serializeUser, loginCallback);
 	}),
 ];
