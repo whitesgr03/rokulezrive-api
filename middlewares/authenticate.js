@@ -1,12 +1,12 @@
 import passport from '../config/passport.js';
 
 export const authenticate = (req, res, next) => {
-	const cb = (err, user, failInfo) => {
+	const cb = (err, user, failMessage) => {
 		const handleError = async () => {
 			res.status(404).json({
 				success: false,
-				message: {
-					email: { msg: failInfo },
+				fields: {
+					email: failMessage,
 				},
 			});
 		};
@@ -27,7 +27,7 @@ export const authenticate = (req, res, next) => {
 		};
 
 		err && next(err);
-		failInfo && handleError();
+		failMessage && handleError();
 		user && handleLogin();
 	};
 
