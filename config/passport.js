@@ -7,17 +7,8 @@ import { Strategy as LocalStrategy } from 'passport-local';
 const prisma = new PrismaClient();
 
 passport.use(
-	{ usernameField: 'email' },
-	new LocalStrategy(async (email, password, done) => {
-		try {
-			const user = await prisma.user.findFirst({
-				where: { email },
-				select: {
-					id: true,
-					username: true,
-				},
-			});
-			const match = user && (await bcrypt.compare(password, user.password));
+	new LocalStrategy(
+		{ usernameField: 'email' },
 
 			match
 				? done(null, {
