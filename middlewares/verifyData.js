@@ -6,9 +6,17 @@ export const verifyData = schema => async (req, res, next) => {
 	const schemaErrors = validationResult(req);
 
 	const handleSchemaErrors = () => {
+		const errors = schemaErrors.mapped();
+
+		let fields = {};
+
+		for (const key of Object.keys(errors)) {
+			fields[key] = errors[key]['msg'];
+		}
+
 		res.status(req.schema?.isConflict ? 409 : 400).json({
 			success: false,
-			message: schemaErrors.mapped(),
+			fields,
 		});
 	};
 
