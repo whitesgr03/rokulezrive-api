@@ -105,8 +105,9 @@ export const register = [
 			},
 			custom: {
 				options: email =>
-					new Promise((resolve, reject) => {
-						const existingEmail = prisma.user.findFirst({
+					/* eslint-disable no-async-promise-executor */
+					new Promise(async (resolve, reject) => {
+						const existingEmail = await prisma.user.findFirst({
 							where: { email },
 						});
 
