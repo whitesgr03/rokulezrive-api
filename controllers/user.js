@@ -12,7 +12,7 @@ import { verifyCredentials } from '../middlewares/verifyCredentials.js';
 const prisma = new PrismaClient();
 const google = new OAuth2Client();
 
-export const userInfo = [
+export const getUser = [
 	verifyCredentials,
 	asyncHandler(async (req, res) => {
 		const { id: pk } = req.user;
