@@ -11,7 +11,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 
 // routes
-import accountRouter from './routes/account.js';
+import indexRouter from './routes/index.js';
 import driveRouter from './routes/drive.js';
 
 export const app = express();
@@ -71,7 +71,7 @@ app.use(express.json());
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev'));
 app.use(compression());
 
-app.use('/account', accountRouter);
+app.use('/', indexRouter);
 app.use('/drive', driveRouter);
 
 // unknown routes handler
