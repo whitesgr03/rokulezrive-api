@@ -176,7 +176,7 @@ export const logout = [
 		);
 	},
 ];
-export const googleLogin = [
+export const loginWithGoogle = [
 	(req, res, next) => {
 		const { authorization } = req.headers;
 
@@ -257,7 +257,7 @@ export const googleLogin = [
 			: handleSetSession();
 	}),
 ];
-export const googleRegister = [
+export const registerWithGoogle = [
 	(req, res, next) => {
 		const { subject } = req.session;
 
@@ -338,7 +338,7 @@ export const googleRegister = [
 		req.login({ pk }, loginCallback);
 	}),
 ];
-export const facebookLogin = [
+export const loginWithFacebook = [
 	(req, res, next) => {
 		const { authorization } = req.headers;
 
@@ -418,7 +418,7 @@ export const facebookLogin = [
 			: handleSetSession();
 	}),
 ];
-export const facebookRegister = [
+export const registerWithFacebook = [
 	(req, res, next) => {
 		const { subject } = req.session;
 
