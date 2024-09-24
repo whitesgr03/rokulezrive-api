@@ -16,11 +16,10 @@ export const getUser = [
 	verifyCredentials,
 	asyncHandler(async (req, res) => {
 		const { pk } = req.user;
+
+		const user = await prisma.user.findUnique({
 			where: { pk },
-			select: {
-				id: true,
-				username: true,
-			},
+			select: { id: true, username: true },
 		});
 
 		res
