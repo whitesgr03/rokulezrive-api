@@ -14,7 +14,7 @@ export const authenticate = (req, res, next) => {
 		const handleLogin = () => {
 			const { pk, ...rest } = user;
 
-			req.login(pk, () => {
+			req.login({ pk }, () => {
 				res.json({
 					success: true,
 					data: rest,

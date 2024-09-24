@@ -15,8 +15,7 @@ const google = new OAuth2Client();
 export const getUser = [
 	verifyCredentials,
 	asyncHandler(async (req, res) => {
-		const { id: pk } = req.user;
-		const user = await prisma.user.findFirst({
+		const { pk } = req.user;
 			where: { pk },
 			select: {
 				id: true,
@@ -244,7 +243,7 @@ export const googleLogin = [
 		const { pk, ...rest } = credential.user;
 
 		credential
-			? req.login({ id: pk }, () => {
+			? req.login({ pk }, () => {
 					res.json({
 						success: true,
 						data: {
@@ -337,7 +336,7 @@ export const googleRegister = [
 			});
 		};
 
-		req.login(pk, loginCallback);
+		req.login({ pk }, loginCallback);
 	}),
 ];
 export const facebookLogin = [
@@ -405,7 +404,7 @@ export const facebookLogin = [
 		const { pk, ...rest } = credential.user;
 
 		credential
-			? req.login(pk, () => {
+			? req.login({ pk }, () => {
 					res.json({
 						success: true,
 						data: {
@@ -498,6 +497,6 @@ export const facebookRegister = [
 			});
 		};
 
-		req.login(pk, loginCallback);
+		req.login({ pk }, loginCallback);
 	}),
 ];
