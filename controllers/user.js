@@ -409,22 +409,26 @@ export const loginWithFacebook = [
 			});
 		};
 
-		const { pk, ...rest } = credential.user;
+		const handleLogin = () => {
+			const { pk, ...rest } = credential.user;
 
-		credential
-			? req.login({ pk }, () => {
-					res.json({
-						success: true,
-						data: {
-							user: rest,
-						},
-						cookie: {
-							exp: req.session.cookie._expires,
-						},
-						message: 'Google login successfully.',
-					});
-			  })
-			: handleSetSession();
+			const cb = () => {
+				res.json({
+					success: true,
+					data: {
+						user: rest,
+					},
+					cookie: {
+						exp: req.session.cookie._expires,
+					},
+					message: 'Facebook login successfully.',
+				});
+			};
+
+			req.login({ pk }, cb);
+		};
+
+		credential ? handleLogin() : handleSetSession();
 	}),
 ];
 export const registerWithFacebook = [
