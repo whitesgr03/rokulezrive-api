@@ -315,13 +315,20 @@ export const registerWithGoogle = [
 					create: [{ name: 'Default' }],
 				},
 			},
+			select: {
+				pk: true,
+				id: true,
+				username: true,
+			},
 		});
+
+		const { pk, ...rest } = user;
 
 		await prisma.credential.create({
 			data: {
 				provider,
 				subject,
-				userId: user.pk,
+				userId: pk,
 			},
 		});
 
