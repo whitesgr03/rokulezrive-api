@@ -502,9 +502,7 @@ export const registerWithFacebook = [
 			},
 		});
 
-		const { pk, ...rest } = user;
-
-		const loginCallback = () => {
+		const cb = () => {
 			delete req.session.subject;
 			res.json({
 				success: true,
@@ -516,6 +514,6 @@ export const registerWithFacebook = [
 			});
 		};
 
-		req.login({ pk }, loginCallback);
+		req.login({ pk }, cb);
 	}),
 ];
