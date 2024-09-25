@@ -332,9 +332,7 @@ export const registerWithGoogle = [
 			},
 		});
 
-		const { pk, ...rest } = user;
-
-		const loginCallback = () => {
+		const cb = () => {
 			delete req.session.subject;
 			res.json({
 				success: true,
@@ -346,7 +344,7 @@ export const registerWithGoogle = [
 			});
 		};
 
-		req.login({ pk }, loginCallback);
+		req.login({ pk }, cb);
 	}),
 ];
 export const loginWithFacebook = [
