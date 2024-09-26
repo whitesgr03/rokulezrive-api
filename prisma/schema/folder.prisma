@@ -6,11 +6,12 @@ model Folder {
   owner   User @relation(fields: [ownerId], references: [pk])
   ownerId Int
 
-  files File[]
-
-  parent   Folder?  @relation("Folder_Children", fields: [parentId], references: [pk])
+  parent   Folder? @relation("Folder_Children", fields: [parentId], references: [pk])
   parentId Int?
+
   children Folder[] @relation("Folder_Children")
+
+  files File[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
