@@ -13,7 +13,6 @@ const prisma = new PrismaClient();
 const google = new OAuth2Client();
 
 export const getUser = [
-	verifyCredentials,
 	asyncHandler(async (req, res) => {
 		const { pk } = req.user;
 
