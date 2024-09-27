@@ -1,6 +1,8 @@
 import asyncHandler from 'express-async-handler';
 import { PrismaClient } from '@prisma/client';
 
+import { verifyData } from '../middlewares/verifyData.js';
+
 const prisma = new PrismaClient();
 
 export const listFolders = [
@@ -92,4 +94,75 @@ export const getFolder = [
 	}),
 ];
 
-export const createFolder = [asyncHandler(async (req, res, next) => {})];
+export const createFolder = [
+	verifyData({
+		name: {
+			trim: true,
+			notEmpty: {
+				errorMessage: 'Folder name is required.',
+				bail: true,
+			},
+			isLength: {
+				options: { max: 200 },
+				errorMessage: 'Folder name must be less then 200 letters.',
+				bail: true,
+			},
+		},
+		parentId: {
+			notEmpty: {
+				errorMessage: 'Parent ID is required.',
+			},
+		},
+	}),
+	asyncHandler(async (req, res, next) => {
+		const { parentId } = req.body;
+
+		const parentFolder = await prisma.folder.findUnique({
+			where: { id: parentId },
+			select: {
+				pk: true,
+				ownerId: true,
+			},
+		});
+
+		const handleSetLocalVariable = () => {
+			req.folder = parentFolder;
+			next();
+		};
+
+		parentFolder
+			? handleSetLocalVariable()
+			: res.status(404).json({
+					success: false,
+					message: 'Parent folder could not been found.',
+			  });
+	}),
+	asyncHandler(async (req, res, next) => {
+		const { ownerId } = req.folder;
+
+		ownerId === req.user.pk
+			? next()
+			: res.status(403).json({
+					success: false,
+					message: 'This request requires higher permissions.',
+			  });
+	}),
+	asyncHandler(async (req, res) => {
+		const { name } = req.body;
+		const { pk: ownerId } = req.user;
+		const { pk: parentId } = req.folder;
+
+		await prisma.folder.create({
+			data: {
+				name,
+				ownerId,
+				parentId,
+			},
+		});
+
+		res.json({
+			success: true,
+			message: 'Create subfolder successfully.',
+		});
+	}),
+];

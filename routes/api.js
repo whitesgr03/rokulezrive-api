@@ -12,6 +12,8 @@ router.get('/user', getUser);
 
 router
   .route('/folders')
-  .get(folderControllers.listFolders);
+  .get(folderControllers.listFolders)
+	.post(folderControllers.createFolder);
+
 router.route('/folders/:folderId').get(folderControllers.getFolder);
 export default router;
