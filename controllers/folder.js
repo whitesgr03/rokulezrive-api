@@ -168,3 +168,68 @@ export const createFolder = [
 		});
 	}),
 ];
+
+export const updateFolder = [
+	verifyData({
+		name: {
+			trim: true,
+			notEmpty: {
+				errorMessage: 'Folder name is required.',
+				bail: true,
+			},
+			isLength: {
+				options: { max: 200 },
+				errorMessage: 'Folder name must be less then 200 letters.',
+				bail: true,
+			},
+		},
+	}),
+	asyncHandler(async (req, res, next) => {
+		const { folderId } = req.params;
+
+		const folder = await prisma.folder.findUnique({
+			where: { id: folderId },
+			select: {
+				ownerId: true,
+			},
+		});
+
+		const handleSetLocalVariable = () => {
+			req.folder = folder;
+			next();
+		};
+
+		folder
+			? handleSetLocalVariable()
+			: res.status(404).json({
+					success: false,
+					message: 'Folder could not been found.',
+			  });
+	}),
+	asyncHandler(async (req, res, next) => {
+		const { ownerId } = req.folder;
+
+		ownerId === req.user.pk
+			? next()
+			: res.status(403).json({
+					success: false,
+					message: 'This request requires higher permissions.',
+			  });
+	}),
+	asyncHandler(async (req, res) => {
+		const { name } = req.body;
+		const { folderId } = req.params;
+
+		await prisma.folder.update({
+			where: { id: folderId },
+			data: {
+				name,
+			},
+		});
+
+		res.json({
+			success: true,
+			message: 'Update folder successfully.',
+		});
+	}),
+];

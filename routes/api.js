@@ -11,9 +11,12 @@ router.use(verifyCredentials);
 router.get('/user', getUser);
 
 router
-  .route('/folders')
-  .get(folderControllers.listFolders)
+	.route('/folders')
+	.get(folderControllers.listFolders)
 	.post(folderControllers.createFolder);
 
-router.route('/folders/:folderId').get(folderControllers.getFolder);
+router
+	.route('/folders/:folderId')
+	.get(folderControllers.getFolder)
+	.put(folderControllers.updateFolder);
 export default router;
