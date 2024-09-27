@@ -54,12 +54,8 @@ export const getFolder = [
 		const { pk } = req.user;
 		const { folderId } = req.params;
 
-		let where = { ownerId: pk };
-
-		folderId ? (where.id = folderId) : (where.parentId = null);
-
 		const folder = await prisma.folder.findFirst({
-			where: { ownerId: pk },
+			where: { ownerId: pk, folderId },
 			select: {
 				id: true,
 				name: true,
