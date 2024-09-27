@@ -26,6 +26,9 @@ export const listFolders = [
 						name: true,
 						createdAt: true,
 					},
+					orderBy: {
+						pk: 'asc',
+					},
 				},
 				files: {
 					select: {
@@ -34,10 +37,13 @@ export const listFolders = [
 						size: true,
 						createdAt: true,
 					},
+					orderBy: {
+						pk: 'asc',
+					},
 				},
 			},
 			orderBy: {
-				createdAt: 'asc',
+				pk: 'asc',
 			},
 		});
 
