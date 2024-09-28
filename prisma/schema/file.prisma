@@ -4,6 +4,9 @@ model File {
   name String
   size Int
 
+  owner   User @relation(fields: [ownerId], references: [pk])
+  ownerId Int
+
   folder   Folder? @relation(fields: [folderId], references: [pk])
   folderId Int?
 

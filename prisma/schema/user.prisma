@@ -6,6 +6,7 @@ model User {
   password String?
 
   credential Credential?
+  files      File[]
   folders    Folder[]
   shared     Sharing[]
 
