@@ -1,12 +1,14 @@
 model File {
-    pk   Int    @id @default(autoincrement())
-    id   String @unique @default(uuid())
-    name String
-    size Int
+  pk   Int    @id @default(autoincrement())
+  id   String @unique @default(uuid())
+  name String
+  size Int
 
-    folder   Folder @relation(fields: [folderId], references: [pk])
-    folderId Int
+  folder   Folder? @relation(fields: [folderId], references: [pk])
+  folderId Int?
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  share Sharing[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
