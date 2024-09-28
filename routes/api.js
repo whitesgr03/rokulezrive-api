@@ -18,5 +18,7 @@ router
 router
 	.route('/folders/:folderId')
 	.get(folderControllers.getFolder)
-	.put(folderControllers.updateFolder);
+	.put(folderControllers.updateFolder)
+	.delete(folderControllers.deleteFolder);
+
 export default router;
