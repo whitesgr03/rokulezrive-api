@@ -35,6 +35,8 @@ export const listFolders = [
 						id: true,
 						name: true,
 						size: true,
+						type: true,
+						secure_url: true,
 						createdAt: true,
 					},
 					orderBy: {
