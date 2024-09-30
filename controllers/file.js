@@ -3,6 +3,10 @@ import asyncHandler from 'express-async-handler';
 import multer from 'multer';
 import { PrismaClient } from '@prisma/client';
 import { v2 as cloudinary } from 'cloudinary';
+
+// Middlewares
+import { verifyData } from '../middlewares/verifyData.js';
+
 // Variables
 const prisma = new PrismaClient();
 const upload = multer({
@@ -111,6 +115,110 @@ export const createFile = [
 			next(err);
 		}
 	},
+];
+
+export const updateFile = [
+	verifyData({
+		name: {
+			trim: true,
+			notEmpty: {
+				errorMessage: 'File name is required.',
+				bail: true,
+			},
+			isLength: {
+				options: { max: 200 },
+				errorMessage: 'File name must be less then 200 letters.',
+				bail: true,
+			},
+		},
+	}),
+	asyncHandler(async (req, res, next) => {
+		const { folderId } = req.params;
+
+		const folder = await prisma.folder.findUnique({
+			where: { id: folderId },
+			select: {
+				ownerId: true,
+			},
+		});
+
+		const handleSetLocalVariable = () => {
+			req.folder = folder;
+			next();
+		};
+
+		folder
+			? handleSetLocalVariable()
+			: res.status(404).json({
+					success: false,
+					message: 'Folder could not been found.',
+			  });
+	}),
+	asyncHandler(async (req, res, next) => {
+		const { fileId } = req.params;
+
+		const file = await prisma.file.findUnique({
+			where: { id: fileId },
+			select: {
+				pk: true,
+				ownerId: true,
+				type: true,
+			},
+		});
+
+		const handleSetLocalVariable = () => {
+			req.file = file;
+			next();
+		};
+
+		file
+			? handleSetLocalVariable()
+			: res.status(404).json({
+					success: false,
+					message: 'File could not been found.',
+			  });
+	}),
+	asyncHandler(async (req, res, next) => {
+		const { pk } = req.user;
+		const { ownerId: fileOwnerId } = req.file;
+		const { ownerId: folderOwnerId } = req.folder;
+
+		fileOwnerId === pk && folderOwnerId === pk
+			? next()
+			: res.status(403).json({
+					success: false,
+					message: 'This request requires higher permissions.',
+			  });
+	}),
+	asyncHandler(async (req, res, next) => {
+		const { name } = req.body;
+		const { fileId } = req.params;
+		const { type } = req.file;
+
+		const response = await cloudinary.uploader.explicit(fileId, {
+			type: 'upload',
+			resource_type: type,
+			display_name: name,
+		});
+
+		response.name === 'Error' ? next('error') : next();
+	}),
+	asyncHandler(async (req, res) => {
+		const { name } = req.body;
+		const { fileId } = req.params;
+
+		await prisma.file.update({
+			where: { id: fileId },
+			data: {
+				name,
+			},
+		});
+
+		res.json({
+			success: true,
+			message: 'Update folder successfully.',
+		});
+	}),
 ];
 
 export const deleteFile = [

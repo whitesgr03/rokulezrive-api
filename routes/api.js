@@ -27,6 +27,7 @@ router.post('/folders/:folderId/files', fileControllers.createFile);
 
 router
 	.route('/folders/:folderId/files/:fileId')
+	.put(fileControllers.updateFile)
 	.delete(fileControllers.deleteFile);
 
 export default router;
