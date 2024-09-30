@@ -9,6 +9,7 @@ import { verifyData } from '../middlewares/verifyData.js';
 import { authenticate } from '../middlewares/authenticate.js';
 import { verifyCredentials } from '../middlewares/verifyCredentials.js';
 
+// Variables
 const prisma = new PrismaClient();
 const google = new OAuth2Client();
 

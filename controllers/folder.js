@@ -1,8 +1,10 @@
 import asyncHandler from 'express-async-handler';
 import { PrismaClient } from '@prisma/client';
 
+// Middlewares
 import { verifyData } from '../middlewares/verifyData.js';
 
+// Variables
 const prisma = new PrismaClient();
 
 export const listFolders = [
