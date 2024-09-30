@@ -32,6 +32,7 @@ export const createFile = [
 		const folder = await prisma.folder.findUnique({
 			where: { id: folderId },
 			select: {
+				pk: true,
 				ownerId: true,
 			},
 		});
@@ -58,37 +59,60 @@ export const createFile = [
 					message: 'This request requires higher permissions.',
 			  });
 	},
-	asyncHandler(async (req, res) => {
+	asyncHandler(async (req, res, next) => {
 		const { folderId } = req.params;
-		let { originalname, buffer, size } = req.file;
 
-		// For busboy defParanCharset issue (multer)
-		originalname = Buffer.from(originalname, 'latin1').toString('utf8');
+		let { originalname, buffer } = req.file;
 
-		const uploadResult = await new Promise((resolve, reject) =>
+		await new Promise(resolve =>
 			cloudinary.uploader
 				.upload_stream(
 					{
-						display_name: originalname,
+						display_name: Buffer.from(originalname, 'latin1').toString('utf8'), // For busboy defParanCharset issue (multer)
 						resource_type: 'auto',
 						asset_folder: folderId,
 					},
-					(error, result) => (error ? reject(error) : resolve(result))
+					(err, result) => {
+						const handleSetLocalVariable = () => {
+							req.upload = result;
+							resolve();
+							next();
+						};
+						err ? next(err) : handleSetLocalVariable();
+					}
 				)
 				.end(buffer)
 		);
+	}),
+	async (req, res, next) => {
+		const { public_id, resource_type, secure_url } = req.upload;
+		const { originalname, size } = req.file;
+		const { pk: folderPk } = req.folder;
+		const { pk: userPk } = req.user;
 
-		const { public_id, resource_type, secure_url } = uploadResult;
+		try {
+			await prisma.file.create({
+				data: {
+					id: public_id,
+					name: Buffer.from(originalname, 'latin1').toString('utf8'),
+					size,
+					type: resource_type,
+					secure_url,
+					ownerId: userPk,
+					folderId: folderPk,
+				},
+			});
+			res.json({
+				success: true,
+				message: 'Upload file is successfully',
+			});
+		} catch (err) {
+			await cloudinary.uploader.destroy(public_id, { resource_type });
+			next(err);
+		}
+	},
+];
 
-		await prisma.folder.create({
-			data: {
-				id: public_id,
-				name: originalname,
-				size,
-				type: resource_type,
-				secure_url,
-				ownerId: req.user.pk,
-				folderId,
 			},
 		});
 
