@@ -292,10 +292,7 @@ export const deleteFile = [
 		response.result === 'ok'
 			? next()
 			: response.result === 'not found'
-			? res.status(404).json({
-					success: true,
-					message: 'File could not been found in cloudinary.',
-			  })
+			? next('Not found')
 			: next(response.result);
 	}),
 	asyncHandler(async (req, res) => {
