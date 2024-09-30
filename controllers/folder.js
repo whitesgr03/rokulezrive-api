@@ -59,16 +59,16 @@ export const listFolders = [
 
 export const getFolder = [
 	asyncHandler(async (req, res) => {
-		const { pk } = req.user;
 		const { folderId } = req.params;
 
-		const folder = await prisma.folder.findFirst({
-			where: { ownerId: pk, folderId },
+		const folder = await prisma.folder.findUnique({
+			where: { id: folderId },
 			select: {
 				id: true,
 				name: true,
 				parent: {
 					select: {
+						name: true,
 						id: true,
 					},
 				},
@@ -78,23 +78,36 @@ export const getFolder = [
 						name: true,
 						createdAt: true,
 					},
+					orderBy: {
+						pk: 'asc',
+					},
 				},
 				files: {
 					select: {
 						id: true,
 						name: true,
 						size: true,
+						type: true,
+						secure_url: true,
 						createdAt: true,
+					},
+					orderBy: {
+						pk: 'asc',
 					},
 				},
 			},
 		});
 
-		res.json({
-			success: true,
-			data: folder,
-			message: 'Get folder successfully.',
-		});
+		folder
+			? res.json({
+					success: true,
+					data: folder,
+					message: 'Get folder successfully.',
+			  })
+			: res.status(404).json({
+					success: false,
+					message: 'Folder could not been found.',
+			  });
 	}),
 ];
 
