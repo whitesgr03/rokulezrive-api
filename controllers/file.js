@@ -113,12 +113,102 @@ export const createFile = [
 	},
 ];
 
+export const deleteFile = [
+	asyncHandler(async (req, res, next) => {
+		const { folderId } = req.params;
+
+		const folder = await prisma.folder.findUnique({
+			where: { id: folderId },
+			select: {
+				pk: true,
+				ownerId: true,
 			},
 		});
 
+		const handleSetLocalVariable = () => {
+			req.folder = folder;
+			next();
+		};
+
+		folder
+			? handleSetLocalVariable()
+			: res.status(404).json({
+					success: false,
+					message: 'Folder could not been found.',
+			  });
+	}),
+	asyncHandler(async (req, res, next) => {
+		const { fileId } = req.params;
+
+		const file = await prisma.file.findUnique({
+			where: { id: fileId },
+			select: {
+				pk: true,
+				ownerId: true,
+				type: true,
+			},
+		});
+
+		const handleSetLocalVariable = () => {
+			req.file = file;
+			next();
+		};
+
+		file
+			? handleSetLocalVariable()
+			: res.status(404).json({
+					success: false,
+					message: 'File could not been found.',
+			  });
+	}),
+	asyncHandler(async (req, res, next) => {
+		const { pk } = req.user;
+		const { ownerId: fileOwnerId } = req.file;
+		const { ownerId: folderOwnerId } = req.folder;
+
+		fileOwnerId === pk && folderOwnerId === pk
+			? next()
+			: res.status(403).json({
+					success: false,
+					message: 'This request requires higher permissions.',
+			  });
+	}),
+	asyncHandler(async (req, res, next) => {
+		const { fileId } = req.params;
+		const { type } = req.file;
+
+		const response = await cloudinary.uploader.destroy(fileId, {
+			resource_type: type,
+		});
+
+		response.result === 'ok'
+			? next()
+			: response.result === 'not found'
+			? res.status(404).json({
+					success: true,
+					message: 'File could not been found in cloudinary.',
+			  })
+			: next(response.result);
+	}),
+	asyncHandler(async (req, res) => {
+		const { pk } = req.file;
+
+		await prisma.$transaction([
+			prisma.sharing.deleteMany({
+				where: {
+					fileId: pk,
+				},
+			}),
+			prisma.file.delete({
+				where: {
+					pk,
+				},
+			}),
+		]);
+
 		res.json({
 			success: true,
-			message: 'Upload file is successfully',
+			message: 'Delete file successfully.',
 		});
 	}),
 ];
