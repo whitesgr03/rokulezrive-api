@@ -322,33 +322,31 @@ export const deleteFolder = [
 		// 	}
 		// };
 		// console.log(get([], [pk], folders));
-		const findAllSubfolderPks = (result, subfolderPks, folders) => {
-			const copyFolders = [...folders];
-			return subfolderPks.length === 0
+		const findAllSubfolderPks = (result, subfolderPks, folders) =>
+			subfolderPks.length === 0
 				? result
 				: findAllSubfolderPks(
 						[...result, ...subfolderPks],
 						subfolderPks.reduce(
 							(previousPks, currentPk) => [
 								...previousPks,
-								...copyFolders
+								...folders
 									.splice(
-										copyFolders.findIndex(folder => folder.pk === currentPk),
+										folders.findIndex(folder => folder.pk === currentPk),
 										1
 									)[0]
 									.children.map(subfolder => subfolder.pk),
 							],
 							[]
 						),
-						copyFolders
+						folders
 				  );
-		};
 
 		await prisma.$transaction([
 			prisma.folder.deleteMany({
 				where: {
 					ownerId: req.user.pk,
-					pk: { in: findAllSubfolderPks([], [pk], folders) },
+					pk: { in: findAllSubfolderPks([], [pk], [...folders]) },
 				},
 			}),
 			prisma.file.deleteMany({
