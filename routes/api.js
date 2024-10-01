@@ -2,6 +2,7 @@ import express from 'express';
 
 import * as fileControllers from '../controllers/file.js';
 import * as folderControllers from '../controllers/folder.js';
+import * as sharedControllers from '../controllers/share.js';
 import { getUser } from '../controllers/user.js';
 
 import { verifyCredentials } from '../middlewares/verifyCredentials.js';
@@ -30,4 +31,5 @@ router
 	.put(fileControllers.updateFile)
 	.delete(fileControllers.deleteFile);
 
+router.get('/shared', sharedControllers.ListShared);
 export default router;
