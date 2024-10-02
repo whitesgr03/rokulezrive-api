@@ -1,7 +1,6 @@
 model Sharing {
-  pk       Int      @id @default(autoincrement())
-  id       String   @unique @default(uuid())
-  duration DateTime
+  pk Int    @id @default(autoincrement())
+  id String @unique @default(uuid())
 
   member   User @relation(fields: [memberId], references: [pk])
   memberId Int
