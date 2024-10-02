@@ -12,7 +12,6 @@ export const ListShared = [
 			where: { memberId: pk },
 			select: {
 				id: true,
-				duration: true,
 				createdAt: true,
 				file: {
 					select: {
