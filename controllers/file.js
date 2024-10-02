@@ -27,7 +27,7 @@ export const createFile = [
 			? next()
 			: res.status(400).json({
 					success: false,
-					message: 'Upload file is request.',
+					message: 'file is required.',
 			  });
 	},
 	asyncHandler(async (req, res, next) => {
