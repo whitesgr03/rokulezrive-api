@@ -178,17 +178,21 @@ export const updateSharing = [
 			},
 		});
 
-		await prisma.sharing.update({
-			where: { id: shareId },
-			data: {
-				anyone,
-				members: {
-					deleteMany: {},
-					createMany: {
-						data: users.map(user => ({ memberId: user.pk })),
-					},
+		const data = {
+			anyone,
+			members: {
+				deleteMany: {},
+				createMany: {
+					data: users.map(user => ({ memberId: user.pk })),
 				},
 			},
+		};
+
+		anyone === true && (data.updatedAt = new Date());
+
+		await prisma.sharing.update({
+			where: { id: shareId },
+			data,
 		});
 
 		res.json({
