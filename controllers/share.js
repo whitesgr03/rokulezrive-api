@@ -9,10 +9,14 @@ export const ListShared = [
 		const { pk } = req.user;
 
 		const sharedFiles = await prisma.sharing.findMany({
-			where: { memberId: pk },
+			where: {
+				members: {
+					some: {
+						member: { pk: pk },
+					},
+				},
+			},
 			select: {
-				id: true,
-				createdAt: true,
 				file: {
 					select: {
 						id: true,
@@ -21,15 +25,15 @@ export const ListShared = [
 						type: true,
 						secure_url: true,
 						owner: {
-							select: {
-								username: true,
-							},
+							select: { username: true },
 						},
 					},
 				},
-			},
-			orderBy: {
-				pk: 'asc',
+				members: {
+					select: {
+						sharedAt: true,
+					},
+				},
 			},
 		});
 
