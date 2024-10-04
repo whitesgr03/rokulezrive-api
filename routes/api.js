@@ -33,4 +33,6 @@ router
 
 router.route('/shared').get(sharedControllers.ListShared);
 
+router.put('/files/:fileId/sharing/:shareId', sharedControllers.updateSharing);
+
 export default router;
