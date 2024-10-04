@@ -12,7 +12,7 @@ model File {
   folder   Folder? @relation(fields: [folderId], references: [pk])
   folderId Int?
 
-  share Sharing[]
+  sharing Sharing?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
