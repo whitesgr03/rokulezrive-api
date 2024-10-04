@@ -35,6 +35,9 @@ export const ListShared = [
 					},
 				},
 			},
+			orderBy: {
+				pk: 'asc',
+			},
 		});
 
 		res.json({
