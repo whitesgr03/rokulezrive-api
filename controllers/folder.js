@@ -41,6 +41,24 @@ export const listFolders = [
 						type: true,
 						secure_url: true,
 						createdAt: true,
+						sharing: {
+							select: {
+								id: true,
+								anyone: true,
+								members: {
+									select: {
+										member: {
+											select: {
+												username: true,
+											},
+										},
+									},
+									orderBy: {
+										memberId: 'asc',
+									},
+								},
+							},
+						},
 					},
 					orderBy: {
 						pk: 'asc',
@@ -93,6 +111,24 @@ export const getFolder = [
 						type: true,
 						secure_url: true,
 						createdAt: true,
+						sharing: {
+							select: {
+								id: true,
+								anyone: true,
+								members: {
+									select: {
+										member: {
+											select: {
+												username: true,
+											},
+										},
+									},
+									orderBy: {
+										memberId: 'asc',
+									},
+								},
+							},
+						},
 					},
 					orderBy: {
 						pk: 'asc',
