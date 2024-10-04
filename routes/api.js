@@ -31,9 +31,6 @@ router
 	.put(fileControllers.updateFile)
 	.delete(fileControllers.deleteFile);
 
-router
-	.route('/shared')
-	.get(sharedControllers.ListShared)
-	.post(sharedControllers.createShared);
+router.route('/shared').get(sharedControllers.ListShared);
 
 export default router;
