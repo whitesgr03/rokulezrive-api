@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Sharing" ALTER COLUMN "updatedAt" SET DEFAULT CURRENT_TIMESTAMP;
