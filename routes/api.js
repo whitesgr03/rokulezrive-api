@@ -9,6 +9,8 @@ import { verifyCredentials } from '../middlewares/verifyCredentials.js';
 
 const router = express.Router();
 
+router.route('/shared/:shareId').get(sharedControllers.getShared);
+
 router.use(verifyCredentials);
 
 router.get('/user', getUser);

@@ -47,6 +47,60 @@ export const ListShared = [
 		});
 	}),
 ];
+
+export const getShared = [
+	asyncHandler(async (req, res) => {
+		const { shareId } = req.params;
+
+		const sharing = await prisma.sharing.findUnique({
+			where: { id: shareId },
+			select: {
+				anyone: true,
+				updatedAt: true,
+				file: {
+					select: {
+						name: true,
+						size: true,
+						type: true,
+						secure_url: true,
+						owner: {
+							select: { username: true },
+						},
+					},
+				},
+				members: {
+					select: {
+						member: {
+							select: {
+								pk: true,
+							},
+						},
+					},
+				},
+			},
+		});
+
+		!sharing
+			? res.status(404).json({
+					success: false,
+					code: 404,
+					message: 'File could not been found.',
+			  })
+			: sharing.anyone ||
+			  sharing.members.find(item => item.member.pk === req?.user?.pk)
+			? res.json({
+					success: true,
+					data: { ...sharing.file, updatedAt: sharing.updatedAt },
+					message: 'Get File successfully.',
+			  })
+			: res.status(403).json({
+					success: false,
+					code: 403,
+					message: 'File is private.',
+			  });
+	}),
+];
+
 export const updateSharing = [
 	(req, res, next) => {
 		const { anyone, usernames } = req.body;
