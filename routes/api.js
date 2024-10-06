@@ -29,8 +29,8 @@ router
 router.post('/folders/:folderId/files', fileControllers.createFile);
 
 router
-	.route('/folders/:folderId/files/:fileId')
-	.put(fileControllers.updateFile)
+	.route('/files/:fileId')
+	.patch(fileControllers.updateFile)
 	.delete(fileControllers.deleteFile);
 
 router.route('/shared').get(sharedControllers.ListShared);
