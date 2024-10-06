@@ -78,10 +78,11 @@ export const listFolders = [
 
 export const getFolder = [
 	asyncHandler(async (req, res) => {
+		const { pk: userPk } = req.user;
 		const { folderId } = req.params;
 
 		const folder = await prisma.folder.findUnique({
-			where: { id: folderId },
+			where: { ownerId: userPk, id: folderId },
 			select: {
 				id: true,
 				name: true,
