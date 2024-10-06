@@ -8,8 +8,8 @@ model User {
   credential Credential?
   files      File[]
   folders    Folder[]
-  shared     SharingOnUser[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
 }
