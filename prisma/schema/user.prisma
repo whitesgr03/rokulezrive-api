@@ -5,11 +5,11 @@ model User {
   email    String? @unique
   password String?
 
-  credential Credential?
-  files      File[]
-  folders    Folder[]
+  credential  Credential?
+  files       File[]
+  folders     Folder[]
+  FileSharers FileSharers[]
 
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

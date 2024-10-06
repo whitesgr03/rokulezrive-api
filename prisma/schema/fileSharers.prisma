@@ -1,0 +1,10 @@
+model FileSharers {
+  file     File @relation(fields: [fileId], references: [pk])
+  fileId   Int
+  sharer   User @relation(fields: [sharerId], references: [pk])
+  sharerId Int
+
+  sharedAt DateTime @default(now())
+
+  @@id([fileId, sharerId])
+}
