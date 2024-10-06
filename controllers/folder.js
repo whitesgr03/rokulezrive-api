@@ -171,13 +171,13 @@ export const createFolder = [
 		},
 	}),
 	asyncHandler(async (req, res, next) => {
-		const { parentId } = req.body;
+		const { parentId } = req.data;
+		const { pk: userPk } = req.user;
 
 		const parentFolder = await prisma.folder.findUnique({
-			where: { id: parentId },
+			where: { ownerId: userPk, id: parentId },
 			select: {
 				pk: true,
-				ownerId: true,
 			},
 		});
 
@@ -191,16 +191,6 @@ export const createFolder = [
 			: res.status(404).json({
 					success: false,
 					message: 'Parent folder could not been found.',
-			  });
-	}),
-	asyncHandler(async (req, res, next) => {
-		const { ownerId } = req.folder;
-
-		ownerId === req.user.pk
-			? next()
-			: res.status(403).json({
-					success: false,
-					message: 'This request requires higher permissions.',
 			  });
 	}),
 	asyncHandler(async (req, res) => {
@@ -239,13 +229,12 @@ export const updateFolder = [
 		},
 	}),
 	asyncHandler(async (req, res, next) => {
+		const { pk: userPk } = req.user;
+		const { pk: parentFolderPK } = req.parentFolder;
 		const { folderId } = req.params;
 
 		const folder = await prisma.folder.findUnique({
-			where: { id: folderId },
-			select: {
-				ownerId: true,
-			},
+			where: { ownerId: userPk, id: folderId, parentId: parentFolderPK },
 		});
 
 		const handleSetLocalVariable = () => {
@@ -260,16 +249,7 @@ export const updateFolder = [
 					message: 'Folder could not been found.',
 			  });
 	}),
-	asyncHandler(async (req, res, next) => {
-		const { ownerId } = req.folder;
 
-		ownerId === req.user.pk
-			? next()
-			: res.status(403).json({
-					success: false,
-					message: 'This request requires higher permissions.',
-			  });
-	}),
 	asyncHandler(async (req, res) => {
 		const { name } = req.body;
 		const { folderId } = req.params;
@@ -290,13 +270,13 @@ export const updateFolder = [
 
 export const deleteFolder = [
 	asyncHandler(async (req, res, next) => {
+		const { pk: userPk } = req.user;
 		const { folderId } = req.params;
 
 		const folder = await prisma.folder.findUnique({
-			where: { id: folderId },
+			where: { ownerId: userPk, id: folderId },
 			select: {
 				pk: true,
-				ownerId: true,
 			},
 		});
 
@@ -310,16 +290,6 @@ export const deleteFolder = [
 			: res.status(404).json({
 					success: false,
 					message: 'Folder could not been found.',
-			  });
-	}),
-	asyncHandler(async (req, res, next) => {
-		const { ownerId } = req.folder;
-
-		ownerId === req.user.pk
-			? next()
-			: res.status(403).json({
-					success: false,
-					message: 'This request requires higher permissions.',
 			  });
 	}),
 	asyncHandler(async (req, res) => {
