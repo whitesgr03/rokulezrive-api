@@ -32,7 +32,9 @@ router
 	.delete(fileControllers.deleteFile);
 
 router.get('/sharedFiles', fileSharerControllers.listFileSharers);
-
-router.put('/files/:fileId/sharing/:shareId', sharedControllers.updateSharing);
+router.delete(
+	'/sharedFiles/:sharedFilesId',
+	fileSharerControllers.deleteFileSharer
+);
 
 export default router;

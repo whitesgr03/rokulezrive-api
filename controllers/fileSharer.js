@@ -39,3 +39,56 @@ export const listFileSharers = [
 		});
 	}),
 ];
+
+export const deleteFileSharer = [
+	asyncHandler(async (req, res, next) => {
+		const { pk: userPk } = req.user;
+		const { sharedFilesId } = req.params;
+
+		const sharedFile = await prisma.file.findUnique({
+			where: { id: sharedFilesId },
+			select: {
+				pk: true,
+				sharers: {
+					where: {
+						sharerId: userPk,
+					},
+				},
+			},
+		});
+
+		const handleSetLocalVariable = () => {
+			req.sharedFile = sharedFile;
+			next();
+		};
+
+		sharedFile.sharers.length
+			? handleSetLocalVariable()
+			: res.status(404).json({
+					success: false,
+					message: 'Shared file could not been found.',
+			  });
+	}),
+	asyncHandler(async (req, res) => {
+		const { pk: userPk } = req.user;
+		const { pk: sharedFilePk } = req.sharedFile;
+
+		await prisma.file.update({
+			where: { pk: sharedFilePk },
+			data: {
+				sharers: {
+					deleteMany: [
+						{
+							sharerId: userPk,
+						},
+					],
+				},
+			},
+		});
+
+		res.json({
+			success: true,
+			message: 'Delete shared file successfully.',
+		});
+	}),
+];
