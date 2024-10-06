@@ -94,11 +94,6 @@ export const createFile = [
 					secure_url,
 					ownerId: userPk,
 					folderId: folderPk,
-					sharing: {
-						create: {
-							anyone: false,
-						},
-					},
 				},
 			});
 			res.json({
