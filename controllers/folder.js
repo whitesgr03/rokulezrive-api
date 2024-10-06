@@ -214,6 +214,29 @@ export const createFolder = [
 ];
 
 export const updateFolder = [
+	asyncHandler(async (req, res, next) => {
+		const { parentId } = req.body;
+		const { pk: userPk } = req.user;
+
+		const parentFolder = await prisma.folder.findUnique({
+			where: { ownerId: userPk, id: parentId },
+			select: {
+				pk: true,
+			},
+		});
+
+		const handleSetLocalVariable = () => {
+			req.parentFolder = parentFolder;
+			next();
+		};
+
+		parentFolder
+			? handleSetLocalVariable()
+			: res.status(404).json({
+					success: false,
+					message: 'Parent folder could not been found.',
+			  });
+	}),
 	verifyData({
 		name: {
 			trim: true,
