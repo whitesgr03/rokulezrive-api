@@ -194,7 +194,7 @@ export const createFolder = [
 			  });
 	}),
 	asyncHandler(async (req, res) => {
-		const { name } = req.body;
+		const { name } = req.data;
 		const { pk: ownerId } = req.user;
 		const { pk: parentId } = req.folder;
 
