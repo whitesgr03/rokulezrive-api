@@ -326,7 +326,7 @@ export const deleteFolder = [
 			where: { ownerId: req.user.pk },
 			select: {
 				pk: true,
-				children: {
+				subfolders: {
 					select: {
 						pk: true,
 					},
@@ -369,7 +369,7 @@ export const deleteFolder = [
 										folders.findIndex(folder => folder.pk === currentPk),
 										1
 									)[0]
-									.children.map(subfolder => subfolder.pk),
+									.subfolders.map(subfolder => subfolder.pk),
 							],
 							[]
 						),
