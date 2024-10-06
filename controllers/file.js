@@ -31,13 +31,13 @@ export const createFile = [
 			  });
 	},
 	asyncHandler(async (req, res, next) => {
+		const { pk: userPk } = req.user;
 		const { folderId } = req.params;
 
 		const folder = await prisma.folder.findUnique({
-			where: { id: folderId },
+			where: { ownerId: userPk, id: folderId },
 			select: {
 				pk: true,
-				ownerId: true,
 			},
 		});
 
@@ -53,16 +53,6 @@ export const createFile = [
 					message: 'Folder could not been found.',
 			  });
 	}),
-	(req, res, next) => {
-		const { ownerId } = req.folder;
-
-		ownerId === req.user.pk
-			? next()
-			: res.status(403).json({
-					success: false,
-					message: 'This request requires higher permissions.',
-			  });
-	},
 	asyncHandler(async (req, res, next) => {
 		const { folderId } = req.params;
 
@@ -138,35 +128,13 @@ export const updateFile = [
 		},
 	}),
 	asyncHandler(async (req, res, next) => {
-		const { folderId } = req.params;
-
-		const folder = await prisma.folder.findUnique({
-			where: { id: folderId },
-			select: {
-				ownerId: true,
-			},
-		});
-
-		const handleSetLocalVariable = () => {
-			req.folder = folder;
-			next();
-		};
-
-		folder
-			? handleSetLocalVariable()
-			: res.status(404).json({
-					success: false,
-					message: 'Folder could not been found.',
-			  });
-	}),
-	asyncHandler(async (req, res, next) => {
+		const { pk: userPk } = req.user;
 		const { fileId } = req.params;
 
 		const file = await prisma.file.findUnique({
-			where: { id: fileId },
+			where: { ownerId: userPk, id: fileId },
 			select: {
 				pk: true,
-				ownerId: true,
 				type: true,
 			},
 		});
@@ -184,19 +152,7 @@ export const updateFile = [
 			  });
 	}),
 	asyncHandler(async (req, res, next) => {
-		const { pk } = req.user;
-		const { ownerId: fileOwnerId } = req.file;
-		const { ownerId: folderOwnerId } = req.folder;
-
-		fileOwnerId === pk && folderOwnerId === pk
-			? next()
-			: res.status(403).json({
-					success: false,
-					message: 'This request requires higher permissions.',
-			  });
-	}),
-	asyncHandler(async (req, res, next) => {
-		const { name } = req.body;
+		const { name } = req.data;
 		const { fileId } = req.params;
 		const { type } = req.file;
 
@@ -228,36 +184,13 @@ export const updateFile = [
 
 export const deleteFile = [
 	asyncHandler(async (req, res, next) => {
-		const { folderId } = req.params;
-
-		const folder = await prisma.folder.findUnique({
-			where: { id: folderId },
-			select: {
-				pk: true,
-				ownerId: true,
-			},
-		});
-
-		const handleSetLocalVariable = () => {
-			req.folder = folder;
-			next();
-		};
-
-		folder
-			? handleSetLocalVariable()
-			: res.status(404).json({
-					success: false,
-					message: 'Folder could not been found.',
-			  });
-	}),
-	asyncHandler(async (req, res, next) => {
+		const { pk: userPk } = req.user;
 		const { fileId } = req.params;
 
 		const file = await prisma.file.findUnique({
-			where: { id: fileId },
+			where: { ownerId: userPk, id: fileId },
 			select: {
 				pk: true,
-				ownerId: true,
 				type: true,
 			},
 		});
@@ -272,18 +205,6 @@ export const deleteFile = [
 			: res.status(404).json({
 					success: false,
 					message: 'File could not been found.',
-			  });
-	}),
-	asyncHandler(async (req, res, next) => {
-		const { pk } = req.user;
-		const { ownerId: fileOwnerId } = req.file;
-		const { ownerId: folderOwnerId } = req.folder;
-
-		fileOwnerId === pk && folderOwnerId === pk
-			? next()
-			: res.status(403).json({
-					success: false,
-					message: 'This request requires higher permissions.',
 			  });
 	}),
 	asyncHandler(async (req, res, next) => {
