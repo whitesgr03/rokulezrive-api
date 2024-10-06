@@ -166,7 +166,7 @@ export const createFolder = [
 		},
 		parentId: {
 			notEmpty: {
-				errorMessage: 'Parent ID is required.',
+				errorMessage: 'Parent folder id is required.',
 			},
 		},
 	}),
