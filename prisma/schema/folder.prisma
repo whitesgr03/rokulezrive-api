@@ -6,10 +6,10 @@ model Folder {
   owner   User @relation(fields: [ownerId], references: [pk])
   ownerId Int
 
-  parent   Folder? @relation("Folder_Children", fields: [parentId], references: [pk])
+  parent   Folder? @relation("parentSubfolders", fields: [parentId], references: [pk])
   parentId Int?
 
-  children Folder[] @relation("Folder_Children")
+  subfolders Folder[] @relation("parentSubfolders")
 
   files File[]
 

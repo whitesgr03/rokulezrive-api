@@ -12,8 +12,8 @@ model File {
   folder   Folder? @relation(fields: [folderId], references: [pk])
   folderId Int?
 
-  FileSharers FileSharers[]
-  PublicFile  PublicFile?
+  sharers FileSharers[]
+  public  PublicFile?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
