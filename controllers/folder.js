@@ -275,12 +275,16 @@ export const updateFolder = [
 
 	asyncHandler(async (req, res) => {
 		const { name } = req.data;
+		const { pk: userPk } = req.user;
+		const { pk: parentFolderPK } = req.parentFolder;
 		const { folderId } = req.params;
 
 		await prisma.folder.update({
 			where: { id: folderId },
 			data: {
 				name,
+				ownerId: userPk,
+				parentId: parentFolderPK,
 			},
 		});
 
