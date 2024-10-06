@@ -274,7 +274,7 @@ export const updateFolder = [
 	}),
 
 	asyncHandler(async (req, res) => {
-		const { name } = req.body;
+		const { name } = req.data;
 		const { folderId } = req.params;
 
 		await prisma.folder.update({
