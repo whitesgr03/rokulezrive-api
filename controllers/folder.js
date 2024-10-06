@@ -23,7 +23,7 @@ export const listFolders = [
 						id: true,
 					},
 				},
-				children: {
+				subfolders: {
 					select: {
 						id: true,
 						name: true,
@@ -41,22 +41,20 @@ export const listFolders = [
 						type: true,
 						secure_url: true,
 						createdAt: true,
-						sharing: {
+						sharers: {
 							select: {
-								id: true,
-								anyone: true,
-								members: {
+								sharer: {
 									select: {
-										member: {
-											select: {
-												username: true,
-											},
-										},
-									},
-									orderBy: {
-										memberId: 'asc',
+										id: true,
+										username: true,
 									},
 								},
+							},
+						},
+						public: {
+							select: {
+								id: true,
+								createdAt: true,
 							},
 						},
 					},
@@ -93,7 +91,7 @@ export const getFolder = [
 						id: true,
 					},
 				},
-				children: {
+				subfolders: {
 					select: {
 						id: true,
 						name: true,
@@ -111,22 +109,20 @@ export const getFolder = [
 						type: true,
 						secure_url: true,
 						createdAt: true,
-						sharing: {
+						sharers: {
 							select: {
-								id: true,
-								anyone: true,
-								members: {
+								sharer: {
 									select: {
-										member: {
-											select: {
-												username: true,
-											},
-										},
-									},
-									orderBy: {
-										memberId: 'asc',
+										id: true,
+										username: true,
 									},
 								},
+							},
+						},
+						public: {
+							select: {
+								id: true,
+								createdAt: true,
 							},
 						},
 					},
