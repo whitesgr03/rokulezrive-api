@@ -220,7 +220,12 @@ export const deleteFile = [
 		const { pk } = req.file;
 
 		await prisma.$transaction([
-			prisma.sharing.deleteMany({
+			prisma.fileSharers.deleteMany({
+				where: {
+					fileId: pk,
+				},
+			}),
+			prisma.publicFile.deleteMany({
 				where: {
 					fileId: pk,
 				},
