@@ -195,14 +195,14 @@ export const createFolder = [
 	}),
 	asyncHandler(async (req, res) => {
 		const { name } = req.data;
-		const { pk: ownerId } = req.user;
-		const { pk: parentId } = req.folder;
+		const { pk: userPk } = req.user;
+		const { pk: parentPk } = req.folder;
 
 		await prisma.folder.create({
 			data: {
 				name,
-				ownerId,
-				parentId,
+				ownerId: userPk,
+				parentId: parentPk,
 			},
 		});
 
