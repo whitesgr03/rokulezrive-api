@@ -160,11 +160,11 @@ export const updateFile = [
 		response.name === 'Error' ? next('error') : next();
 	}),
 	asyncHandler(async (req, res) => {
-		const { name } = req.body;
-		const { fileId } = req.params;
+		const { name } = req.data;
+		const { pk } = req.file;
 
 		await prisma.file.update({
-			where: { id: fileId },
+			where: { pk },
 			data: {
 				name,
 			},
