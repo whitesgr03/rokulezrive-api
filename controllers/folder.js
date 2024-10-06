@@ -214,29 +214,6 @@ export const createFolder = [
 ];
 
 export const updateFolder = [
-	asyncHandler(async (req, res, next) => {
-		const { parentId } = req.body;
-		const { pk: userPk } = req.user;
-
-		const parentFolder = await prisma.folder.findUnique({
-			where: { ownerId: userPk, id: parentId },
-			select: {
-				pk: true,
-			},
-		});
-
-		const handleSetLocalVariable = () => {
-			req.parentFolder = parentFolder;
-			next();
-		};
-
-		parentFolder
-			? handleSetLocalVariable()
-			: res.status(404).json({
-					success: false,
-					message: 'Parent folder could not been found.',
-			  });
-	}),
 	verifyData({
 		name: {
 			trim: true,
@@ -253,11 +230,10 @@ export const updateFolder = [
 	}),
 	asyncHandler(async (req, res, next) => {
 		const { pk: userPk } = req.user;
-		const { pk: parentFolderPK } = req.parentFolder;
 		const { folderId } = req.params;
 
 		const folder = await prisma.folder.findUnique({
-			where: { ownerId: userPk, id: folderId, parentId: parentFolderPK },
+			where: { ownerId: userPk, id: folderId },
 		});
 
 		const handleSetLocalVariable = () => {
@@ -272,19 +248,14 @@ export const updateFolder = [
 					message: 'Folder could not been found.',
 			  });
 	}),
-
 	asyncHandler(async (req, res) => {
 		const { name } = req.data;
-		const { pk: userPk } = req.user;
-		const { pk: parentFolderPK } = req.parentFolder;
 		const { folderId } = req.params;
 
 		await prisma.folder.update({
 			where: { id: folderId },
 			data: {
 				name,
-				ownerId: userPk,
-				parentId: parentFolderPK,
 			},
 		});
 

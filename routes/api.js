@@ -23,7 +23,7 @@ router
 router
 	.route('/folders/:folderId')
 	.get(folderControllers.getFolder)
-	.put(folderControllers.updateFolder)
+	.patch(folderControllers.updateFolder)
 	.delete(folderControllers.deleteFolder);
 
 router.post('/folders/:folderId/files', fileControllers.createFile);
