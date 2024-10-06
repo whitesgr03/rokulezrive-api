@@ -2,7 +2,7 @@ import express from 'express';
 
 import * as fileControllers from '../controllers/file.js';
 import * as folderControllers from '../controllers/folder.js';
-import * as sharedControllers from '../controllers/share.js';
+import * as fileSharerControllers from '../controllers/fileSharer.js';
 import { getUser } from '../controllers/user.js';
 
 import { verifyCredentials } from '../middlewares/verifyCredentials.js';
@@ -31,7 +31,7 @@ router
 	.patch(fileControllers.updateFile)
 	.delete(fileControllers.deleteFile);
 
-router.route('/shared').get(sharedControllers.ListShared);
+router.get('/sharedFiles', fileSharerControllers.listFileSharers);
 
 router.put('/files/:fileId/sharing/:shareId', sharedControllers.updateSharing);
 
