@@ -36,6 +36,8 @@ router.delete(
 	'/sharedFiles/:sharedFileId',
 	fileSharerControllers.deleteSharedFile
 );
+
+router.post('/files/:fileId/sharers', fileSharerControllers.createFileSharer);
 	fileSharerControllers.deleteFileSharer
 );
 

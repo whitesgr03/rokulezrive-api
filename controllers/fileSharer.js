@@ -1,6 +1,9 @@
 import asyncHandler from 'express-async-handler';
 import { PrismaClient } from '@prisma/client';
 
+// Middlewares
+import { verifyData } from '../middlewares/verifyData.js';
+
 // Variables
 const prisma = new PrismaClient();
 
@@ -89,6 +92,116 @@ export const deleteSharedFile = [
 		res.json({
 			success: true,
 			message: 'Delete shared file successfully.',
+		});
+	}),
+];
+
+export const createFileSharer = [
+	verifyData({
+		username: {
+			trim: true,
+			notEmpty: {
+				errorMessage: 'Username is required.',
+			},
+		},
+	}),
+	asyncHandler(async (req, res, next) => {
+		const { pk: userPk } = req.user;
+		const { fileId } = req.params;
+
+		const sharedFile = await prisma.file.findUnique({
+			where: { ownerId: userPk, id: fileId },
+			select: {
+				pk: true,
+			},
+		});
+
+		const handleSetLocalVariable = () => {
+			req.sharedFile = sharedFile;
+			next();
+		};
+
+		sharedFile
+			? handleSetLocalVariable()
+			: res.status(404).json({
+					success: false,
+					message: 'File could not been found.',
+			  });
+	}),
+	asyncHandler(async (req, res, next) => {
+		const { pk: userPk } = req.user;
+		const { pk: sharedFilePk } = req.sharedFile;
+		const { username } = req.data;
+
+		const sharer = await prisma.user.findFirst({
+			where: {
+				pk: { not: userPk },
+				username,
+				sharedFiles: {
+					none: {
+						fileId: sharedFilePk,
+					},
+				},
+			},
+			select: {
+				username: true,
+				pk: true,
+			},
+		});
+
+		const handleSetLocalVariable = () => {
+			req.sharer = sharer;
+			next();
+		};
+
+		sharer
+			? handleSetLocalVariable()
+			: res.status(404).json({
+					success: false,
+					fields: {
+						username: 'Username is invalid.',
+					},
+					message: 'Username is invalid.',
+			  });
+	}),
+	asyncHandler(async (req, res) => {
+		const { pk: sharerPk } = req.sharer;
+		const { pk: sharedFilePk } = req.sharedFile;
+
+		const file = await prisma.file.update({
+			where: { pk: sharedFilePk },
+			data: {
+				sharers: {
+					createMany: {
+						data: [
+							{
+								sharerId: sharerPk,
+							},
+						],
+					},
+				},
+			},
+			select: {
+				sharers: {
+					where: {
+						sharerId: sharerPk,
+					},
+					select: {
+						sharer: {
+							select: {
+								id: true,
+								username: true,
+							},
+						},
+					},
+				},
+			},
+		});
+
+		res.status(201).json({
+			success: true,
+			data: file.sharers[0],
+			message: 'Update file sharer successfully.',
 		});
 	}),
 ];
