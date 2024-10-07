@@ -4,6 +4,43 @@ import { PrismaClient } from '@prisma/client';
 // Variables
 const prisma = new PrismaClient();
 
+export const getPublicFile = [
+	asyncHandler(async (req, res) => {
+		const { publicId } = req.params;
+
+		const publicFile = await prisma.publicFile.findUnique({
+			where: { id: publicId },
+			select: {
+				file: {
+					select: {
+						name: true,
+						size: true,
+						type: true,
+						secure_url: true,
+						owner: {
+							select: {
+								username: true,
+							},
+						},
+					},
+				},
+				createdAt: true,
+			},
+		});
+
+		publicFile
+			? res.json({
+					success: true,
+					data: publicFile,
+					message: 'Get public file successfully.',
+			  })
+			: res.status(404).json({
+					success: false,
+					message: 'Public file could not been found.',
+			  });
+	}),
+];
+
 export const createPublicFile = [
 	asyncHandler(async (req, res, next) => {
 		const { fileId } = req.params;

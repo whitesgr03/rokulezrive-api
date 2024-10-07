@@ -10,6 +10,8 @@ import { verifyCredentials } from '../middlewares/verifyCredentials.js';
 
 const router = express.Router();
 
+router.get('/public/:publicId', publicFileControllers.getPublicFile);
+
 router.use(verifyCredentials);
 
 router.get('/user', getUser);
