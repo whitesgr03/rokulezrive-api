@@ -45,3 +45,37 @@ export const createPublicFile = [
 	}),
 ];
 
+export const deletePublicFile = [
+	asyncHandler(async (req, res, next) => {
+		const { publicId } = req.params;
+		const { pk: userPk } = req.user;
+
+		const publicFile = await prisma.publicFile.findFirst({
+			where: {
+				id: publicId,
+				file: {
+					ownerId: userPk,
+				},
+			},
+		});
+
+		publicFile
+			? next()
+			: res.status(404).json({
+					success: false,
+					message: 'Public file could not been found.',
+			  });
+	}),
+	asyncHandler(async (req, res) => {
+		const { publicId } = req.params;
+
+		await prisma.publicFile.delete({
+			where: { id: publicId },
+		});
+
+		res.json({
+			success: true,
+			message: 'Delete public file successfully.',
+		});
+	}),
+];
