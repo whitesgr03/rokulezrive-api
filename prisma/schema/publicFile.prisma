@@ -1,5 +1,6 @@
 model PublicFile {
-  id Int @id @default(autoincrement())
+  pk Int    @id @default(autoincrement())
+  id String @unique @default(uuid())
 
   file   File? @relation(fields: [fileId], references: [pk])
   fileId Int?  @unique
