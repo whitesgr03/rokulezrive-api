@@ -3,6 +3,7 @@ import express from 'express';
 import * as fileControllers from '../controllers/file.js';
 import * as folderControllers from '../controllers/folder.js';
 import * as fileSharerControllers from '../controllers/fileSharer.js';
+import * as publicFileControllers from '../controllers/publicFile.js';
 import { getUser } from '../controllers/user.js';
 
 import { verifyCredentials } from '../middlewares/verifyCredentials.js';
@@ -42,5 +43,7 @@ router.delete(
 	'/files/:fileId/sharers/:sharerId',
 	fileSharerControllers.deleteFileSharer
 );
+
+router.post('/files/:fileId/public', publicFileControllers.createPublicFile);
 
 export default router;
