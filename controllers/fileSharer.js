@@ -205,3 +205,86 @@ export const createFileSharer = [
 		});
 	}),
 ];
+
+export const deleteFileSharer = [
+	asyncHandler(async (req, res, next) => {
+		const { pk: userPk } = req.user;
+		const { fileId } = req.params;
+
+		const sharedFile = await prisma.file.findUnique({
+			where: {
+				ownerId: userPk,
+				id: fileId,
+			},
+			select: {
+				pk: true,
+			},
+		});
+
+		const handleSetLocalVariable = () => {
+			req.sharedFile = sharedFile;
+			next();
+		};
+
+		sharedFile
+			? handleSetLocalVariable()
+			: res.status(404).json({
+					success: false,
+					message: 'File could not been found.',
+			  });
+	}),
+	asyncHandler(async (req, res, next) => {
+		const { sharerId } = req.params;
+		const { pk: sharedFilePk } = req.sharedFile;
+
+		const sharer = await prisma.user.findUnique({
+			where: {
+				id: sharerId,
+				sharedFiles: {
+					some: {
+						fileId: sharedFilePk,
+					},
+				},
+			},
+			select: {
+				pk: true,
+			},
+		});
+
+		const handleSetLocalVariable = () => {
+			req.sharer = sharer;
+			next();
+		};
+
+		sharer
+			? handleSetLocalVariable()
+			: res.status(404).json({
+					success: false,
+					message: 'Sharer could not been found.',
+			  });
+	}),
+	asyncHandler(async (req, res) => {
+		const { pk: sharedFilePk } = req.sharedFile;
+		const { pk: sharerPk } = req.sharer;
+
+		await prisma.file.update({
+			where: {
+				pk: sharedFilePk,
+			},
+			data: {
+				sharers: {
+					deleteMany: [
+						{
+							sharerId: sharerPk,
+						},
+					],
+				},
+			},
+		});
+
+		res.json({
+			success: true,
+			message: 'Delete file sharer successfully.',
+		});
+	}),
+];
