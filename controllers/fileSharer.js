@@ -40,13 +40,13 @@ export const listFileSharers = [
 	}),
 ];
 
-export const deleteFileSharer = [
+export const deleteSharedFile = [
 	asyncHandler(async (req, res, next) => {
 		const { pk: userPk } = req.user;
-		const { sharedFilesId } = req.params;
+		const { sharedFileId } = req.params;
 
 		const sharedFile = await prisma.file.findUnique({
-			where: { id: sharedFilesId },
+			where: { id: sharedFileId },
 			select: {
 				pk: true,
 				sharers: {
