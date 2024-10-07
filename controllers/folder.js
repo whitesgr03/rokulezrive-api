@@ -54,7 +54,6 @@ export const listFolders = [
 						public: {
 							select: {
 								id: true,
-								createdAt: true,
 							},
 						},
 					},
@@ -123,7 +122,6 @@ export const getFolder = [
 						public: {
 							select: {
 								id: true,
-								createdAt: true,
 							},
 						},
 					},
