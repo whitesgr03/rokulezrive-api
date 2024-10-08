@@ -305,7 +305,7 @@ export const registerWithGoogle = [
 	}),
 	asyncHandler(async (req, res) => {
 		const provider = 'https://accounts.google.com';
-		const { username } = req.body;
+		const { username } = req.data;
 		const { subject } = req.session;
 
 		const user = await prisma.user.create({
@@ -475,7 +475,7 @@ export const registerWithFacebook = [
 	}),
 	asyncHandler(async (req, res) => {
 		const provider = 'https://connect.facebook.net';
-		const { username } = req.body;
+		const { username } = req.data;
 		const { subject } = req.session;
 
 		const user = await prisma.user.create({
