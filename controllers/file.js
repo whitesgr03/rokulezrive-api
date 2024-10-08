@@ -130,6 +130,11 @@ export const updateFile = [
 			select: {
 				pk: true,
 				type: true,
+				folder: {
+					select: {
+						id: true,
+					},
+				},
 			},
 		});
 
@@ -148,13 +153,16 @@ export const updateFile = [
 	asyncHandler(async (req, res, next) => {
 		const { name } = req.data;
 		const { fileId } = req.params;
-		const { type } = req.file;
+		const { type, folder } = req.file;
 
-		const response = await cloudinary.uploader.explicit(fileId, {
-			type: 'upload',
-			resource_type: type,
-			display_name: name,
-		});
+		const response = await cloudinary.uploader.explicit(
+			`${folder.id}/${fileId}`,
+			{
+				type: 'upload',
+				resource_type: type,
+				display_name: name,
+			}
+		);
 
 		response.name === 'Error' ? next('error') : next();
 	}),
