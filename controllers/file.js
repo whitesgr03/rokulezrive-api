@@ -194,6 +194,11 @@ export const deleteFile = [
 			select: {
 				pk: true,
 				type: true,
+				folder: {
+					select: {
+						id: true,
+					},
+				},
 			},
 		});
 
@@ -211,11 +216,12 @@ export const deleteFile = [
 	}),
 	asyncHandler(async (req, res, next) => {
 		const { fileId } = req.params;
-		const { type } = req.file;
+		const { type, folder } = req.file;
 
-		const response = await cloudinary.uploader.destroy(fileId, {
-			resource_type: type,
-		});
+		const response = await cloudinary.uploader.destroy(
+			`${folder.id}/${fileId}`,
+			{ resource_type: type }
+		);
 
 		response.result === 'ok'
 			? next()
