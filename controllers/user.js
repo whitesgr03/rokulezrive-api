@@ -155,7 +155,7 @@ export const register = [
 				email,
 				password: await bcrypt.hash(password, randomSalt),
 				folders: {
-					create: [{ name: 'Default' }],
+					create: [{ name: 'My Drive' }],
 				},
 			},
 		});
@@ -482,7 +482,7 @@ export const registerWithFacebook = [
 			data: {
 				username,
 				folders: {
-					create: [{ name: 'Default' }],
+					create: [{ name: 'My Drive' }],
 				},
 			},
 			select: {
