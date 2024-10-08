@@ -205,16 +205,131 @@ export const createFolder = [
 		const { pk: userPk } = req.user;
 		const { pk: parentPk } = req.folder;
 
-		await prisma.folder.create({
+		const newFolder = await prisma.folder.create({
 			data: {
 				name,
 				ownerId: userPk,
 				parentId: parentPk,
 			},
+			select: {
+				id: true,
+				name: true,
+				parent: {
+					select: {
+						name: true,
+						id: true,
+					},
+				},
+				subfolders: {
+					select: {
+						id: true,
+						name: true,
+						createdAt: true,
+						_count: {
+							select: {
+								subfolders: true,
+								files: true,
+							},
+						},
+					},
+					orderBy: {
+						pk: 'asc',
+					},
+				},
+				files: {
+					select: {
+						id: true,
+						name: true,
+						size: true,
+						type: true,
+						secure_url: true,
+						createdAt: true,
+						sharers: {
+							select: {
+								sharer: {
+									select: {
+										id: true,
+										username: true,
+									},
+								},
+							},
+						},
+						public: {
+							select: {
+								id: true,
+							},
+						},
+					},
+					orderBy: {
+						pk: 'asc',
+					},
+				},
+			},
 		});
 
-		res.json({
+		const parentFolder = await prisma.folder.findUnique({
+			where: {
+				pk: parentPk,
+			},
+			select: {
+				id: true,
+				name: true,
+				parent: {
+					select: {
+						name: true,
+						id: true,
+					},
+				},
+				subfolders: {
+					select: {
+						id: true,
+						name: true,
+						createdAt: true,
+						_count: {
+							select: {
+								subfolders: true,
+								files: true,
+							},
+						},
+					},
+					orderBy: {
+						pk: 'asc',
+					},
+				},
+				files: {
+					select: {
+						id: true,
+						name: true,
+						size: true,
+						type: true,
+						secure_url: true,
+						createdAt: true,
+						sharers: {
+							select: {
+								sharer: {
+									select: {
+										id: true,
+										username: true,
+									},
+								},
+							},
+						},
+						public: {
+							select: {
+								id: true,
+							},
+						},
+					},
+					orderBy: {
+						pk: 'asc',
+					},
+				},
+			},
+		});
+
+		res.status(201).json({
 			success: true,
+			data: { newFolder, parentFolder },
 			message: 'Create subfolder successfully.',
 		});
 	}),
