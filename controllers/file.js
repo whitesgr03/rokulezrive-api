@@ -17,7 +17,6 @@ cloudinary.config({
 	cloud_name: process.env.CLOUDINARY_NAME,
 	api_key: process.env.CLOUDINARY_API_KEY,
 	api_secret: process.env.CLOUDINARY_API_SECRET,
-	signature_algorithm: 'sha256',
 });
 
 export const createFile = [
@@ -64,7 +63,7 @@ export const createFile = [
 					{
 						display_name: Buffer.from(originalname, 'latin1').toString('utf8'), // For busboy defParanCharset issue (multer)
 						resource_type: 'auto',
-						asset_folder: folderId,
+						public_id_prefix: folderId,
 					},
 					(err, result) => {
 						const handleSetLocalVariable = () => {
@@ -87,7 +86,7 @@ export const createFile = [
 		try {
 			await prisma.file.create({
 				data: {
-					id: public_id,
+					id: public_id.split('/')[1],
 					name: Buffer.from(originalname, 'latin1').toString('utf8'),
 					size,
 					type: resource_type,
