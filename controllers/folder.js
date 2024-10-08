@@ -563,25 +563,6 @@ export const deleteFolder = [
 		});
 
 		// for loop recursion
-		// const get = (result, arrPk, folders) => {
-		// 	if (arrPk.length === 0) {
-		// 		return result;
-		// 	} else {
-		// 		const f = [...folders];
-		// 		const children = [];
-		// 		for (const p of arrPk) {
-		// 			const target = f.find(folder => folder.pk === p);
-		// 			if (target.children.length !== 0) {
-		// 				for (const f of target.children) {
-		// 					children.push(f.pk);
-		// 				}
-		// 			}
-		// 		}
-		// 		return get([...result, ...arrPk], children, f);
-		// 	}
-		// };
-		// console.log(get([], [pk], folders));
-
 		// const get = (result, arrSub, folders) => {
 		// 	if (arrSub.length === 0) {
 		// 		return result;
