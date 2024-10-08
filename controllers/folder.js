@@ -640,9 +640,70 @@ export const deleteFolder = [
 					where: { pk: { in: allDeleteFolderPks } },
 			  });
 
+		const allFolders = await prisma.folder.findMany({
+			where: { ownerId: req.user.pk },
+			select: {
+				id: true,
+				name: true,
+				parent: {
+					select: {
+						name: true,
+						id: true,
+					},
+				},
+				subfolders: {
+					select: {
+						id: true,
+						name: true,
+						createdAt: true,
+						_count: {
+							select: {
+								subfolders: true,
+								files: true,
+							},
+						},
+					},
+					orderBy: {
+						pk: 'asc',
+					},
+				},
+				files: {
+					select: {
+						id: true,
+						name: true,
+						size: true,
+						type: true,
+						secure_url: true,
+						createdAt: true,
+						sharers: {
+							select: {
+								sharer: {
+									select: {
+										id: true,
+										username: true,
+									},
+								},
+							},
+						},
+						public: {
+							select: {
+								id: true,
+							},
+						},
+					},
+					orderBy: {
+						pk: 'asc',
+					},
+				},
+			},
+			orderBy: {
+				pk: 'asc',
+			},
+		});
 
 		res.json({
 			success: true,
+			data: allFolders,
 			message: 'Delete folder successfully.',
 		});
 	}),
