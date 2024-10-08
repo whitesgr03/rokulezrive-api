@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post('/login', userControllers.login);
 router.post('/register', userControllers.register);
-router.get('/logout', userControllers.logout);
+router.post('/logout', userControllers.logout);
 
 router.post('/login/google', userControllers.loginWithGoogle);
 router.post('/register/google', userControllers.registerWithGoogle);
