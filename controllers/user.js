@@ -213,12 +213,12 @@ export const loginWithGoogle = [
 					message: 'Google login is invalid.',
 				});
 		}
-	},
+	}),
 	asyncHandler(async (req, res) => {
 		const provider = 'https://accounts.google.com';
 		const { subject } = req;
 
-		const credential = await prisma.credential.findFirst({
+		const credential = await prisma.credential.findUnique({
 			where: { provider, subject },
 			select: {
 				user: {
@@ -388,7 +388,7 @@ export const loginWithFacebook = [
 		const provider = 'https://connect.facebook.net';
 		const { subject } = req;
 
-		const credential = await prisma.credential.findFirst({
+		const credential = await prisma.credential.findUnique({
 			where: { provider, subject },
 			select: {
 				user: {
