@@ -9,8 +9,8 @@ model File {
   owner   User @relation(fields: [ownerId], references: [pk])
   ownerId Int
 
-  folder   Folder? @relation(fields: [folderId], references: [pk])
-  folderId Int?
+  folder   Folder @relation(fields: [folderId], references: [pk])
+  folderId Int
 
   sharers FileSharers[]
   public  PublicFile?
