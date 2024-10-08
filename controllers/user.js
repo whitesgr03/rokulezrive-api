@@ -194,7 +194,7 @@ export const loginWithGoogle = [
 					message: 'The provided Google token is malformed.',
 			  });
 	},
-	async (req, res, next) => {
+	asyncHandler(async (req, res, next) => {
 		try {
 			const ticket = await google.verifyIdToken({
 				idToken: req.token,
