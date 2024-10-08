@@ -1,14 +1,14 @@
 import { networkInterfaces } from 'node:os';
 import debug from 'debug';
-import { createServer } from 'node:https';
-import { readFileSync } from 'node:fs';
+// import { createServer } from 'node:https';
+// import { readFileSync } from 'node:fs';
 
 import { app } from './app.js';
 
 const serverLog = debug('Server');
 
 const port = process.env.PORT || '3000';
-const use_https = process.env.USE_HTTPS === 'true';
+const development = process.env.development === 'true';
 
 const handleServer = async () => {
 	const handleListening = async () => {
@@ -16,10 +16,8 @@ const handleServer = async () => {
 			internet => internet.family === 'IPv4'
 		).address;
 
-		const scheme = `http${use_https ? 's' : ''}`;
-
-		serverLog(`Listening on Local:         ${scheme}://localhost:${port}`);
-		serverLog(`Listening on Your Network:  ${scheme}://${IP_Address}:${port}`);
+		serverLog(`Listening on Local:         http://localhost:${port}`);
+		serverLog(`Listening on Your Network:  http://${IP_Address}:${port}`);
 	};
 	const handleError = error => {
 		switch (error.code) {
@@ -39,18 +37,16 @@ const handleServer = async () => {
 		serverLog(`There has an Error, so the server is closed.`);
 		process.exit(1);
 	};
-	const handleHTTPS = () => {
-		const options = {
-			key: readFileSync('key.pem'),
-			cert: readFileSync('cert.pem'),
-		};
-		return createServer(options, app);
-	};
+	// const handleHTTPS = () => {
+	// 	const options = {
+	// 		key: readFileSync('key.pem'),
+	// 		cert: readFileSync('cert.pem'),
+	// 	};
+	// 	return createServer(options, app);
+	// };
 
-	const server = use_https ? handleHTTPS() : app;
-
-	server
-		.listen(port, !use_https && handleListening)
+	app
+		.listen(port, development && handleListening)
 		.on('error', handleError)
 		.on('close', handleClose);
 };
