@@ -1,12 +1,19 @@
 // Packages
 import asyncHandler from 'express-async-handler';
 import { PrismaClient } from '@prisma/client';
+import { v2 as cloudinary } from 'cloudinary';
 
 // Middlewares
 import { verifyData } from '../middlewares/verifyData.js';
 
 // Variables
 const prisma = new PrismaClient();
+
+cloudinary.config({
+	cloud_name: process.env.CLOUDINARY_NAME,
+	api_key: process.env.CLOUDINARY_API_KEY,
+	api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export const listFolders = [
 	asyncHandler(async (req, res) => {
@@ -512,11 +519,17 @@ export const deleteFolder = [
 			where: { ownerId: userPk, id: folderId },
 			select: {
 				pk: true,
+				files: {
+					select: {
+						pk: true,
+					},
+				},
 			},
 		});
 
 		const handleSetLocalVariable = () => {
-			req.folder = folder;
+			const { pk, files } = folder;
+			req.folder = files.length === 0 ? { pk } : { pk, files, id: folderId };
 			next();
 		};
 
@@ -528,8 +541,6 @@ export const deleteFolder = [
 			  });
 	}),
 	asyncHandler(async (req, res) => {
-		const { pk } = req.folder;
-
 		const folders = await prisma.folder.findMany({
 			where: { ownerId: req.user.pk },
 			select: {
@@ -537,6 +548,12 @@ export const deleteFolder = [
 				subfolders: {
 					select: {
 						pk: true,
+						id: true,
+						files: {
+							select: {
+								pk: true,
+							},
+						},
 					},
 				},
 			},
@@ -564,35 +581,77 @@ export const deleteFolder = [
 		// 	}
 		// };
 		// console.log(get([], [pk], folders));
-		const findAllSubfolderPks = (result, subfolderPks, folders) =>
-			subfolderPks.length === 0
+
+		// const get = (result, arrSub, folders) => {
+		// 	if (arrSub.length === 0) {
+		// 		return result;
+		// 	} else {
+		// 		const children = [];
+		// 		for (const sub of arrSub) {
+		// 			const target = folders.find(folder => folder.pk === sub.pk);
+		// 			if (target.subfolders.length !== 0) {
+		// 				for (const sf of target.subfolders) {
+		// 					children.push(sf);
+		// 				}
+		// 			}
+		// 		}
+		// 		return get([...result, ...arrSub], children, folders);
+		// 	}
+		// };
+
+		const findAllDeleteFolders = (result, subfolders) =>
+			subfolders.length === 0
 				? result
-				: findAllSubfolderPks(
-						[...result, ...subfolderPks],
-						subfolderPks.reduce(
-							(previousPks, currentPk) => [
-								...previousPks,
+				: findAllDeleteFolders(
+						[...result, ...subfolders],
+						subfolders.reduce(
+							(previousSubs, currentSub) => [
+								...previousSubs,
 								...folders
 									.splice(
-										folders.findIndex(folder => folder.pk === currentPk),
+										folders.findIndex(folder => folder.pk === currentSub.pk),
 										1
 									)[0]
-									.subfolders.map(subfolder => subfolder.pk),
+									.subfolders.map(subfolder =>
+										subfolder.files.length === 0
+											? { pk: subfolder.pk }
+											: subfolder
+									),
 							],
 							[]
-						),
-						folders
+						)
 				  );
 
+		const allDeleteFolders = findAllDeleteFolders([], [req.folder]);
+
+		const allDeleteFolderPks = allDeleteFolders.map(folder => folder.pk);
+		const allDeleteFolderIds = allDeleteFolders
+			.filter(folder => folder.id)
+			.map(folder => folder.id);
+		const allDeleteFolderFilePks = allDeleteFolders
+			.filter(folder => folder.files)
+			.map(folder => folder.files)
+			.reduce((result, file) => result.concat(file.map(f => f.pk)), []);
+
+		allDeleteFolderIds.length > 0 &&
+			(await Promise.all(
+				allDeleteFolderIds.map(folderId =>
+					cloudinary.api.delete_resources_by_prefix(folderId)
+				)
+			));
+
 		await prisma.$transaction([
-			prisma.folder.deleteMany({
-				where: {
-					ownerId: req.user.pk,
-					pk: { in: findAllSubfolderPks([], [pk], [...folders]) },
-				},
+			prisma.publicFile.deleteMany({
+				where: { fileId: { in: allDeleteFolderFilePks } },
+			}),
+			prisma.fileSharers.deleteMany({
+				where: { fileId: { in: allDeleteFolderFilePks } },
 			}),
 			prisma.file.deleteMany({
-				where: { ownerId: req.user.pk, folderId: null },
+				where: { pk: { in: allDeleteFolderFilePks } },
+			}),
+			prisma.folder.deleteMany({
+				where: { pk: { in: allDeleteFolderPks } },
 			}),
 		]);
 
