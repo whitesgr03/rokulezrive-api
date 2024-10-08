@@ -621,20 +621,25 @@ export const deleteFolder = [
 				)
 			));
 
-		await prisma.$transaction([
-			prisma.publicFile.deleteMany({
-				where: { fileId: { in: allDeleteFolderFilePks } },
-			}),
-			prisma.fileSharers.deleteMany({
-				where: { fileId: { in: allDeleteFolderFilePks } },
-			}),
-			prisma.file.deleteMany({
-				where: { pk: { in: allDeleteFolderFilePks } },
-			}),
-			prisma.folder.deleteMany({
-				where: { pk: { in: allDeleteFolderPks } },
-			}),
-		]);
+		allDeleteFolderFilePks.length > 0
+			? await prisma.$transaction([
+					prisma.publicFile.deleteMany({
+						where: { fileId: { in: allDeleteFolderFilePks } },
+					}),
+					prisma.fileSharers.deleteMany({
+						where: { fileId: { in: allDeleteFolderFilePks } },
+					}),
+					prisma.file.deleteMany({
+						where: { pk: { in: allDeleteFolderFilePks } },
+					}),
+					prisma.folder.deleteMany({
+						where: { pk: { in: allDeleteFolderPks } },
+					}),
+			  ])
+			: await prisma.folder.deleteMany({
+					where: { pk: { in: allDeleteFolderPks } },
+			  });
+
 
 		res.json({
 			success: true,
