@@ -374,15 +374,130 @@ export const updateFolder = [
 		const { name } = req.data;
 		const { folderId } = req.params;
 
-		await prisma.folder.update({
+		const newFolder = await prisma.folder.update({
 			where: { id: folderId },
 			data: {
 				name,
 			},
+			select: {
+				id: true,
+				name: true,
+				parent: {
+					select: {
+						name: true,
+						id: true,
+					},
+				},
+				subfolders: {
+					select: {
+						id: true,
+						name: true,
+						createdAt: true,
+						_count: {
+							select: {
+								subfolders: true,
+								files: true,
+							},
+						},
+					},
+					orderBy: {
+						pk: 'asc',
+					},
+				},
+				files: {
+					select: {
+						id: true,
+						name: true,
+						size: true,
+						type: true,
+						secure_url: true,
+						createdAt: true,
+						sharers: {
+							select: {
+								sharer: {
+									select: {
+										id: true,
+										username: true,
+									},
+								},
+							},
+						},
+						public: {
+							select: {
+								id: true,
+							},
+						},
+					},
+					orderBy: {
+						pk: 'asc',
+					},
+				},
+			},
 		});
 
-		res.json({
+		const parentFolder = await prisma.folder.findUnique({
+			where: {
+				id: newFolder.parent.id,
+			},
+			select: {
+				id: true,
+				name: true,
+				parent: {
+					select: {
+						name: true,
+						id: true,
+					},
+				},
+				subfolders: {
+					select: {
+						id: true,
+						name: true,
+						createdAt: true,
+						_count: {
+							select: {
+								subfolders: true,
+								files: true,
+							},
+						},
+					},
+					orderBy: {
+						pk: 'asc',
+					},
+				},
+				files: {
+					select: {
+						id: true,
+						name: true,
+						size: true,
+						type: true,
+						secure_url: true,
+						createdAt: true,
+						sharers: {
+							select: {
+								sharer: {
+									select: {
+										id: true,
+										username: true,
+									},
+								},
+							},
+						},
+						public: {
+							select: {
+								id: true,
+							},
+						},
+					},
+					orderBy: {
+						pk: 'asc',
+					},
+				},
+			},
+		});
+
+		res.status(201).json({
 			success: true,
+			data: { newFolder, parentFolder },
 			message: 'Update folder successfully.',
 		});
 	}),
