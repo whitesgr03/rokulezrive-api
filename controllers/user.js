@@ -235,7 +235,7 @@ export const loginWithGoogle = [
 			req.session.subject = subject;
 			res.json({
 				success: true,
-				message: 'Google login successfully.',
+				message: 'Google authenticate successfully.',
 			});
 		};
 
@@ -405,7 +405,7 @@ export const loginWithFacebook = [
 			req.session.subject = subject;
 			res.json({
 				success: true,
-				message: 'Facebook login successfully.',
+				message: 'Facebook authenticate successfully.',
 			});
 		};
 
