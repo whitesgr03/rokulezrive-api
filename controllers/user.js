@@ -312,7 +312,7 @@ export const registerWithGoogle = [
 			data: {
 				username,
 				folders: {
-					create: [{ name: 'Default' }],
+					create: [{ name: 'My Drive' }],
 				},
 			},
 			select: {
