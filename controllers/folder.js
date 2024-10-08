@@ -28,6 +28,12 @@ export const listFolders = [
 						id: true,
 						name: true,
 						createdAt: true,
+						_count: {
+							select: {
+								subfolders: true,
+								files: true,
+							},
+						},
 					},
 					orderBy: {
 						pk: 'asc',
@@ -96,6 +102,12 @@ export const getFolder = [
 						id: true,
 						name: true,
 						createdAt: true,
+						_count: {
+							select: {
+								subfolders: true,
+								files: true,
+							},
+						},
 					},
 					orderBy: {
 						pk: 'asc',
