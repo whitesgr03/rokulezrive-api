@@ -8,7 +8,7 @@ import { app } from './app.js';
 const serverLog = debug('Server');
 
 const port = process.env.PORT || '3000';
-const development = process.env.development === 'true';
+const development = process.env.NODE_ENV === 'true';
 
 const handleServer = async () => {
 	const handleListening = async () => {
