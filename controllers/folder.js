@@ -52,7 +52,6 @@ export const listFolders = [
 						name: true,
 						size: true,
 						type: true,
-						secure_url: true,
 						createdAt: true,
 						sharers: {
 							select: {
@@ -126,7 +125,6 @@ export const getFolder = [
 						name: true,
 						size: true,
 						type: true,
-						secure_url: true,
 						createdAt: true,
 						sharers: {
 							select: {
