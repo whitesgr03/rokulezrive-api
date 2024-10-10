@@ -49,4 +49,6 @@ router.delete(
 router.post('/files/:fileId/public', publicFileControllers.createPublicFile);
 router.delete('/public/:publicId', publicFileControllers.deletePublicFile);
 
+router.post('/files/:fileId/copy', fileControllers.createCopyFile);
+
 export default router;

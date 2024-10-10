@@ -17,6 +17,7 @@ cloudinary.config({
 	cloud_name: process.env.CLOUDINARY_NAME,
 	api_key: process.env.CLOUDINARY_API_KEY,
 	api_secret: process.env.CLOUDINARY_API_SECRET,
+	signature_algorithm: 'sha256',
 });
 
 export const createFile = [
@@ -253,6 +254,83 @@ export const deleteFile = [
 		res.json({
 			success: true,
 			message: 'Delete file successfully.',
+		});
+	}),
+];
+
+export const createCopyFile = [
+	asyncHandler(async (req, res, next) => {
+		const { pk: userPk } = req.user;
+		const { fileId } = req.params;
+
+		const file = await prisma.file.findUnique({
+			where: { id: fileId },
+			select: {
+				secure_url: true,
+				type: true,
+				ownerId: true,
+				folder: {
+					select: {
+						id: true,
+					},
+				},
+				sharers: {
+					where: {
+						sharerId: userPk,
+					},
+				},
+			},
+		});
+
+		const handleSetLocalVariable = () => {
+			req.file = file;
+			next();
+		};
+
+		file.sharers.length === 1 || file.ownerId === userPk
+			? handleSetLocalVariable()
+			: res.status(404).json({
+					success: false,
+					message: 'File could not been found.',
+			  });
+	}),
+	asyncHandler(async (req, res) => {
+		const { fileId } = req.params;
+		const { folder, type } = req.file;
+
+		const originFileUrl = cloudinary.url(`${folder.id}/${fileId}`, {
+			resource_type: type,
+			sign_url: true,
+			type: 'authenticated',
+		});
+
+		const copyFile = await cloudinary.uploader.upload(originFileUrl, {
+			resource_type: type,
+			type: 'upload',
+			access_mode: 'public',
+			use_filename_as_display_name: false,
+			return_delete_token: true,
+			invalidate: true,
+			access_control: [
+				{ access_type: 'token' },
+				{
+					access_type: 'anonymous',
+					start: new Date().toISOString,
+					end: new Date(Date.now() + 1000 * 60).toISOString,
+				},
+			],
+		});
+
+		const { secure_url, delete_token } = copyFile;
+
+		res.json({
+			success: true,
+			data: {
+				secure_url,
+				delete_token,
+				cloud_name: process.env.CLOUDINARY_NAME,
+			},
+			message: 'Create copy resource successfully ',
 		});
 	}),
 ];
