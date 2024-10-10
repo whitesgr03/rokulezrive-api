@@ -88,7 +88,7 @@ export const createFile = [
 			await prisma.file.create({
 				data: {
 					id: public_id.split('/')[1],
-					name: Buffer.from(originalname, 'latin1').toString('utf8'),
+					name: Buffer.from(originalname, 'latin1').toString('utf8'), // For busboy defParanCharset issue (multer)
 					size,
 					type: resource_type,
 					ownerId: userPk,
