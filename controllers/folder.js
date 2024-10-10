@@ -247,7 +247,6 @@ export const createFolder = [
 						name: true,
 						size: true,
 						type: true,
-						secure_url: true,
 						createdAt: true,
 						sharers: {
 							select: {
@@ -307,7 +306,6 @@ export const createFolder = [
 						name: true,
 						size: true,
 						type: true,
-						secure_url: true,
 						createdAt: true,
 						sharers: {
 							select: {
@@ -415,7 +413,6 @@ export const updateFolder = [
 						name: true,
 						size: true,
 						type: true,
-						secure_url: true,
 						createdAt: true,
 						sharers: {
 							select: {
@@ -475,7 +472,6 @@ export const updateFolder = [
 						name: true,
 						size: true,
 						type: true,
-						secure_url: true,
 						createdAt: true,
 						sharers: {
 							select: {
@@ -671,7 +667,6 @@ export const deleteFolder = [
 						name: true,
 						size: true,
 						type: true,
-						secure_url: true,
 						createdAt: true,
 						sharers: {
 							select: {
