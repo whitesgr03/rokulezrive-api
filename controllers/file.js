@@ -266,7 +266,6 @@ export const createCopyFile = [
 		const file = await prisma.file.findUnique({
 			where: { id: fileId },
 			select: {
-				secure_url: true,
 				type: true,
 				ownerId: true,
 				folder: {
