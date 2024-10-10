@@ -54,16 +54,15 @@ export const createFile = [
 	}),
 	asyncHandler(async (req, res, next) => {
 		const { folderId } = req.params;
-
-		let { originalname, buffer } = req.file;
+		const { buffer } = req.file;
 
 		await new Promise(resolve =>
 			cloudinary.uploader
 				.upload_stream(
 					{
-						display_name: Buffer.from(originalname, 'latin1').toString('utf8'), // For busboy defParanCharset issue (multer)
 						resource_type: 'auto',
 						public_id_prefix: folderId,
+						use_filename_as_display_name: false,
 					},
 					(err, result) => {
 						const handleSetLocalVariable = () => {
