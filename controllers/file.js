@@ -78,7 +78,7 @@ export const createFile = [
 		);
 	}),
 	async (req, res, next) => {
-		const { public_id, resource_type, secure_url } = req.upload;
+		const { public_id, resource_type } = req.upload;
 		const { originalname, size } = req.file;
 		const { pk: folderPk } = req.folder;
 		const { pk: userPk } = req.user;
@@ -90,7 +90,6 @@ export const createFile = [
 					name: Buffer.from(originalname, 'latin1').toString('utf8'),
 					size,
 					type: resource_type,
-					secure_url,
 					ownerId: userPk,
 					folderId: folderPk,
 				},

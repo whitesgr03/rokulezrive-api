@@ -4,7 +4,6 @@ model File {
   name       String
   size       Int
   type       String
-  secure_url String
 
   owner   User @relation(fields: [ownerId], references: [pk])
   ownerId Int
