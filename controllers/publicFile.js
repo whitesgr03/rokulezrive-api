@@ -16,7 +16,6 @@ export const getPublicFile = [
 						name: true,
 						size: true,
 						type: true,
-						secure_url: true,
 						owner: {
 							select: {
 								username: true,
