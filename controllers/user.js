@@ -72,15 +72,10 @@ export const register = [
 				errorMessage: 'Username is required.',
 				bail: true,
 			},
-			isLength: {
-				options: { min: 4, max: 25 },
-				errorMessage: 'Username must be between 4 and 25 letters.',
-				bail: true,
-			},
 			matches: {
-				options: /^(?=.*[a-zA-Z0-9]_?)/,
+				options: /^(?=\w{4,25}$)(?!.*[_]{2,})[^_].*[^_]$/,
 				errorMessage:
-					'Username must only contain alphanumeric and underline characters.',
+					'Username can only contain alphanumeric and non-consecutive underscore characters, and be between 4 and 25 characters.',
 				bail: true,
 			},
 			custom: {
@@ -302,15 +297,10 @@ export const registerWithGoogle = [
 				errorMessage: 'Username is required.',
 				bail: true,
 			},
-			isLength: {
-				options: { min: 4, max: 25 },
-				errorMessage: 'Username must be between 4 and 25 letters.',
-				bail: true,
-			},
 			matches: {
-				options: /^\w+$/,
+				options: /^(?=\w{4,25}$)(?!.*[_]{2,})[^_].*[^_]$/,
 				errorMessage:
-					'Username must only contain alphanumeric and underline characters.',
+					'Username can only contain alphanumeric and non-consecutive underscore characters, and be between 4 and 25 characters.',
 				bail: true,
 			},
 			custom: {
@@ -472,15 +462,10 @@ export const registerWithFacebook = [
 				errorMessage: 'Username is required.',
 				bail: true,
 			},
-			isLength: {
-				options: { min: 4, max: 25 },
-				errorMessage: 'Username must be between 4 and 25 letters.',
-				bail: true,
-			},
 			matches: {
-				options: /^\w+$/,
+				options: /^(?=\w{4,25}$)(?!.*[_]{2,})[^_].*[^_]$/,
 				errorMessage:
-					'Username must only contain alphanumeric and underline characters.',
+					'Username can only contain alphanumeric and non-consecutive underscore characters, and be between 4 and 25 characters.',
 				bail: true,
 			},
 			custom: {
