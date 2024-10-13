@@ -130,12 +130,6 @@ export const updateFile = [
 			where: { ownerId: userPk, id: fileId },
 			select: {
 				pk: true,
-				type: true,
-				folder: {
-					select: {
-						id: true,
-					},
-				},
 			},
 		});
 
@@ -150,22 +144,6 @@ export const updateFile = [
 					success: false,
 					message: 'File could not been found.',
 			  });
-	}),
-	asyncHandler(async (req, res, next) => {
-		const { name } = req.data;
-		const { fileId } = req.params;
-		const { type, folder } = req.file;
-
-		const response = await cloudinary.uploader.explicit(
-			`${folder.id}/${fileId}`,
-			{
-				type: 'upload',
-				resource_type: type,
-				display_name: name,
-			}
-		);
-
-		response.name === 'Error' ? next('error') : next();
 	}),
 	asyncHandler(async (req, res) => {
 		const { name } = req.data;
