@@ -278,7 +278,7 @@ export const loginWithGoogle = [
 				});
 			};
 
-			req.login({ pk }, cb);
+			req.login({ pk, type: 'google' }, cb);
 		};
 
 		credential ? handleLogin() : handleSetSession();
