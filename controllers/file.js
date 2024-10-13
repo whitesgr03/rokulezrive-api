@@ -238,7 +238,7 @@ export const deleteFile = [
 
 export const createCopyFile = [
 	asyncHandler(async (req, res, next) => {
-		const { pk: userPk } = req.user;
+		const userPk = req.user?.pk;
 		const { fileId } = req.params;
 
 		const file = await prisma.file.findUnique({
@@ -251,6 +251,7 @@ export const createCopyFile = [
 						id: true,
 					},
 				},
+				public: true,
 				sharers: {
 					where: {
 						sharerId: userPk,
@@ -264,7 +265,7 @@ export const createCopyFile = [
 			next();
 		};
 
-		file.sharers.length === 1 || file.ownerId === userPk
+		file.public || file.sharers.length === 1 || file.ownerId === userPk
 			? handleSetLocalVariable()
 			: res.status(404).json({
 					success: false,
