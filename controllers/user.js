@@ -19,6 +19,9 @@ const oauth2Client = new google.auth.OAuth2(
 	process.env.REDIRECT_URI
 );
 
+const facebook_client_id = process.env.FACEBOOK_CLIENT_ID;
+const facebook_client_secret = process.env.FACEBOOK_SECRET_KEY;
+
 export const getUser = [
 	asyncHandler(async (req, res) => {
 		const { pk } = req.user;
@@ -355,32 +358,53 @@ export const registerWithGoogle = [
 			});
 		};
 
-		req.login({ pk }, cb);
+		req.login({ pk, type: 'google' }, cb);
 	}),
 ];
 export const loginWithFacebook = [
 	(req, res, next) => {
-		const { authorization } = req.headers;
+		const { code } = req.body;
 
-		const token = authorization && authorization.split(' ')[1];
-
-		const handleSetToken = () => {
-			req.token = token;
-			next();
-		};
-
-		token
-			? handleSetToken()
+		code
+			? next()
 			: res.status(400).json({
 					success: false,
-					message: 'The provided Google token is malformed.',
+					message: 'The provided Facebook authorization code is malformed.',
 			  });
 	},
 	asyncHandler(async (req, res, next) => {
+		const { code } = req.body;
+
 		const tokenResponse = await fetch(
-			`https://graph.facebook.com/debug_token?input_token=${req.token}&access_token=818458357029166|c776f420aaf467241b7e85a3fc4a3717`
+			'https://graph.facebook.com/v21.0/oauth/access_token?' +
+				`client_id=${facebook_client_id}` +
+				`&redirect_uri=${process.env.REDIRECT_URI}` +
+				`&client_secret=${facebook_client_secret}` +
+				`&code=${code}`
 		);
-		const { data } = await tokenResponse.json();
+
+		const result = await tokenResponse.json();
+
+		const handleSetLocalVariable = () => {
+			req.token = result.access_token;
+			next();
+		};
+
+		result.access_token
+			? handleSetLocalVariable()
+			: res.status(401).json({
+					success: false,
+					message: 'Facebook login is malformed.',
+			  });
+	}),
+	asyncHandler(async (req, res, next) => {
+		const checkTokenResponse = await fetch(
+			'https://graph.facebook.com/debug_token?' +
+				`input_token=${req.token}` +
+				`&access_token=${facebook_client_id}|${facebook_client_secret}`
+		);
+		const { data } = await checkTokenResponse.json();
+
 		const { user_id: subject, is_valid } = data;
 
 		const handleValid = () => {
