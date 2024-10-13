@@ -2,7 +2,8 @@
 import asyncHandler from 'express-async-handler';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
-import { OAuth2Client } from 'google-auth-library';
+import { google } from 'googleapis';
+import jwt from 'jsonwebtoken';
 
 // Middlewares
 import { verifyData } from '../middlewares/verifyData.js';
@@ -11,7 +12,12 @@ import { verifyCredentials } from '../middlewares/verifyCredentials.js';
 
 // Variables
 const prisma = new PrismaClient();
-const google = new OAuth2Client();
+
+const oauth2Client = new google.auth.OAuth2(
+	process.env.GOOGLE_CLIENT_ID,
+	process.env.GOOGLE_SECRET_KEY,
+	process.env.REDIRECT_URI
+);
 
 export const getUser = [
 	asyncHandler(async (req, res) => {
@@ -196,30 +202,22 @@ export const logout = [
 ];
 export const loginWithGoogle = [
 	(req, res, next) => {
-		const { authorization } = req.headers;
+		const { code } = req.body;
 
-		const token = authorization && authorization.split(' ')[1];
-
-		const handleSetToken = () => {
-			req.token = token;
-			next();
-		};
-
-		token
-			? handleSetToken()
+		code
+			? next()
 			: res.status(400).json({
 					success: false,
-					message: 'The provided Google token is malformed.',
+					message: 'The provided Google authorization code is malformed.',
 			  });
 	},
 	asyncHandler(async (req, res, next) => {
 		try {
-			const ticket = await google.verifyIdToken({
-				idToken: req.token,
-				audience: process.env.APP_GOOGLE_CLIENT_ID,
-			});
+			const { code } = req.body;
 
-			const { sub: subject } = ticket.getPayload();
+			const { tokens } = await oauth2Client.getToken(code);
+
+			const { sub: subject } = jwt.decode(tokens.id_token);
 
 			req.subject = subject;
 
