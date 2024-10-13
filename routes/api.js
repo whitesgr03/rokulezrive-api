@@ -12,44 +12,41 @@ import { verifyCSRF } from '../middlewares/verifyCSRF.js';
 const router = express.Router();
 
 router.get('/public/:publicId', publicFileControllers.getPublicFile);
+router.post('/files/:fileId/copy', verifyCSRF, fileControllers.createCopyFile);
 
+// Requires credentials
 router.use(verifyCredentials);
 
+// GET
 router.get('/user', getUser);
-
-router
-	.route('/folders')
-	.get(folderControllers.listFolders)
-	.post(folderControllers.createFolder);
-
-router
-	.route('/folders/:folderId')
-	.get(folderControllers.getFolder)
-	.patch(folderControllers.updateFolder)
-	.delete(folderControllers.deleteFolder);
-
-router.post('/folders/:folderId/files', fileControllers.createFile);
-
-router
-	.route('/files/:fileId')
-	.patch(fileControllers.updateFile)
-	.delete(fileControllers.deleteFile);
-
+router.get('/folders', folderControllers.listFolders);
+router.get('/folders/:folderId', folderControllers.getFolder);
 router.get('/sharedFiles', fileSharerControllers.listFileSharers);
+
+// Requires CSRF (xhr)
+router.use(verifyCSRF);
+
+// POST
+router.post('/folders', folderControllers.createFolder);
+router.post('/folders/:folderId/files', fileControllers.createFile);
+router.post('/files/:fileId/sharers', fileSharerControllers.createFileSharer);
+router.post('/files/:fileId/public', publicFileControllers.createPublicFile);
+
+// PATCH
+router.patch('/folders/:folderId', folderControllers.updateFolder);
+router.patch('/files/:fileId', fileControllers.updateFile);
+
+// DELETE
+router.delete('/files/:fileId', fileControllers.deleteFile);
+router.delete('/folders/:folderId', folderControllers.deleteFolder);
 router.delete(
 	'/sharedFiles/:sharedFileId',
 	fileSharerControllers.deleteSharedFile
 );
-
-router.post('/files/:fileId/sharers', fileSharerControllers.createFileSharer);
 router.delete(
 	'/files/:fileId/sharers/:sharerId',
 	fileSharerControllers.deleteFileSharer
 );
-
-router.post('/files/:fileId/public', publicFileControllers.createPublicFile);
 router.delete('/public/:publicId', publicFileControllers.deletePublicFile);
-
-router.post('/files/:fileId/copy', fileControllers.createCopyFile);
 
 export default router;
