@@ -7,6 +7,7 @@ import * as publicFileControllers from '../controllers/publicFile.js';
 import { getUser } from '../controllers/user.js';
 
 import { verifyCredentials } from '../middlewares/verifyCredentials.js';
+import { verifyCSRF } from '../middlewares/verifyCSRF.js';
 
 const router = express.Router();
 
