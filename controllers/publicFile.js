@@ -13,6 +13,7 @@ export const getPublicFile = [
 			select: {
 				file: {
 					select: {
+						id: true,
 						name: true,
 						size: true,
 						type: true,
