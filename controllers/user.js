@@ -425,7 +425,7 @@ export const loginWithFacebook = [
 				});
 			};
 
-			req.login({ pk }, cb);
+			req.login({ pk, type: 'facebook' }, cb);
 		};
 
 		credential ? handleLogin() : handleSetSession();
@@ -514,6 +514,6 @@ export const registerWithFacebook = [
 			});
 		};
 
-		req.login({ pk }, cb);
+		req.login({ pk, type: 'facebook' }, cb);
 	}),
 ];
