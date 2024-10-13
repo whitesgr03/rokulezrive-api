@@ -165,7 +165,30 @@ export const register = [
 ];
 export const logout = [
 	verifyCredentials,
-	(req, res, next) => {
+	asyncHandler(async (req, res, next) => {
+		const { pk, type } = req.user;
+
+		const handleFacebookLogout = async () => {
+			const user = await prisma.user.findUnique({
+				where: { pk },
+				select: {
+					credential: {
+						select: {
+							subject: true,
+						},
+					},
+				},
+			});
+
+			const url =
+				`https://graph.facebook.com/${user.credential.subject}/permissions?` +
+				`access_token=${facebook_client_id}|${facebook_client_secret}`;
+
+			await fetch(url, { method: 'DELETE' });
+		};
+
+		type === 'facebook' && (await handleFacebookLogout());
+
 		req.logout(err =>
 			err
 				? next(err)
@@ -174,7 +197,7 @@ export const logout = [
 						message: 'User logout successfully.',
 				  })
 		);
-	},
+	}),
 ];
 export const loginWithGoogle = [
 	(req, res, next) => {
