@@ -1,9 +1,9 @@
 model File {
-  pk         Int    @id @default(autoincrement())
-  id         String @unique
-  name       String
-  size       Int
-  type       String
+  pk   Int    @id @default(autoincrement())
+  id   String @unique
+  name String
+  size Int
+  type String
 
   owner   User @relation(fields: [ownerId], references: [pk])
   ownerId Int
