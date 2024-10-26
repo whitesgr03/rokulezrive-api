@@ -1,7 +1,6 @@
 model User {
-  pk       Int     @id @default(autoincrement())
-  id       String  @unique @default(uuid())
-  username String  @unique
+  pk Int    @id @default(autoincrement())
+  id String @unique
   email    String? @unique
   password String?
 
@@ -11,5 +10,5 @@ model User {
   sharedFiles FileSharers[]
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now())
 }
