@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import { PrismaClient } from '@prisma/client';
+import { checkSchema } from 'express-validator';
 
 // Middlewares
 import { verifyData } from '../middlewares/verifyData.js';
@@ -96,14 +97,25 @@ export const deleteSharedFile = [
 ];
 
 export const createFileSharer = [
-	verifyData({
-		username: {
+	checkSchema({
+		email: {
 			trim: true,
+			toLowerCase: true,
 			notEmpty: {
-				errorMessage: 'Username is required.',
+				errorMessage: 'The email is required.',
+				bail: true,
+			},
+			isEmail: {
+				errorMessage: 'The email must be in the correct format.',
+				bail: true,
+			},
+			normalizeEmail: {
+				errorMessage: 'The email must be in standard format.',
+				bail: true,
 			},
 		},
 	}),
+	verifyData,
 	asyncHandler(async (req, res, next) => {
 		const { pk: userPk } = req.user;
 		const { fileId } = req.params;
@@ -130,12 +142,12 @@ export const createFileSharer = [
 	asyncHandler(async (req, res, next) => {
 		const { pk: userPk } = req.user;
 		const { pk: sharedFilePk } = req.sharedFile;
-		const { username } = req.data;
+		const { email } = req.data;
 
 		const sharer = await prisma.user.findFirst({
 			where: {
 				pk: { not: userPk },
-				username,
+				email,
 				sharedFiles: {
 					none: {
 						fileId: sharedFilePk,
@@ -143,7 +155,7 @@ export const createFileSharer = [
 				},
 			},
 			select: {
-				username: true,
+				email: true,
 				pk: true,
 			},
 		});
@@ -158,9 +170,9 @@ export const createFileSharer = [
 			: res.status(404).json({
 					success: false,
 					fields: {
-						username: 'Username is invalid.',
+						email: 'email is invalid.',
 					},
-					message: 'Username is invalid.',
+					message: 'email is invalid.',
 			  });
 	}),
 	asyncHandler(async (req, res) => {
@@ -189,7 +201,7 @@ export const createFileSharer = [
 						sharer: {
 							select: {
 								id: true,
-								username: true,
+								email: true,
 							},
 						},
 					},
