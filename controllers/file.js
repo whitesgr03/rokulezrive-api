@@ -31,6 +31,17 @@ export const createFile = [
 					message: 'File is required.',
 			  });
 	},
+	(req, res, next) => {
+		const MEGABYTE = 1000000;
+		const { size } = req.file;
+
+		size <= MEGABYTE
+			? next()
+			: res.status(413).json({
+					success: false,
+					message: 'File size must be less than 1 MB.',
+			  });
+	},
 	asyncHandler(async (req, res, next) => {
 		const { pk: userPk } = req.user;
 		const { folderId } = req.params;
