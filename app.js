@@ -25,25 +25,7 @@ const corsOptions = {
 	maxAge: 3600,
 };
 const helmetOptions = {
-	contentSecurityPolicy: {
-		directives: {
-			defaultSrc: ["'none'"],
-			imgSrc: ["'self'", 'data:', 'blob:'],
-			styleSrc: ["'self'", 'fonts.googleapis.com', 'necolas.github.io'],
-			formAction: [
-				"'self'",
-				`${process.env.NODE_ENV === 'development' ? 'http' : 'https'}:`,
-			],
-			frameAncestors: ["'none'"],
-			baseUri: ["'none'"],
-			objectSrc: ["'none'"],
-			scriptSrc: ['strict-dynamic'],
-		},
-	},
 	xFrameOptions: { action: 'deny' },
-	referrerPolicy: {
-		policy: ['no-referrer'],
-	},
 };
 const sessionOptions = {
 	secret: process.env.SESSION_SECRETS.split(','),
