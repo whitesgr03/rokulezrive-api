@@ -59,7 +59,7 @@ export const listFolders = [
 								sharer: {
 									select: {
 										id: true,
-										username: true,
+										email: true,
 									},
 								},
 							},
