@@ -75,8 +75,8 @@ export const createFile = [
 					{
 						resource_type: 'auto',
 						public_id_prefix: folderId,
-						type: 'authenticated',
-						access_mode: 'authenticated',
+						type: 'private',
+						access_mode: 'public',
 						use_filename_as_display_name: false,
 					},
 					(err, result) => {
