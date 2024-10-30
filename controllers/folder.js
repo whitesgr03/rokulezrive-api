@@ -144,7 +144,7 @@ export const getFolder = [
 								sharer: {
 									select: {
 										id: true,
-										username: true,
+										email: true,
 									},
 								},
 							},
