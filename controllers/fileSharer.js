@@ -212,7 +212,7 @@ export const createFileSharer = [
 		res.status(201).json({
 			success: true,
 			data: file.sharers[0],
-			message: 'Update file sharer successfully.',
+			message: 'Create file sharer successfully.',
 		});
 	}),
 ];
