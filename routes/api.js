@@ -6,16 +6,15 @@ import * as fileSharerControllers from '../controllers/fileSharer.js';
 import * as publicFileControllers from '../controllers/publicFile.js';
 import { getUser } from '../controllers/user.js';
 
-import { verifyCredentials } from '../middlewares/verifyCredentials.js';
-import { verifyCSRF } from '../middlewares/verifyCSRF.js';
+import { verifyToken } from '../middlewares/verifyToken.js';
 
 const router = express.Router();
 
 router.get('/public/:publicId', publicFileControllers.getPublicFile);
 router.post('/files/:fileId/copy', verifyCSRF, fileControllers.createCopyFile);
 
-// Requires credentials
-router.use(verifyCredentials);
+// Requires token
+router.use(verifyToken);
 
 // GET
 router.get('/user', getUser);
@@ -23,8 +22,6 @@ router.get('/folders', folderControllers.listFolders);
 router.get('/folders/:folderId', folderControllers.getFolder);
 router.get('/sharedFiles', fileSharerControllers.listFileSharers);
 
-// Requires CSRF (xhr)
-router.use(verifyCSRF);
 
 // POST
 router.post('/folders', folderControllers.createFolder);
