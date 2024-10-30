@@ -11,7 +11,6 @@ import helmet from 'helmet';
 import cors from 'cors';
 
 // routes
-import indexRouter from './routes/index.js';
 import apiRouter from './routes/api.js';
 
 export const app = express();
@@ -54,7 +53,6 @@ app.use(express.json());
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev'));
 app.use(compression());
 
-app.use('/', indexRouter);
 app.use('/api', apiRouter);
 
 // unknown routes handler
