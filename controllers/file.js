@@ -212,7 +212,7 @@ export const deleteFile = [
 
 		const response = await cloudinary.uploader.destroy(
 			`${folder.id}/${fileId}`,
-			{ resource_type: type, type: 'authenticated', invalidate: true }
+			{ resource_type: type, type: 'private', invalidate: true }
 		);
 
 		response.result === 'ok'
