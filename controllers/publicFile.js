@@ -1,8 +1,16 @@
 import asyncHandler from 'express-async-handler';
 import { PrismaClient } from '@prisma/client';
+import { v2 as cloudinary } from 'cloudinary';
 
 // Variables
 const prisma = new PrismaClient();
+
+cloudinary.config({
+	cloud_name: process.env.CLOUDINARY_NAME,
+	api_key: process.env.CLOUDINARY_API_KEY,
+	api_secret: process.env.CLOUDINARY_API_SECRET,
+	signature_algorithm: 'sha256',
+});
 
 export const getPublicFile = [
 	asyncHandler(async (req, res) => {
@@ -17,6 +25,11 @@ export const getPublicFile = [
 						name: true,
 						size: true,
 						type: true,
+						folder: {
+							select: {
+								id: true,
+							},
+						},
 						owner: {
 							select: {
 								email: true,
@@ -28,10 +41,25 @@ export const getPublicFile = [
 			},
 		});
 
+		const { id, folder, ...file } = publicFile.file;
+
+		const url = cloudinary.utils.private_download_url(
+			`${folder.id}/${id}`,
+			null,
+			{
+				resource_type: file.type,
+				expires_at: Math.floor(Date.now() / 1000) + 60,
+			}
+		);
+
 		publicFile
 			? res.json({
 					success: true,
-					data: publicFile,
+					data: {
+						...file,
+						url,
+						sharedAt: publicFile.createdAt,
+					},
 					message: 'Get public file successfully.',
 			  })
 			: res.status(404).json({
