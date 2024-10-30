@@ -1,8 +1,4 @@
 import express from 'express';
-import session from 'express-session';
-import passport from './config/passport.js';
-import { PrismaSessionStore } from '@quixo3/prisma-session-store';
-import { PrismaClient } from '@prisma/client';
 import createError from 'http-errors';
 import morgan from 'morgan';
 import debug from 'debug';
@@ -25,30 +21,12 @@ const corsOptions = {
 const helmetOptions = {
 	xFrameOptions: { action: 'deny' },
 };
-const sessionOptions = {
-	secret: process.env.SESSION_SECRETS.split(','),
-	resave: false,
-	saveUninitialized: false,
-	store: new PrismaSessionStore(new PrismaClient(), {
-		checkPeriod: 60 * 60 * 1000, // ms
-		dbRecordIdIsSessionId: true,
-		dbRecordIdFunction: undefined,
-	}),
-	cookie: {
-		sameSite: 'Strict',
-		httpOnly: true,
-		secure: process.env.NODE_ENV === 'production',
-		maxAge: 7 * 24 * 60 * 60 * 1000,
-	},
-	name: 'local-drive.connect.sid',
-};
+
 
 process.env.NODE_ENV === 'production' && app.set('trust proxy', 1);
 
 app.use(cors(corsOptions));
 app.use(helmet(helmetOptions));
-app.use(session(sessionOptions));
-app.use(passport.session());
 app.use(express.json());
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev'));
 app.use(compression());
