@@ -20,8 +20,7 @@ const errorLog = debug('ServerError');
 const corsOptions = {
 	origin: process.env.APP_URL,
 	methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-	allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-	credentials: true,
+	allowedHeaders: ['Content-Type', 'Authorization'],
 	maxAge: 3600,
 };
 const helmetOptions = {
