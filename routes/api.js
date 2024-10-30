@@ -4,7 +4,6 @@ import * as fileControllers from '../controllers/file.js';
 import * as folderControllers from '../controllers/folder.js';
 import * as fileSharerControllers from '../controllers/fileSharer.js';
 import * as publicFileControllers from '../controllers/publicFile.js';
-import { getUser } from '../controllers/user.js';
 
 import { verifyToken } from '../middlewares/verifyToken.js';
 
@@ -17,7 +16,6 @@ router.post('/files/:fileId/copy', verifyCSRF, fileControllers.createCopyFile);
 router.use(verifyToken);
 
 // GET
-router.get('/user', getUser);
 router.get('/folders', folderControllers.listFolders);
 router.get('/folders/:folderId', folderControllers.getFolder);
 router.get('/sharedFiles', fileSharerControllers.listFileSharers);
