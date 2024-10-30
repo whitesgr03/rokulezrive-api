@@ -80,9 +80,21 @@ export const listFolders = [
 			},
 		});
 
+		const newFolders = folders.map(folder => ({
+			...folder,
+			files: folder.files.map(file => ({
+				...file,
+				url: cloudinary.url(`${folder.id}/${file.id}`, {
+					resource_type: file.type,
+					sign_url: true,
+					type: 'private',
+				}),
+			})),
+		}));
+
 		res.json({
 			success: true,
-			data: folders,
+			data: newFolders,
 			message: 'Get all folders successfully.',
 		});
 	}),
