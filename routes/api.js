@@ -10,7 +10,6 @@ import { verifyToken } from '../middlewares/verifyToken.js';
 const router = express.Router();
 
 router.get('/public/:publicId', publicFileControllers.getPublicFile);
-router.post('/files/:fileId/copy', verifyCSRF, fileControllers.createCopyFile);
 
 // Requires token
 router.use(verifyToken);
@@ -20,6 +19,7 @@ router.get('/folders', folderControllers.listFolders);
 router.get('/folders/:folderId', folderControllers.getFolder);
 router.get('/sharedFiles', fileSharerControllers.listFileSharers);
 
+router.get('/files/:fileId/download-url', fileControllers.getDownloadUrl);
 
 // POST
 router.post('/folders', folderControllers.createFolder);

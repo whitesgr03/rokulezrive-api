@@ -249,7 +249,7 @@ export const deleteFile = [
 	}),
 ];
 
-export const createCopyFile = [
+export const getDownloadUrl = [
 	asyncHandler(async (req, res, next) => {
 		const userPk = req.user?.pk;
 		const { fileId } = req.params;
@@ -258,13 +258,11 @@ export const createCopyFile = [
 			where: { id: fileId },
 			select: {
 				type: true,
-				ownerId: true,
 				folder: {
 					select: {
 						id: true,
 					},
 				},
-				public: true,
 				sharers: {
 					where: {
 						sharerId: userPk,
@@ -278,7 +276,7 @@ export const createCopyFile = [
 			next();
 		};
 
-		file.public || file.sharers.length === 1 || file.ownerId === userPk
+		file.sharers.length === 1
 			? handleSetLocalVariable()
 			: res.status(404).json({
 					success: false,
@@ -289,39 +287,19 @@ export const createCopyFile = [
 		const { fileId } = req.params;
 		const { folder, type } = req.file;
 
-		const originFileUrl = cloudinary.url(`${folder.id}/${fileId}`, {
-			resource_type: type,
-			sign_url: true,
-			type: 'authenticated',
-		});
-
-		const copyFile = await cloudinary.uploader.upload(originFileUrl, {
-			resource_type: type,
-			type: 'upload',
-			access_mode: 'public',
-			use_filename_as_display_name: false,
-			return_delete_token: true,
-			invalidate: true,
-			access_control: [
-				{ access_type: 'token' },
-				{
-					access_type: 'anonymous',
-					start: new Date().toISOString,
-					end: new Date(Date.now() + 1000 * 60).toISOString,
-				},
-			],
-		});
-
-		const { secure_url, delete_token } = copyFile;
+		const url = cloudinary.utils.private_download_url(
+			`${folder.id}/${fileId}`,
+			null,
+			{
+				resource_type: type,
+				expires_at: Math.floor(Date.now() / 1000) + 60,
+			}
+		);
 
 		res.json({
 			success: true,
-			data: {
-				secure_url,
-				delete_token,
-				cloud_name: process.env.CLOUDINARY_NAME,
-			},
-			message: 'Create copy resource successfully ',
+			data: { url },
+			message: 'Get file download url successfully ',
 		});
 	}),
 ];
