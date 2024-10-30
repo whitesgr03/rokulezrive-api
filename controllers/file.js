@@ -3,6 +3,7 @@ import asyncHandler from 'express-async-handler';
 import multer from 'multer';
 import { PrismaClient } from '@prisma/client';
 import { v2 as cloudinary } from 'cloudinary';
+import { checkSchema } from 'express-validator';
 
 // Middlewares
 import { verifyData } from '../middlewares/verifyData.js';
@@ -108,7 +109,7 @@ export const createFile = [
 ];
 
 export const updateFile = [
-	verifyData({
+	checkSchema({
 		name: {
 			trim: true,
 			notEmpty: {
@@ -122,6 +123,7 @@ export const updateFile = [
 			},
 		},
 	}),
+	verifyData,
 	asyncHandler(async (req, res, next) => {
 		const { pk: userPk } = req.user;
 		const { fileId } = req.params;

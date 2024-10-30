@@ -2,6 +2,7 @@
 import asyncHandler from 'express-async-handler';
 import { PrismaClient } from '@prisma/client';
 import { v2 as cloudinary } from 'cloudinary';
+import { checkSchema } from 'express-validator';
 
 // Middlewares
 import { verifyData } from '../middlewares/verifyData.js';
@@ -163,7 +164,7 @@ export const getFolder = [
 ];
 
 export const createFolder = [
-	verifyData({
+	checkSchema({
 		name: {
 			trim: true,
 			notEmpty: {
@@ -182,6 +183,7 @@ export const createFolder = [
 			},
 		},
 	}),
+	verifyData,
 	asyncHandler(async (req, res, next) => {
 		const { parentId } = req.data;
 		const { pk: userPk } = req.user;
@@ -339,7 +341,7 @@ export const createFolder = [
 ];
 
 export const updateFolder = [
-	verifyData({
+	checkSchema({
 		name: {
 			trim: true,
 			notEmpty: {
@@ -353,6 +355,7 @@ export const updateFolder = [
 			},
 		},
 	}),
+	verifyData,
 	asyncHandler(async (req, res, next) => {
 		const { pk: userPk } = req.user;
 		const { folderId } = req.params;

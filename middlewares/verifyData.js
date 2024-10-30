@@ -1,8 +1,6 @@
-import { validationResult, checkSchema, matchedData } from 'express-validator';
+import { validationResult, matchedData } from 'express-validator';
 
-export const verifyData = schema => async (req, res, next) => {
-	await checkSchema(schema, ['body']).run(req);
-
+export const verifyData = (req, res, next) => {
 	const schemaErrors = validationResult(req);
 
 	const handleSchemaErrors = () => {
@@ -14,7 +12,7 @@ export const verifyData = schema => async (req, res, next) => {
 			fields[key] = errors[key]['msg'];
 		}
 
-		res.status(req.schema?.isConflict ? 409 : 400).json({
+		res.status(400).json({
 			success: false,
 			fields,
 		});
