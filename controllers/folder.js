@@ -162,10 +162,19 @@ export const getFolder = [
 			},
 		});
 
+		const newFolder = folder?.files.map(file => ({
+			...file,
+			url: cloudinary.url(`${folder.id}/${file.id}`, {
+				resource_type: file.type,
+				sign_url: true,
+				type: 'private',
+			}),
+		}));
+
 		folder
 			? res.json({
 					success: true,
-					data: folder,
+					data: newFolder,
 					message: 'Get folder successfully.',
 			  })
 			: res.status(404).json({
