@@ -24,7 +24,7 @@ export const listFileSharers = [
 						type: true,
 						owner: {
 							select: {
-								username: true,
+								email: true,
 							},
 						},
 					},
