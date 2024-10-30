@@ -276,7 +276,7 @@ export const createFolder = [
 								sharer: {
 									select: {
 										id: true,
-										username: true,
+										email: true,
 									},
 								},
 							},
@@ -335,7 +335,7 @@ export const createFolder = [
 								sharer: {
 									select: {
 										id: true,
-										username: true,
+										email: true,
 									},
 								},
 							},
@@ -443,7 +443,7 @@ export const updateFolder = [
 								sharer: {
 									select: {
 										id: true,
-										username: true,
+										email: true,
 									},
 								},
 							},
@@ -502,7 +502,7 @@ export const updateFolder = [
 								sharer: {
 									select: {
 										id: true,
-										username: true,
+										email: true,
 									},
 								},
 							},
@@ -697,7 +697,7 @@ export const deleteFolder = [
 								sharer: {
 									select: {
 										id: true,
-										username: true,
+										email: true,
 									},
 								},
 							},
