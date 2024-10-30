@@ -1,7 +1,5 @@
 import { networkInterfaces } from 'node:os';
 import debug from 'debug';
-// import { createServer } from 'node:https';
-// import { readFileSync } from 'node:fs';
 
 import { app } from './app.js';
 
@@ -37,13 +35,6 @@ const handleServer = async () => {
 		serverLog(`There has an Error, so the server is closed.`);
 		process.exit(1);
 	};
-	// const handleHTTPS = () => {
-	// 	const options = {
-	// 		key: readFileSync('key.pem'),
-	// 		cert: readFileSync('cert.pem'),
-	// 	};
-	// 	return createServer(options, app);
-	// };
 
 	app
 		.listen(port, development && handleListening)
