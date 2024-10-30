@@ -520,7 +520,7 @@ export const updateFolder = [
 			},
 		});
 
-		res.status(201).json({
+		res.json({
 			success: true,
 			data: { newFolder, parentFolder },
 			message: 'Update folder successfully.',
