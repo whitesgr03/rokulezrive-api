@@ -336,7 +336,7 @@ export const deleteFileSharer = [
 		const { pk: sharedFilePk } = req.sharedFile;
 		const { pk: sharerPk } = req.sharer;
 
-		await prisma.file.update({
+		const file = await prisma.file.update({
 			where: {
 				pk: sharedFilePk,
 			},
@@ -349,10 +349,68 @@ export const deleteFileSharer = [
 					],
 				},
 			},
+			select: {
+				folder: {
+					select: {
+						id: true,
+						name: true,
+						parent: {
+							select: {
+								name: true,
+								id: true,
+							},
+						},
+						subfolders: {
+							select: {
+								id: true,
+								name: true,
+								createdAt: true,
+								_count: {
+									select: {
+										subfolders: true,
+										files: true,
+									},
+								},
+							},
+							orderBy: {
+								pk: 'asc',
+							},
+						},
+						files: {
+							select: {
+								id: true,
+								name: true,
+								size: true,
+								type: true,
+								createdAt: true,
+								sharers: {
+									select: {
+										sharer: {
+											select: {
+												id: true,
+												email: true,
+											},
+										},
+									},
+								},
+								public: {
+									select: {
+										id: true,
+									},
+								},
+							},
+							orderBy: {
+								pk: 'asc',
+							},
+						},
+					},
+				},
+			},
 		});
 
 		res.json({
 			success: true,
+			data: { currentFolder: file.folder },
 			message: 'Delete file sharer successfully.',
 		});
 	}),
