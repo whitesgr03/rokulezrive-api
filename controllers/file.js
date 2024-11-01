@@ -403,26 +403,146 @@ export const deleteFile = [
 	asyncHandler(async (req, res) => {
 		const { pk } = req.file;
 
-		await prisma.$transaction([
-			prisma.fileSharers.deleteMany({
-				where: {
-					fileId: pk,
+		const file = await prisma.file.delete({
+			where: {
+				pk,
+			},
+			select: {
+				folder: {
+					select: {
+						pk: true,
+						parent: {
+							select: {
+								pk: true,
+							},
+						},
+					},
+				},
+			},
+		});
+
+		const [currentFolder, parentFolder] = await Promise.all([
+			prisma.folder.findUnique({
+				where: { pk: file.folder.pk },
+				select: {
+					id: true,
+					name: true,
+					parent: {
+						select: {
+							name: true,
+							id: true,
+						},
+					},
+					subfolders: {
+						select: {
+							id: true,
+							name: true,
+							createdAt: true,
+							_count: {
+								select: {
+									subfolders: true,
+									files: true,
+								},
+							},
+						},
+						orderBy: {
+							pk: 'asc',
+						},
+					},
+					files: {
+						select: {
+							id: true,
+							name: true,
+							size: true,
+							type: true,
+							createdAt: true,
+							sharers: {
+								select: {
+									sharer: {
+										select: {
+											id: true,
+											email: true,
+										},
+									},
+								},
+							},
+							public: {
+								select: {
+									id: true,
+								},
+							},
+						},
+						orderBy: {
+							pk: 'asc',
+						},
+					},
 				},
 			}),
-			prisma.publicFile.deleteMany({
-				where: {
-					fileId: pk,
-				},
-			}),
-			prisma.file.delete({
-				where: {
-					pk,
-				},
-			}),
+			file.folder.parent?.pk &&
+				prisma.folder.findUnique({
+					where: { pk: file.folder.parent.pk },
+					select: {
+						id: true,
+						name: true,
+						parent: {
+							select: {
+								name: true,
+								id: true,
+							},
+						},
+						subfolders: {
+							select: {
+								id: true,
+								name: true,
+								createdAt: true,
+								_count: {
+									select: {
+										subfolders: true,
+										files: true,
+									},
+								},
+							},
+							orderBy: {
+								pk: 'asc',
+							},
+						},
+						files: {
+							select: {
+								id: true,
+								name: true,
+								size: true,
+								type: true,
+								createdAt: true,
+								sharers: {
+									select: {
+										sharer: {
+											select: {
+												id: true,
+												email: true,
+											},
+										},
+									},
+								},
+								public: {
+									select: {
+										id: true,
+									},
+								},
+							},
+							orderBy: {
+								pk: 'asc',
+							},
+						},
+					},
+				}),
 		]);
 
 		res.json({
 			success: true,
+			data: {
+				currentFolder,
+				parentFolder,
+			},
 			message: 'Delete file successfully.',
 		});
 	}),
