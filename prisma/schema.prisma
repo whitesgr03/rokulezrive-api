@@ -1,0 +1,86 @@
+generator client {
+  provider        = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model File {
+  pk   Int    @id @default(autoincrement())
+  id   String @unique
+  name String
+  size Int
+  type String
+
+  owner   User @relation(fields: [ownerId], references: [pk], onDelete: Cascade)
+  ownerId Int
+
+  folder   Folder @relation(fields: [folderId], references: [pk], onDelete: Cascade)
+  folderId Int
+
+  sharers FileSharers[]
+  public  PublicFile?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FileSharers {
+  file     File @relation(fields: [fileId], references: [pk], onDelete: Cascade)
+  fileId   Int
+  sharer   User @relation(fields: [sharerId], references: [pk], onDelete: Cascade)
+  sharerId Int
+
+  sharedAt DateTime @default(now())
+
+  @@id([fileId, sharerId])
+}
+
+model Folder {
+  pk   Int    @id @default(autoincrement())
+  id   String @unique @default(dbgenerated("gen_random_uuid()"))
+  name String
+
+  owner   User @relation(fields: [ownerId], references: [pk], onDelete: Cascade)
+  ownerId Int
+
+  parent   Folder? @relation("parentSubfolders", fields: [parentId], references: [pk], onDelete: Cascade)
+  parentId Int?
+
+  subfolders Folder[] @relation("parentSubfolders")
+
+  files File[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PublicFile {
+  pk Int    @id @default(autoincrement())
+  id String @unique @default(uuid())
+
+  file   File? @relation(fields: [fileId], references: [pk], onDelete: Cascade)
+  fileId Int?  @unique
+
+  createdAt DateTime @default(now())
+}
+
+model User {
+  pk    Int    @id @default(autoincrement())
+  id    String @unique
+  email String @unique
+
+  // password String?
+  // displayname String?
+  // credential  Credential?
+
+  files       File[]
+  folders     Folder[]
+  sharedFiles FileSharers[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

@@ -1,9 +1,0 @@
-model PublicFile {
-  pk Int    @id @default(autoincrement())
-  id String @unique @default(uuid())
-
-  file   File? @relation(fields: [fileId], references: [pk])
-  fileId Int?  @unique
-
-  createdAt DateTime @default(now())
-}
