@@ -98,7 +98,7 @@ export const createFile = [
 		const { pk: userPk } = req.user;
 
 		try {
-			await prisma.file.create({
+			const file = await prisma.file.create({
 				data: {
 					id: public_id.split('/')[1],
 					name: Buffer.from(originalname, 'latin1').toString('utf8'), // For busboy defParanCharset issue (multer)
@@ -107,9 +107,130 @@ export const createFile = [
 					ownerId: userPk,
 					folderId: folderPk,
 				},
+				select: {
+					folder: {
+						select: {
+							id: true,
+							name: true,
+							parent: {
+								select: {
+									name: true,
+									id: true,
+								},
+							},
+							subfolders: {
+								select: {
+									id: true,
+									name: true,
+									createdAt: true,
+									_count: {
+										select: {
+											subfolders: true,
+											files: true,
+										},
+									},
+								},
+								orderBy: {
+									pk: 'asc',
+								},
+							},
+							files: {
+								select: {
+									id: true,
+									name: true,
+									size: true,
+									type: true,
+									createdAt: true,
+									sharers: {
+										select: {
+											sharer: {
+												select: {
+													id: true,
+													email: true,
+												},
+											},
+										},
+									},
+									public: {
+										select: {
+											id: true,
+										},
+									},
+								},
+								orderBy: {
+									pk: 'asc',
+								},
+							},
+						},
+					},
+				},
 			});
+
+			const parentFolder =
+				file.folder.parent?.id &&
+				(await prisma.folder.findUnique({
+					where: { id: file.folder.parent.id },
+					select: {
+						id: true,
+						name: true,
+						parent: {
+							select: {
+								name: true,
+								id: true,
+							},
+						},
+						subfolders: {
+							select: {
+								id: true,
+								name: true,
+								createdAt: true,
+								_count: {
+									select: {
+										subfolders: true,
+										files: true,
+									},
+								},
+							},
+							orderBy: {
+								pk: 'asc',
+							},
+						},
+						files: {
+							select: {
+								id: true,
+								name: true,
+								size: true,
+								type: true,
+								createdAt: true,
+								sharers: {
+									select: {
+										sharer: {
+											select: {
+												id: true,
+												email: true,
+											},
+										},
+									},
+								},
+								public: {
+									select: {
+										id: true,
+									},
+								},
+							},
+							orderBy: {
+								pk: 'asc',
+							},
+						},
+					},
+				}));
+
 			res.status(201).json({
 				success: true,
+				data: {
+					currentFolder: file.folder,
+					parentFolder,
+				},
 				message: 'Upload file is successfully',
 			});
 		} catch (err) {
