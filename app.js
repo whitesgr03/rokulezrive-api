@@ -13,7 +13,10 @@ export const app = express();
 const errorLog = debug('ServerError');
 
 const corsOptions = {
-	origin: process.env.APP_URL,
+	origin:
+		process.env.NODE_ENV === 'production'
+			? process.env.APP_URL
+			: process.env.LOCAL_APP_URL,
 	methods: ['GET', 'POST', 'PATCH', 'DELETE'],
 	allowedHeaders: ['Content-Type', 'Authorization'],
 	maxAge: 3600,
@@ -21,7 +24,6 @@ const corsOptions = {
 const helmetOptions = {
 	xFrameOptions: { action: 'deny' },
 };
-
 
 process.env.NODE_ENV === 'production' && app.set('trust proxy', 1);
 
