@@ -187,10 +187,20 @@ export const deletePublicFile = [
 					ownerId: userPk,
 				},
 			},
+			select: {
+				file: {
+					select: { folder: { select: { pk: true } } },
+				},
+			},
 		});
 
+		const handleSetLocalVariable = () => {
+			req.folder = publicFile.file.folder;
+			next();
+		};
+
 		publicFile
-			? next()
+			? handleSetLocalVariable()
 			: res.status(404).json({
 					success: false,
 					message: 'Public file could not been found.',
