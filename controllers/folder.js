@@ -186,7 +186,7 @@ export const createFolder = [
 				bail: true,
 			},
 		},
-		parentId: {
+		folderId: {
 			notEmpty: {
 				errorMessage: 'Parent folder id is required.',
 			},
@@ -194,22 +194,27 @@ export const createFolder = [
 	}),
 	verifyData,
 	asyncHandler(async (req, res, next) => {
-		const { parentId } = req.data;
+		const { folderId } = req.data;
 		const { pk: userPk } = req.user;
 
-		const parentFolder = await prisma.folder.findUnique({
-			where: { ownerId: userPk, id: parentId },
+		const folder = await prisma.folder.findUnique({
+			where: { ownerId: userPk, id: folderId },
 			select: {
 				pk: true,
+				parent: {
+					select: {
+						pk: true,
+					},
+				},
 			},
 		});
 
 		const handleSetLocalVariable = () => {
-			req.folder = parentFolder;
+			req.folder = folder;
 			next();
 		};
 
-		parentFolder
+		folder
 			? handleSetLocalVariable()
 			: res.status(404).json({
 					success: false,
@@ -219,13 +224,13 @@ export const createFolder = [
 	asyncHandler(async (req, res) => {
 		const { name } = req.data;
 		const { pk: userPk } = req.user;
-		const { pk: parentPk } = req.folder;
+		const { pk: folderPk, parent } = req.folder;
 
 		const newFolder = await prisma.folder.create({
 			data: {
 				name,
 				ownerId: userPk,
-				parentId: parentPk,
+				parentId: folderPk,
 			},
 			select: {
 				id: true,
@@ -282,68 +287,129 @@ export const createFolder = [
 			},
 		});
 
-		const parentFolder = await prisma.folder.findUnique({
-			where: {
-				pk: parentPk,
-			},
-			select: {
-				id: true,
-				name: true,
-				parent: {
-					select: {
-						name: true,
-						id: true,
-					},
+		const [currentFolder, parentFolder] = await Promise.all([
+			prisma.folder.findUnique({
+				where: {
+					pk: folderPk,
 				},
-				subfolders: {
-					select: {
-						id: true,
-						name: true,
-						createdAt: true,
-						_count: {
-							select: {
-								subfolders: true,
-								files: true,
-							},
+				select: {
+					id: true,
+					name: true,
+					parent: {
+						select: {
+							name: true,
+							id: true,
 						},
 					},
-					orderBy: {
-						pk: 'asc',
-					},
-				},
-				files: {
-					select: {
-						id: true,
-						name: true,
-						size: true,
-						type: true,
-						createdAt: true,
-						sharers: {
-							select: {
-								sharer: {
-									select: {
-										id: true,
-										email: true,
-									},
+					subfolders: {
+						select: {
+							id: true,
+							name: true,
+							createdAt: true,
+							_count: {
+								select: {
+									subfolders: true,
+									files: true,
 								},
 							},
 						},
-						public: {
+						orderBy: {
+							pk: 'asc',
+						},
+					},
+					files: {
+						select: {
+							id: true,
+							name: true,
+							size: true,
+							type: true,
+							createdAt: true,
+							sharers: {
+								select: {
+									sharer: {
+										select: {
+											id: true,
+											email: true,
+										},
+									},
+								},
+							},
+							public: {
+								select: {
+									id: true,
+								},
+							},
+						},
+						orderBy: {
+							pk: 'asc',
+						},
+					},
+				},
+			}),
+			parent?.pk &&
+				prisma.folder.findUnique({
+					where: {
+						pk: parent.pk,
+					},
+					select: {
+						id: true,
+						name: true,
+						parent: {
 							select: {
+								name: true,
 								id: true,
 							},
 						},
+						subfolders: {
+							select: {
+								id: true,
+								name: true,
+								createdAt: true,
+								_count: {
+									select: {
+										subfolders: true,
+										files: true,
+									},
+								},
+							},
+							orderBy: {
+								pk: 'asc',
+							},
+						},
+						files: {
+							select: {
+								id: true,
+								name: true,
+								size: true,
+								type: true,
+								createdAt: true,
+								sharers: {
+									select: {
+										sharer: {
+											select: {
+												id: true,
+												email: true,
+											},
+										},
+									},
+								},
+								public: {
+									select: {
+										id: true,
+									},
+								},
+							},
+							orderBy: {
+								pk: 'asc',
+							},
+						},
 					},
-					orderBy: {
-						pk: 'asc',
-					},
-				},
-			},
-		});
+				}),
+		]);
 
 		res.status(201).json({
 			success: true,
-			data: { newFolder, parentFolder },
+			data: { newFolder, currentFolder, parentFolder },
 			message: 'Create subfolder successfully.',
 		});
 	}),
