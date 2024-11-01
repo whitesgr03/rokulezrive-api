@@ -208,13 +208,72 @@ export const deletePublicFile = [
 	}),
 	asyncHandler(async (req, res) => {
 		const { publicId } = req.params;
+		const { pk } = req.folder;
 
 		await prisma.publicFile.delete({
 			where: { id: publicId },
 		});
 
+		const currentFolder = await prisma.folder.findUnique({
+			where: { pk },
+			select: {
+				id: true,
+				name: true,
+				parent: {
+					select: {
+						name: true,
+						id: true,
+					},
+				},
+				subfolders: {
+					select: {
+						id: true,
+						name: true,
+						createdAt: true,
+						_count: {
+							select: {
+								subfolders: true,
+								files: true,
+							},
+						},
+					},
+					orderBy: {
+						pk: 'asc',
+					},
+				},
+				files: {
+					select: {
+						id: true,
+						name: true,
+						size: true,
+						type: true,
+						createdAt: true,
+						sharers: {
+							select: {
+								sharer: {
+									select: {
+										id: true,
+										email: true,
+									},
+								},
+							},
+						},
+						public: {
+							select: {
+								id: true,
+							},
+						},
+					},
+					orderBy: {
+						pk: 'asc',
+					},
+				},
+			},
+		});
+
 		res.json({
 			success: true,
+			data: { currentFolder },
 			message: 'Delete public file successfully.',
 		});
 	}),
