@@ -613,6 +613,8 @@ export const deleteFolder = [
 			  });
 	}),
 	asyncHandler(async (req, res) => {
+		const { pk } = req.folder;
+
 		const folders = await prisma.folder.findMany({
 			where: { ownerId: req.user.pk },
 			select: {
@@ -677,104 +679,154 @@ export const deleteFolder = [
 
 		const allDeleteFolders = findAllDeleteFolders([], [req.folder]);
 
-		const allDeleteFolderPks = allDeleteFolders.map(folder => folder.pk);
 		const allDeleteFolderIds = allDeleteFolders
 			.filter(folder => folder.id)
 			.map(folder => folder.id);
-		const allDeleteFolderFilePks = allDeleteFolders
-			.filter(folder => folder.files)
-			.map(folder => folder.files)
-			.reduce((result, file) => result.concat(file.map(f => f.pk)), []);
 
 		allDeleteFolderIds.length > 0 &&
 			(await Promise.all(
 				allDeleteFolderIds.map(folderId =>
-					cloudinary.api.delete_resources_by_prefix(folderId)
+					cloudinary.api.delete_resources_by_prefix(folderId, {
+						type: 'private',
+					})
 				)
 			));
 
-		allDeleteFolderFilePks.length > 0
-			? await prisma.$transaction([
-					prisma.publicFile.deleteMany({
-						where: { fileId: { in: allDeleteFolderFilePks } },
-					}),
-					prisma.fileSharers.deleteMany({
-						where: { fileId: { in: allDeleteFolderFilePks } },
-					}),
-					prisma.file.deleteMany({
-						where: { pk: { in: allDeleteFolderFilePks } },
-					}),
-					prisma.folder.deleteMany({
-						where: { pk: { in: allDeleteFolderPks } },
-					}),
-			  ])
-			: await prisma.folder.deleteMany({
-					where: { pk: { in: allDeleteFolderPks } },
-			  });
-
-		const allFolders = await prisma.folder.findMany({
-			where: { ownerId: req.user.pk },
+		const folder = await prisma.folder.delete({
+			where: { pk },
 			select: {
-				id: true,
-				name: true,
 				parent: {
 					select: {
-						name: true,
-						id: true,
-					},
-				},
-				subfolders: {
-					select: {
-						id: true,
-						name: true,
-						createdAt: true,
-						_count: {
+						pk: true,
+						parent: {
 							select: {
-								subfolders: true,
-								files: true,
+								pk: true,
 							},
 						},
 					},
-					orderBy: {
-						pk: 'asc',
-					},
 				},
-				files: {
-					select: {
-						id: true,
-						name: true,
-						size: true,
-						type: true,
-						createdAt: true,
-						sharers: {
-							select: {
-								sharer: {
-									select: {
-										id: true,
-										email: true,
-									},
-								},
-							},
-						},
-						public: {
-							select: {
-								id: true,
-							},
-						},
-					},
-					orderBy: {
-						pk: 'asc',
-					},
-				},
-			},
-			orderBy: {
-				pk: 'asc',
 			},
 		});
 
+		const [currentFolder, parentFolder] = await Promise.all([
+			prisma.folder.findUnique({
+				where: { pk: folder.parent.pk },
+				select: {
+					id: true,
+					name: true,
+					parent: {
+						select: {
+							name: true,
+							id: true,
+						},
+					},
+					subfolders: {
+						select: {
+							id: true,
+							name: true,
+							createdAt: true,
+							_count: {
+								select: {
+									subfolders: true,
+									files: true,
+								},
+							},
+						},
+						orderBy: {
+							pk: 'asc',
+						},
+					},
+					files: {
+						select: {
+							id: true,
+							name: true,
+							size: true,
+							type: true,
+							createdAt: true,
+							sharers: {
+								select: {
+									sharer: {
+										select: {
+											id: true,
+											email: true,
+										},
+									},
+								},
+							},
+							public: {
+								select: {
+									id: true,
+								},
+							},
+						},
+						orderBy: {
+							pk: 'asc',
+						},
+					},
+				},
+			}),
+			folder.parent.parent?.pk &&
+				prisma.folder.findUnique({
+					where: { pk: folder.parent.parent.pk },
+					select: {
+						id: true,
+						name: true,
+						parent: {
+							select: {
+								name: true,
+								id: true,
+							},
+						},
+						subfolders: {
+							select: {
+								id: true,
+								name: true,
+								createdAt: true,
+								_count: {
+									select: {
+										subfolders: true,
+										files: true,
+									},
+								},
+							},
+							orderBy: {
+								pk: 'asc',
+							},
+						},
+						files: {
+							select: {
+								id: true,
+								name: true,
+								size: true,
+								type: true,
+								createdAt: true,
+								sharers: {
+									select: {
+										sharer: {
+											select: {
+												id: true,
+												email: true,
+											},
+										},
+									},
+								},
+								public: {
+									select: {
+										id: true,
+									},
+								},
+							},
+							orderBy: {
+								pk: 'asc',
+							},
+						},
+					},
+				}),
+		]);
+
 		res.json({
 			success: true,
-			data: allFolders,
+			data: { currentFolder, parentFolder },
 			message: 'Delete folder successfully.',
 		});
 	}),
