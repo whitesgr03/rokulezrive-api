@@ -455,7 +455,7 @@ export const updateFolder = [
 		const { name } = req.data;
 		const { folderId } = req.params;
 
-		const newFolder = await prisma.folder.update({
+		const currentFolder = await prisma.folder.update({
 			where: { id: folderId },
 			data: {
 				name,
@@ -517,7 +517,7 @@ export const updateFolder = [
 
 		const parentFolder = await prisma.folder.findUnique({
 			where: {
-				id: newFolder.parent.id,
+				id: currentFolder.parent.id,
 			},
 			select: {
 				id: true,
@@ -576,7 +576,7 @@ export const updateFolder = [
 
 		res.json({
 			success: true,
-			data: { newFolder, parentFolder },
+			data: { currentFolder, parentFolder },
 			message: 'Update folder successfully.',
 		});
 	}),
