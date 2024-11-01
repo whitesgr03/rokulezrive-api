@@ -193,6 +193,61 @@ export const createFileSharer = [
 				},
 			},
 			select: {
+				folder: {
+					select: {
+						id: true,
+						name: true,
+						parent: {
+							select: {
+								name: true,
+								id: true,
+							},
+						},
+						subfolders: {
+							select: {
+								id: true,
+								name: true,
+								createdAt: true,
+								_count: {
+									select: {
+										subfolders: true,
+										files: true,
+									},
+								},
+							},
+							orderBy: {
+								pk: 'asc',
+							},
+						},
+						files: {
+							select: {
+								id: true,
+								name: true,
+								size: true,
+								type: true,
+								createdAt: true,
+								sharers: {
+									select: {
+										sharer: {
+											select: {
+												id: true,
+												email: true,
+											},
+										},
+									},
+								},
+								public: {
+									select: {
+										id: true,
+									},
+								},
+							},
+							orderBy: {
+								pk: 'asc',
+							},
+						},
+					},
+				},
 				sharers: {
 					where: {
 						sharerId: sharerPk,
@@ -211,7 +266,10 @@ export const createFileSharer = [
 
 		res.status(201).json({
 			success: true,
-			data: file.sharers[0],
+			data: {
+				newShare: file.sharers[0],
+				currentFolder: file.folder,
+			},
 			message: 'Create file sharer successfully.',
 		});
 	}),
