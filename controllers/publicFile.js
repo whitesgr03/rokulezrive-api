@@ -96,15 +96,80 @@ export const createPublicFile = [
 	asyncHandler(async (req, res) => {
 		const { pk: filePk } = req.file;
 
-		const { id } = await prisma.publicFile.create({
+		const publicFile = await prisma.publicFile.create({
 			data: {
 				fileId: filePk,
+			},
+			select: {
+				id: true,
+				file: {
+					select: {
+						folder: {
+							select: {
+								id: true,
+								name: true,
+								parent: {
+									select: {
+										name: true,
+										id: true,
+									},
+								},
+								subfolders: {
+									select: {
+										id: true,
+										name: true,
+										createdAt: true,
+										_count: {
+											select: {
+												subfolders: true,
+												files: true,
+											},
+										},
+									},
+									orderBy: {
+										pk: 'asc',
+									},
+								},
+								files: {
+									select: {
+										id: true,
+										name: true,
+										size: true,
+										type: true,
+										createdAt: true,
+										sharers: {
+											select: {
+												sharer: {
+													select: {
+														id: true,
+														email: true,
+													},
+												},
+											},
+										},
+										public: {
+											select: {
+												id: true,
+											},
+										},
+									},
+									orderBy: {
+										pk: 'asc',
+									},
+								},
+							},
+						},
+					},
+				},
 			},
 		});
 
 		res.status(201).json({
 			success: true,
-			data: id,
+			data: {
+				publicFileId: publicFile.id,
+				currentFolder: publicFile.file.folder,
+			},
 			message: 'Create public file successfully.',
 		});
 	}),
