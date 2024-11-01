@@ -557,6 +557,11 @@ export const getDownloadUrl = [
 			where: { id: fileId },
 			select: {
 				type: true,
+				owner: {
+					select: {
+						pk: true,
+					},
+				},
 				folder: {
 					select: {
 						id: true,
@@ -575,7 +580,7 @@ export const getDownloadUrl = [
 			next();
 		};
 
-		file.sharers.length === 1
+		file.sharers.length === 1 || file.owner.pk === userPk
 			? handleSetLocalVariable()
 			: res.status(404).json({
 					success: false,
