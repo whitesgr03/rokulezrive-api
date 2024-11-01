@@ -15,3 +15,11 @@ nodemon.json
 *example*
 
 seed*
+
+.github
+
+.dockerignore
+
+fly*
+
+Dockerfile
