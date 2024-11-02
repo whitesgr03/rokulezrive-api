@@ -1,6 +1,6 @@
 import { validationResult, matchedData } from 'express-validator';
 
-export const verifyData = (req, res, next) => {
+export const verifyScheme = (req, res, next) => {
 	const schemaErrors = validationResult(req);
 
 	const handleSchemaErrors = () => {

@@ -5,7 +5,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { checkSchema } from 'express-validator';
 
 // Middlewares
-import { verifyData } from '../middlewares/verifyData.js';
+import { verifyScheme } from '../middlewares/verifyScheme.js';
 
 // Variables
 const prisma = new PrismaClient();
@@ -192,7 +192,7 @@ export const createFolder = [
 			},
 		},
 	}),
-	verifyData,
+	verifyScheme,
 	asyncHandler(async (req, res, next) => {
 		const { folderId } = req.data;
 		const { pk: userPk } = req.user;
@@ -430,7 +430,7 @@ export const updateFolder = [
 			},
 		},
 	}),
-	verifyData,
+	verifyScheme,
 	asyncHandler(async (req, res, next) => {
 		const { pk: userPk } = req.user;
 		const { folderId } = req.params;
