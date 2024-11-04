@@ -13,6 +13,8 @@
 		"coverage:unit": "NODE_ENV=test vitest --coverage --config ./vitest.config.unit.js",
 		"test:integration": "NODE_ENV=test vitest --config ./vitest.config.integration.js",
 		"coverage:integration": "NODE_ENV=test vitest --coverage --config ./vitest.config.integration.js",
+		"test:startup": "./scripts/run-integration.sh",
+		"test:drop": "docker compose down",
 	},
 	"prisma": {
 		"seed": "node prisma/seed.js"
