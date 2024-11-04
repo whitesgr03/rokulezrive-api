@@ -148,19 +148,20 @@ export const getFolder = [
 			},
 		});
 
-		const newFiles = folder?.files.map(file => ({
-			...file,
-			url: cloudinary.url(`${folder.id}/${file.id}`, {
-				resource_type: file.type,
-				sign_url: true,
-				type: 'private',
-			}),
-		}));
-
 		folder
 			? res.json({
 					success: true,
-					data: { ...folder, files: newFiles },
+					data: {
+						...folder,
+						files: folder.files.map(file => ({
+							...file,
+							url: cloudinary.url(`${folder.id}/${file.id}`, {
+								resource_type: file.type,
+								sign_url: true,
+								type: 'private',
+							}),
+						})),
+					},
 					message: 'Get folder successfully.',
 			  })
 			: res.status(404).json({
