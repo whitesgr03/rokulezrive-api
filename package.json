@@ -9,11 +9,10 @@
 	},
 	"scripts": {
 		"start": "NODE_ENV=production node index",
-		"pro": "USE_HTTPS=true nodemon --env-file=.env",
-		"dev": "NODE_ENV=development nodemon --env-file=.env",
-		"commitlint": "commitlint --edit",
-		"test": "vitest",
-		"coverage": "vitest --coverage"
+		"test:unit": "NODE_ENV=test vitest --config ./vitest.config.unit.js",
+		"coverage:unit": "NODE_ENV=test vitest --coverage --config ./vitest.config.unit.js",
+		"test:integration": "NODE_ENV=test vitest --config ./vitest.config.integration.js",
+		"coverage:integration": "NODE_ENV=test vitest --coverage --config ./vitest.config.integration.js",
 	},
 	"prisma": {
 		"seed": "node prisma/seed.js"
