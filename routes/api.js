@@ -5,14 +5,18 @@ import * as folderControllers from '../controllers/folder.js';
 import * as fileSharerControllers from '../controllers/fileSharer.js';
 import * as publicFileControllers from '../controllers/publicFile.js';
 
-import { verifyToken } from '../middlewares/verifyToken.js';
+import {
+	verifyAuthorization,
+	verifyBearer,
+	verifyToken,
+} from '../middlewares/verifyToken.js';
 
 const router = express.Router();
 
 router.get('/public/:publicId', publicFileControllers.getPublicFile);
 
 // Requires token
-router.use(verifyToken);
+router.use([verifyAuthorization, verifyBearer, verifyToken]);
 
 // GET
 router.get('/folders', folderControllers.listFolders);
