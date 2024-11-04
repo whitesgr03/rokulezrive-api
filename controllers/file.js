@@ -1,15 +1,14 @@
 // Packages
 import asyncHandler from 'express-async-handler';
 import multer from 'multer';
-import { PrismaClient } from '@prisma/client';
 import { v2 as cloudinary } from 'cloudinary';
 import { checkSchema } from 'express-validator';
+import { prisma } from '../lib/prisma.js';
 
 // Middlewares
 import { verifyScheme } from '../middlewares/verifyScheme.js';
 
 // Variables
-const prisma = new PrismaClient();
 const upload = multer({
 	storage: multer.memoryStorage(),
 });

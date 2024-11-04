@@ -1,12 +1,10 @@
 import asyncHandler from 'express-async-handler';
-import { PrismaClient } from '@prisma/client';
+
 import { checkSchema } from 'express-validator';
+import { prisma } from '../lib/prisma.js';
 
 // Middlewares
 import { verifyScheme } from '../middlewares/verifyScheme.js';
-
-// Variables
-const prisma = new PrismaClient();
 
 export const listFileSharers = [
 	asyncHandler(async (req, res) => {
