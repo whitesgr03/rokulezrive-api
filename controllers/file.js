@@ -561,7 +561,7 @@ export const getDownloadUrl = [
 		res.json({
 			success: true,
 			data: { url },
-			message: 'Get file download url successfully ',
+			message: 'Get file download url successfully.',
 		});
 	}),
 ];
