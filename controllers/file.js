@@ -508,7 +508,7 @@ export const deleteFile = [
 
 export const getDownloadUrl = [
 	asyncHandler(async (req, res, next) => {
-		const userPk = req.user?.pk;
+		const { pk: userPk } = req.user;
 		const { fileId } = req.params;
 
 		const file = await prisma.file.findUnique({
