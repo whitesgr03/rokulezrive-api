@@ -349,21 +349,17 @@ export const deleteFile = [
 	}),
 	asyncHandler(async (req, res, next) => {
 		const { fileId } = req.params;
-		const { type, folder } = req.file;
+		const { pk, type, folder } = req.file;
 
-		const response = await cloudinary.uploader.destroy(
-			`${folder.id}/${fileId}`,
-			{ resource_type: type, type: 'private', invalidate: true }
-		);
+		const response = await cloudinary.uploader
+			.destroy(`${folder.id}/${fileId}`, {
+				resource_type: type,
+				type: 'private',
+				invalidate: true,
+			})
+			.catch(err => next(err));
 
-		response.result === 'ok'
-			? next()
-			: response.result === 'not found'
-			? next('Not found')
-			: next(response.result);
-	}),
-	asyncHandler(async (req, res) => {
-		const { pk } = req.file;
+		response.result !== 'ok' && next(response.result);
 
 		const file = await prisma.file.delete({
 			where: {
