@@ -7,16 +7,13 @@ import helmet from 'helmet';
 import cors from 'cors';
 
 // routes
-import apiRouter from './routes/api.js';
+import { apiRouter } from './routes/api.js';
 
 export const app = express();
 const errorLog = debug('ServerError');
 
 const corsOptions = {
-	origin:
-		process.env.NODE_ENV === 'production'
-			? process.env.APP_URL
-			: process.env.LOCAL_APP_URL,
+	origin: process.env.APP_URL,
 	methods: ['GET', 'POST', 'PATCH', 'DELETE'],
 	allowedHeaders: ['Content-Type', 'Authorization'],
 	maxAge: 3600,
