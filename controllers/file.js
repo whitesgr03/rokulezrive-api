@@ -3,9 +3,7 @@ import asyncHandler from 'express-async-handler';
 import multer from 'multer';
 import { checkSchema } from 'express-validator';
 import { prisma } from '../lib/prisma.js';
-import {
-  cloudinary,
-} from '../lib/cloudinary.js';
+import { cloudinary, uploadFile } from '../lib/cloudinary.js';
 
 const upload = multer({
 	storage: multer.memoryStorage(),
@@ -59,110 +57,24 @@ export const createFile = [
 			  });
 	}),
 	asyncHandler(async (req, res, next) => {
+		const { originalname, size, buffer } = req.file;
 		const { folderId } = req.params;
-		const { buffer } = req.file;
-
-		await new Promise(resolve =>
-			cloudinary.uploader
-				.upload_stream(
-					{
-						resource_type: 'auto',
-						public_id_prefix: folderId,
-						type: 'private',
-						access_mode: 'public',
-						use_filename_as_display_name: false,
-					},
-					(err, result) => {
-						const handleSetLocalVariable = () => {
-							req.upload = result;
-							resolve();
-							next();
-						};
-						err ? next(err) : handleSetLocalVariable();
-					}
-				)
-				.end(buffer)
-		);
-	}),
-	async (req, res, next) => {
-		const { public_id, resource_type } = req.upload;
-		const { originalname, size } = req.file;
 		const { pk: folderPk } = req.folder;
 		const { pk: userPk } = req.user;
 
-		try {
-			const file = await prisma.file.create({
-				data: {
-					id: public_id.split('/')[1],
-					name: Buffer.from(originalname, 'latin1').toString('utf8'), // For busboy defParanCharset issue (multer)
-					size,
-					type: resource_type,
-					ownerId: userPk,
-					folderId: folderPk,
-				},
-				select: {
-					folder: {
-						select: {
-							id: true,
-							name: true,
-							parent: {
-								select: {
-									name: true,
-									id: true,
-								},
-							},
-							subfolders: {
-								select: {
-									id: true,
-									name: true,
-									createdAt: true,
-									_count: {
-										select: {
-											subfolders: true,
-											files: true,
-										},
-									},
-								},
-								orderBy: {
-									pk: 'asc',
-								},
-							},
-							files: {
-								select: {
-									id: true,
-									name: true,
-									size: true,
-									type: true,
-									createdAt: true,
-									sharers: {
-										select: {
-											sharer: {
-												select: {
-													id: true,
-													email: true,
-												},
-											},
-										},
-									},
-									public: {
-										select: {
-											id: true,
-										},
-									},
-								},
-								orderBy: {
-									pk: 'asc',
-								},
-							},
-						},
-					},
-				},
-			});
+		const upload = await uploadFile(folderId, buffer).catch(err => next(err));
 
-			const parentFolder =
-				file.folder.parent?.id &&
-				(await prisma.folder.findUnique({
-					where: { id: file.folder.parent.id },
+		const file = await prisma.file.create({
+			data: {
+				id: upload.public_id.split('/')[1],
+				name: Buffer.from(originalname, 'latin1').toString('utf8'), // For busboy defParanCharset issue (multer)
+				size,
+				type: upload.resource_type,
+				ownerId: userPk,
+				folderId: folderPk,
+			},
+			select: {
+				folder: {
 					select: {
 						id: true,
 						name: true,
@@ -216,21 +128,78 @@ export const createFile = [
 							},
 						},
 					},
-				}));
-
-			res.status(201).json({
-				success: true,
-				data: {
-					currentFolder: file.folder,
-					parentFolder,
 				},
-				message: 'Upload file is successfully',
-			});
-		} catch (err) {
-			await cloudinary.uploader.destroy(public_id, { resource_type });
-			next(err);
-		}
-	},
+			},
+		});
+
+		const parentFolder =
+			file.folder.parent?.id &&
+			(await prisma.folder.findUnique({
+				where: { id: file.folder.parent.id },
+				select: {
+					id: true,
+					name: true,
+					parent: {
+						select: {
+							name: true,
+							id: true,
+						},
+					},
+					subfolders: {
+						select: {
+							id: true,
+							name: true,
+							createdAt: true,
+							_count: {
+								select: {
+									subfolders: true,
+									files: true,
+								},
+							},
+						},
+						orderBy: {
+							pk: 'asc',
+						},
+					},
+					files: {
+						select: {
+							id: true,
+							name: true,
+							size: true,
+							type: true,
+							createdAt: true,
+							sharers: {
+								select: {
+									sharer: {
+										select: {
+											id: true,
+											email: true,
+										},
+									},
+								},
+							},
+							public: {
+								select: {
+									id: true,
+								},
+							},
+						},
+						orderBy: {
+							pk: 'asc',
+						},
+					},
+				},
+			}));
+
+		res.status(201).json({
+			success: true,
+			data: {
+				currentFolder: file.folder,
+				parentFolder,
+			},
+			message: 'Upload file is successfully.',
+		});
+	}),
 ];
 
 export const updateFile = [
