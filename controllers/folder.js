@@ -649,8 +649,8 @@ export const deleteFolder = [
 				)
 			));
 
-		const folder = await prisma.folder.delete({
-			where: { pk },
+		const deletedFolder = await prisma.folder.delete({
+			where: { id },
 			select: {
 				parent: {
 					select: {
@@ -667,7 +667,7 @@ export const deleteFolder = [
 
 		const [currentFolder, parentFolder] = await Promise.all([
 			prisma.folder.findUnique({
-				where: { pk: folder.parent.pk },
+				where: { pk: deletedFolder.parent.pk },
 				select: {
 					id: true,
 					name: true,
@@ -722,9 +722,9 @@ export const deleteFolder = [
 					},
 				},
 			}),
-			folder.parent.parent?.pk &&
+			deletedFolder.parent.parent?.pk &&
 				prisma.folder.findUnique({
-					where: { pk: folder.parent.parent.pk },
+					where: { pk: deletedFolder.parent.parent.pk },
 					select: {
 						id: true,
 						name: true,
