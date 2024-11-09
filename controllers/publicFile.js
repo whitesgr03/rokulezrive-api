@@ -1,14 +1,6 @@
 import asyncHandler from 'express-async-handler';
-import { v2 as cloudinary } from 'cloudinary';
 import { prisma } from '../lib/prisma.js';
-
-// Variables
-cloudinary.config({
-	cloud_name: process.env.CLOUDINARY_NAME,
-	api_key: process.env.CLOUDINARY_API_KEY,
-	api_secret: process.env.CLOUDINARY_API_SECRET,
-	signature_algorithm: 'sha256',
-});
+import { cloudinary } from '../lib/cloudinary.js';
 
 export const getPublicFile = [
 	asyncHandler(async (req, res) => {

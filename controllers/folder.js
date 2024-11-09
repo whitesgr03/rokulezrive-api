@@ -1,18 +1,11 @@
 // Packages
 import asyncHandler from 'express-async-handler';
-import { v2 as cloudinary } from 'cloudinary';
 import { checkSchema } from 'express-validator';
 import { prisma } from '../lib/prisma.js';
+import { cloudinary } from '../lib/cloudinary.js';
 
 // Middlewares
 import { verifyScheme } from '../middlewares/verifyScheme.js';
-
-// Variables
-cloudinary.config({
-	cloud_name: process.env.CLOUDINARY_NAME,
-	api_key: process.env.CLOUDINARY_API_KEY,
-	api_secret: process.env.CLOUDINARY_API_SECRET,
-});
 
 export const listFolders = [
 	asyncHandler(async (req, res) => {
