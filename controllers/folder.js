@@ -510,29 +510,59 @@ export const updateFolder = [
 ];
 
 export const deleteFolder = [
+	checkSchema({
+		'folderIds.*': {
+			isString: {
+				errorMessage: 'Folder id must be string',
+			},
+			optional: true,
+		},
+	}),
+	verifyScheme,
 	asyncHandler(async (req, res, next) => {
 		const { pk: userPk } = req.user;
 		const { folderId } = req.params;
 
-		const folder = await prisma.folder.findUnique({
-			where: { ownerId: userPk, id: folderId },
+		const folders =
+			req.data?.folderIds &&
+			(await prisma.folder.findMany({
+				where: {
+					ownerId: userPk,
+					id: { in: req.data.folderIds },
+				},
+			}));
+
+		const defaultFolder = await prisma.folder.findFirst({
+			where: { name: 'My Drive', ownerId: userPk },
 			select: {
-				pk: true,
-				files: {
+				id: true,
+			},
+		});
+
+		const deletedFolder = await prisma.folder.findUnique({
+			where: {
+				ownerId: userPk,
+				id: folderId,
+				NOT: {
+					id: defaultFolder.id,
+				},
+			},
+			select: {
+				_count: {
 					select: {
-						pk: true,
+						files: true,
 					},
 				},
 			},
 		});
 
 		const handleSetLocalVariable = () => {
-			const { pk, files } = folder;
-			req.folder = files.length === 0 ? { pk } : { pk, files, id: folderId };
+			const { _count } = deletedFolder;
+			req.deletedFolder = { id: req.params.folderId, _count };
 			next();
 		};
 
-		folder
+		req.data?.folderIds?.length === folders?.length && deletedFolder
 			? handleSetLocalVariable()
 			: res.status(404).json({
 					success: false,
