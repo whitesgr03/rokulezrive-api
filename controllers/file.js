@@ -312,7 +312,7 @@ export const updateFile = [
 		res.json({
 			success: true,
 			data: { currentFolder: newFile.folder },
-			message: 'Update folder successfully.',
+			message: 'Update file successfully.',
 		});
 	}),
 ];
