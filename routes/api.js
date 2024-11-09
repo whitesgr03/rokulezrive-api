@@ -5,47 +5,43 @@ import * as folderControllers from '../controllers/folder.js';
 import * as fileSharerControllers from '../controllers/fileSharer.js';
 import * as publicFileControllers from '../controllers/publicFile.js';
 
-import {
-	verifyAuthorization,
-	verifyBearer,
-	verifyToken,
-} from '../middlewares/verifyToken.js';
+import { authorization } from '../middlewares/authorization.js';
 
-const router = express.Router();
+export const apiRouter = express.Router();
 
-router.get('/public/:publicId', publicFileControllers.getPublicFile);
+apiRouter.get('/public/:publicId', publicFileControllers.getPublicFile);
 
-// Requires token
-router.use([verifyAuthorization, verifyBearer, verifyToken]);
+// authorization
+apiRouter.use(authorization);
 
-// GET
-router.get('/folders', folderControllers.listFolders);
-router.get('/folders/:folderId', folderControllers.getFolder);
-router.get('/sharedFiles', fileSharerControllers.listFileSharers);
+// Folder
+apiRouter.get('/folders', folderControllers.listFolders);
+apiRouter.get('/folders/:folderId', folderControllers.getFolder);
+apiRouter.post('/folders', folderControllers.createFolder);
+apiRouter.patch('/folders/:folderId', folderControllers.updateFolder);
+apiRouter.delete('/folders/:folderId', folderControllers.deleteFolder);
 
-router.get('/files/:fileId/download-url', fileControllers.getDownloadUrl);
+// File
+apiRouter.post('/folders/:folderId/files', fileControllers.createFile);
+apiRouter.patch('/files/:fileId', fileControllers.updateFile);
+apiRouter.delete('/files/:fileId', fileControllers.deleteFile);
+apiRouter.get('/files/:fileId/download-url', fileControllers.getDownloadUrl);
 
-// POST
-router.post('/folders', folderControllers.createFolder);
-router.post('/folders/:folderId/files', fileControllers.createFile);
-router.post('/files/:fileId/sharers', fileSharerControllers.createFileSharer);
-router.post('/files/:fileId/public', publicFileControllers.createPublicFile);
-
-// PATCH
-router.patch('/folders/:folderId', folderControllers.updateFolder);
-router.patch('/files/:fileId', fileControllers.updateFile);
-
-// DELETE
-router.delete('/files/:fileId', fileControllers.deleteFile);
-router.delete('/folders/:folderId', folderControllers.deleteFolder);
-router.delete(
-	'/sharedFiles/:sharedFileId',
-	fileSharerControllers.deleteSharedFile
+// File Sharer
+apiRouter.get('/sharedFiles', fileSharerControllers.listFileSharers);
+apiRouter.post(
+	'/files/:fileId/sharers',
+	fileSharerControllers.createFileSharer
 );
-router.delete(
+apiRouter.delete(
 	'/files/:fileId/sharers/:sharerId',
 	fileSharerControllers.deleteFileSharer
 );
-router.delete('/public/:publicId', publicFileControllers.deletePublicFile);
+apiRouter.delete(
+	'/sharedFiles/:sharedFileId',
+	fileSharerControllers.deleteSharedFile
+);
 
-export default router;
+// Public File
+apiRouter.post('/files/:fileId/public', publicFileControllers.createPublicFile);
+apiRouter.delete('/public/:publicId', publicFileControllers.deletePublicFile);
