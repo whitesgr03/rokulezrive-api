@@ -23,3 +23,9 @@ seed*
 fly*
 
 Dockerfile
+
+scripts
+
+coverage
+
+docker-compose.yml
