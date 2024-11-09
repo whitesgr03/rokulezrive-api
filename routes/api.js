@@ -16,7 +16,6 @@ apiRouter.use(authorization);
 
 // Folder
 apiRouter.get('/folders', folderControllers.listFolders);
-apiRouter.get('/folders/:folderId', folderControllers.getFolder);
 apiRouter.post('/folders', folderControllers.createFolder);
 apiRouter.patch('/folders/:folderId', folderControllers.updateFolder);
 apiRouter.delete('/folders/:folderId', folderControllers.deleteFolder);
