@@ -349,8 +349,21 @@ export const updateFolder = [
 		const { pk: userPk } = req.user;
 		const { folderId } = req.params;
 
+		const defaultFolder = await prisma.folder.findFirst({
+			where: { name: 'My Drive', ownerId: userPk },
+			select: {
+				id: true,
+			},
+		});
+
 		const folder = await prisma.folder.findUnique({
-			where: { ownerId: userPk, id: folderId },
+			where: {
+				id: folderId,
+				ownerId: userPk,
+				NOT: {
+					id: defaultFolder.id,
+				},
+			},
 		});
 
 		const handleSetLocalVariable = () => {
