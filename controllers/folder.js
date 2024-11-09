@@ -569,85 +569,17 @@ export const deleteFolder = [
 					message: 'Folder could not been found.',
 			  });
 	}),
-	asyncHandler(async (req, res) => {
-		const { pk } = req.folder;
+	asyncHandler(async (req, res, next) => {
+		const { id } = req.deletedFolder;
 
-		const folders = await prisma.folder.findMany({
-			where: { ownerId: req.user.pk },
-			select: {
-				pk: true,
-				subfolders: {
-					select: {
-						pk: true,
-						id: true,
-						files: {
-							select: {
-								pk: true,
-							},
-						},
-					},
-				},
-			},
-			orderBy: {
-				pk: 'asc',
-			},
-		});
-
-		// for loop recursion
-		// const get = (result, arrSub, folders) => {
-		// 	if (arrSub.length === 0) {
-		// 		return result;
-		// 	} else {
-		// 		const children = [];
-		// 		for (const sub of arrSub) {
-		// 			const target = folders.find(folder => folder.pk === sub.pk);
-		// 			if (target.subfolders.length !== 0) {
-		// 				for (const sf of target.subfolders) {
-		// 					children.push(sf);
-		// 				}
-		// 			}
-		// 		}
-		// 		return get([...result, ...arrSub], children, folders);
-		// 	}
-		// };
-
-		const findAllDeleteFolders = (result, subfolders) =>
-			subfolders.length === 0
-				? result
-				: findAllDeleteFolders(
-						[...result, ...subfolders],
-						subfolders.reduce(
-							(previousSubs, currentSub) => [
-								...previousSubs,
-								...folders
-									.splice(
-										folders.findIndex(folder => folder.pk === currentSub.pk),
-										1
-									)[0]
-									.subfolders.map(subfolder =>
-										subfolder.files.length === 0
-											? { pk: subfolder.pk }
-											: subfolder
-									),
-							],
-							[]
-						)
-				  );
-
-		const allDeleteFolders = findAllDeleteFolders([], [req.folder]);
-
-		const allDeleteFolderIds = allDeleteFolders
-			.filter(folder => folder.id)
-			.map(folder => folder.id);
-
-		allDeleteFolderIds.length > 0 &&
+		req.data?.folderIds &&
 			(await Promise.all(
-				allDeleteFolderIds.map(folderId =>
+				req.data.folderIds.map(folderId =>
 					cloudinary.api.delete_resources_by_prefix(folderId, {
 						type: 'private',
 					})
 				)
-			));
+			).catch(err => next(err)));
 
 		const deletedFolder = await prisma.folder.delete({
 			where: { id },
