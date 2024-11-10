@@ -26,7 +26,7 @@ describe('File paths', () => {
 		});
 		it('should respond with a 400 status code and message if the auth schema is invalid', async () => {
 			const { status, body } = await request(app)
-				.get('/api/folders')
+				.get(`/api/folders/id/files`)
 				.set('Authorization', 'Public token');
 
 			expect(status).toBe(400);
@@ -37,7 +37,7 @@ describe('File paths', () => {
 		});
 		it('should respond with a 400 status code and message if token is empty', async () => {
 			const { status, body } = await request(app)
-				.get('/api/folders')
+				.get(`/api/folders/id/files`)
 				.set('Authorization', 'Bearer ');
 
 			expect(status).toBe(400);
@@ -52,7 +52,7 @@ describe('File paths', () => {
 			});
 
 			const { status, body } = await request(app)
-				.get('/api/folders')
+				.get(`/api/folders/id/files`)
 				.set('Authorization', 'Bearer token');
 
 			expect(status).toBe(403);
@@ -65,7 +65,7 @@ describe('File paths', () => {
 			jwt.verify.mockReturnValueOnce({ sub: 'mockSub' });
 
 			const { status, body } = await request(app)
-				.get('/api/folders')
+				.get(`/api/folders/id/files`)
 				.set('Authorization', 'Bearer token');
 
 			expect(status).toBe(404);
@@ -97,7 +97,7 @@ describe('File paths', () => {
 			});
 
 			const { status, body } = await request(app)
-				.get(`/api/files/${anotherUserFile.id}/download-url`)
+				.get(`/api/files/${otherUserFile.id}/download-url`)
 				.set('Authorization', 'Bearer token');
 
 			expect(status).toBe(404);
@@ -173,7 +173,7 @@ describe('File paths', () => {
 			cloudinary.utils.private_download_url.mockReturnValueOnce(mockUrl);
 
 			const { status, body } = await request(app)
-				.get(`/api/files/${anotherUserFile.id}/download-url`)
+				.get(`/api/files/${otherUserFile.id}/download-url`)
 				.set('Authorization', 'Bearer token');
 
 			expect(status).toBe(200);
@@ -230,7 +230,7 @@ describe('File paths', () => {
 			});
 
 			const { status, body } = await request(app)
-				.post(`/api/folders/${anotherUserDefaultFolder.id}/files`)
+				.post(`/api/folders/${otherUserDefaultFolder.id}/files`)
 				.set('Authorization', 'Bearer token')
 				.attach('file', `${__dirname}/setup.js`);
 
@@ -371,7 +371,7 @@ describe('File paths', () => {
 			};
 
 			const { status, body } = await request(app)
-				.patch(`/api/files/${anotherUserFile.id}`)
+				.patch(`/api/files/${otherUserFile.id}`)
 				.set('Authorization', 'Bearer token')
 				.type('json')
 				.send(mockData);
@@ -387,7 +387,6 @@ describe('File paths', () => {
 			const defaultFolder = await prisma.folder.findFirst({
 				where: { name: 'My Drive', ownerId: user.pk },
 			});
-
 			const file = await prisma.file.create({
 				data: {
 					id: '1',
@@ -438,7 +437,7 @@ describe('File paths', () => {
 			});
 
 			const { status, body } = await request(app)
-				.delete(`/api/files/${anotherUserFile.id}`)
+				.delete(`/api/files/${otherUserFile.id}`)
 				.set('Authorization', 'Bearer token');
 
 			expect(status).toBe(404);

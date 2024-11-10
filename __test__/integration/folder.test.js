@@ -256,7 +256,7 @@ describe('Folder paths', () => {
 			};
 
 			const { status, body } = await request(app)
-				.patch(`/api/folders/${anotherUserDefaultFolder.id}`)
+				.patch(`/api/folders/${otherUserDefaultFolder.id}`)
 				.set('Authorization', 'Bearer token')
 				.type('json')
 				.send(mockData);
@@ -329,7 +329,7 @@ describe('Folder paths', () => {
 			});
 
 			const { status, body } = await request(app)
-				.delete(`/api/folders/${anotherUserDefaultFolder.id}`)
+				.delete(`/api/folders/${otherUserDefaultFolder.id}`)
 				.set('Authorization', 'Bearer token');
 
 			expect(status).toBe(404);
