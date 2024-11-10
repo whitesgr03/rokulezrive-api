@@ -142,13 +142,13 @@ describe('Folder paths', () => {
 			const userId = '1';
 			jwt.verify.mockReturnValueOnce({ sub: userId });
 			const user = await prisma.user.findUnique({ where: { id: userId } });
-			const anotherUserDefaultFolder = await prisma.folder.findFirst({
+			const otherUserDefaultFolder = await prisma.folder.findFirst({
 				where: { name: 'My Drive', ownerId: { not: user.pk } },
 			});
 
 			const mockData = {
 				name: 'New Folder',
-				folderId: anotherUserDefaultFolder.id,
+				folderId: otherUserDefaultFolder.id,
 			};
 
 			const { status, body } = await request(app)
@@ -247,7 +247,7 @@ describe('Folder paths', () => {
 			const userId = '1';
 			jwt.verify.mockReturnValueOnce({ sub: userId });
 			const user = await prisma.user.findUnique({ where: { id: userId } });
-			const anotherUserDefaultFolder = await prisma.folder.findFirst({
+			const otherUserDefaultFolder = await prisma.folder.findFirst({
 				where: { name: 'My Drive', ownerId: { not: user.pk } },
 			});
 
@@ -324,7 +324,7 @@ describe('Folder paths', () => {
 			const userId = '1';
 			jwt.verify.mockReturnValueOnce({ sub: userId });
 			const user = await prisma.user.findUnique({ where: { id: userId } });
-			const anotherUserDefaultFolder = await prisma.folder.findFirst({
+			const otherUserDefaultFolder = await prisma.folder.findFirst({
 				where: { name: 'My Drive', ownerId: { not: user.pk } },
 			});
 

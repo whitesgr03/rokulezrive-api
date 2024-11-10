@@ -82,15 +82,15 @@ describe('File paths', () => {
 			const user = await prisma.user.findUnique({
 				where: { id: userId },
 			});
-			const anotherUserDefaultFolder = await prisma.folder.findFirst({
+			const otherUserDefaultFolder = await prisma.folder.findFirst({
 				where: { name: 'My Drive', ownerId: { not: user.pk } },
 			});
-			const anotherUserFile = await prisma.file.create({
+			const otherUserFile = await prisma.file.create({
 				data: {
 					id: '1',
 					name: 'file',
-					ownerId: anotherUserDefaultFolder.ownerId,
-					folderId: anotherUserDefaultFolder.pk,
+					ownerId: otherUserDefaultFolder.ownerId,
+					folderId: otherUserDefaultFolder.pk,
 					size: 123,
 					type: 'image',
 				},
@@ -145,15 +145,15 @@ describe('File paths', () => {
 			const user = await prisma.user.findUnique({
 				where: { id: userId },
 			});
-			const anotherUserDefaultFolder = await prisma.folder.findFirst({
+			const otherUserDefaultFolder = await prisma.folder.findFirst({
 				where: { name: 'My Drive', ownerId: { not: user.pk } },
 			});
-			const anotherUserFile = await prisma.file.create({
+			const otherUserFile = await prisma.file.create({
 				data: {
 					id: '1',
 					name: 'file',
-					ownerId: anotherUserDefaultFolder.ownerId,
-					folderId: anotherUserDefaultFolder.pk,
+					ownerId: otherUserDefaultFolder.ownerId,
+					folderId: otherUserDefaultFolder.pk,
 					size: 123,
 					type: 'image',
 					sharers: {
@@ -225,7 +225,7 @@ describe('File paths', () => {
 			const userId = '1';
 			jwt.verify.mockReturnValueOnce({ sub: userId });
 			const user = await prisma.user.findUnique({ where: { id: userId } });
-			const anotherUserDefaultFolder = await prisma.folder.findFirst({
+			const otherUserDefaultFolder = await prisma.folder.findFirst({
 				where: { name: 'My Drive', ownerId: { not: user.pk } },
 			});
 
@@ -351,16 +351,16 @@ describe('File paths', () => {
 				where: { id: userId },
 			});
 
-			const anotherUserDefaultFolder = await prisma.folder.findFirst({
+			const otherUserDefaultFolder = await prisma.folder.findFirst({
 				where: { name: 'My Drive', ownerId: { not: user.pk } },
 			});
 
-			const anotherUserFile = await prisma.file.create({
+			const otherUserFile = await prisma.file.create({
 				data: {
 					id: '1',
 					name: 'file',
-					ownerId: anotherUserDefaultFolder.ownerId,
-					folderId: anotherUserDefaultFolder.pk,
+					ownerId: otherUserDefaultFolder.ownerId,
+					folderId: otherUserDefaultFolder.pk,
 					size: 123,
 					type: 'image',
 				},
@@ -421,16 +421,16 @@ describe('File paths', () => {
 			const user = await prisma.user.findUnique({
 				where: { id: userId },
 			});
-			const anotherUserDefaultFolder = await prisma.folder.findFirst({
+			const otherUserDefaultFolder = await prisma.folder.findFirst({
 				where: { name: 'My Drive', ownerId: { not: user.pk } },
 			});
 
-			const anotherUserFile = await prisma.file.create({
+			const otherUserFile = await prisma.file.create({
 				data: {
 					id: '1',
 					name: 'file',
-					ownerId: anotherUserDefaultFolder.ownerId,
-					folderId: anotherUserDefaultFolder.pk,
+					ownerId: otherUserDefaultFolder.ownerId,
+					folderId: otherUserDefaultFolder.pk,
 					size: 123,
 					type: 'image',
 				},
