@@ -10,8 +10,6 @@
 	"scripts": {
 		"start": "NODE_ENV=production node index",
 		"dev": "NODE_ENV=development nodemon --env-file=.env.development",
-		"test:unit": "NODE_ENV=test vitest --config ./vitest.config.unit.js",
-		"coverage:unit": "NODE_ENV=test vitest --coverage --config ./vitest.config.unit.js",
 		"test:integration": "npx vitest -c ./__test__/integration/vitest.config.js",
 		"coverage:integration": "npx vitest --coverage -c ./__test__/integration/vitest.config.js",
 		"test:startup": "./scripts/run-integration.sh",
