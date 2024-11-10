@@ -542,7 +542,7 @@ export const getDownloadUrl = [
 			? handleSetLocalVariable()
 			: res.status(404).json({
 					success: false,
-					message: 'File could not been found.',
+					message: 'The file you are looking for could not be found.',
 			  });
 	}),
 	asyncHandler(async (req, res) => {
