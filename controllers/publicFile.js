@@ -31,27 +31,31 @@ export const getPublicFile = [
 			},
 		});
 
-		const { id, folder, ...file } = publicFile.file;
+		const handleSuccess = () => {
+			const { id, folder, ...file } = publicFile.file;
 
-		const url = cloudinary.utils.private_download_url(
-			`${folder.id}/${id}`,
-			null,
-			{
-				resource_type: file.type,
-				expires_at: Math.floor(Date.now() / 1000) + 60,
-			}
-		);
+			const url = cloudinary.utils.private_download_url(
+				`${folder.id}/${id}`,
+				null,
+				{
+					resource_type: file.type,
+					expires_at: Math.floor(Date.now() / 1000) + 60,
+				}
+			);
+
+			res.json({
+				success: true,
+				data: {
+					...file,
+					url,
+					sharedAt: publicFile.createdAt,
+				},
+				message: 'Get public file successfully.',
+			});
+		};
 
 		publicFile
-			? res.json({
-					success: true,
-					data: {
-						...file,
-						url,
-						sharedAt: publicFile.createdAt,
-					},
-					message: 'Get public file successfully.',
-			  })
+			? handleSuccess()
 			: res.status(404).json({
 					success: false,
 					message: 'Public file could not been found.',
