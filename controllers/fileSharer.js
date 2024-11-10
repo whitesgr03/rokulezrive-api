@@ -1,5 +1,4 @@
 import asyncHandler from 'express-async-handler';
-
 import { checkSchema } from 'express-validator';
 import { prisma } from '../lib/prisma.js';
 
@@ -47,14 +46,16 @@ export const deleteSharedFile = [
 		const { sharedFileId } = req.params;
 
 		const sharedFile = await prisma.file.findUnique({
-			where: { id: sharedFileId },
-			select: {
-				pk: true,
+			where: {
+				id: sharedFileId,
 				sharers: {
-					where: {
+					some: {
 						sharerId: userPk,
 					},
 				},
+			},
+			select: {
+				pk: true,
 			},
 		});
 
@@ -63,7 +64,7 @@ export const deleteSharedFile = [
 			next();
 		};
 
-		sharedFile.sharers.length
+		sharedFile
 			? handleSetLocalVariable()
 			: res.status(404).json({
 					success: false,
