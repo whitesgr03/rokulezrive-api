@@ -16,7 +16,7 @@ vi.mock('../../lib/cloudinary');
 describe('File paths', () => {
 	describe('Authorization', () => {
 		it('should respond with a 400 status code and message if no "authorization" header passed', async () => {
-			const { status, body } = await request(app).post(`/api/folders/id/files`);
+			const { status, body } = await request(app).get(`/api/folders/id/files`);
 
 			expect(status).toBe(400);
 			expect(body).toStrictEqual({
