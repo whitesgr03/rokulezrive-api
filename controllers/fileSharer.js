@@ -166,12 +166,11 @@ export const createFileSharer = [
 
 		sharer
 			? handleSetLocalVariable()
-			: res.status(404).json({
+			: res.status(400).json({
 					success: false,
 					fields: {
 						email: 'email is invalid.',
 					},
-					message: 'email is invalid.',
 			  });
 	}),
 	asyncHandler(async (req, res) => {
