@@ -152,7 +152,7 @@ export const deletePublicFile = [
 		const { publicId } = req.params;
 		const { pk: userPk } = req.user;
 
-		const publicFile = await prisma.publicFile.findFirst({
+		const publicFile = await prisma.publicFile.findUnique({
 			where: {
 				id: publicId,
 				file: {
