@@ -342,19 +342,12 @@ export const updateFolder = [
 		const { pk: userPk } = req.user;
 		const { folderId } = req.params;
 
-		const defaultFolder = await prisma.folder.findFirst({
-			where: { name: 'My Drive', ownerId: userPk },
-			select: {
-				id: true,
-			},
-		});
-
 		const folder = await prisma.folder.findUnique({
 			where: {
 				id: folderId,
 				ownerId: userPk,
 				NOT: {
-					id: defaultFolder.id,
+					parent: null,
 				},
 			},
 		});
@@ -525,19 +518,12 @@ export const deleteFolder = [
 				},
 			}));
 
-		const defaultFolder = await prisma.folder.findFirst({
-			where: { name: 'My Drive', ownerId: userPk },
-			select: {
-				id: true,
-			},
-		});
-
 		const deletedFolder = await prisma.folder.findUnique({
 			where: {
 				ownerId: userPk,
 				id: folderId,
 				NOT: {
-					id: defaultFolder.id,
+					parent: null,
 				},
 			},
 			select: {
