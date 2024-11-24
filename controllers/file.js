@@ -507,7 +507,7 @@ export const deleteFile = [
 ];
 
 export const getDownloadUrl = [
-	asyncHandler(async (req, res, next) => {
+	asyncHandler(async (req, res) => {
 		const { pk: userPk } = req.user;
 		const { fileId } = req.params;
 
@@ -537,35 +537,24 @@ export const getDownloadUrl = [
 			},
 		});
 
-		const handleSetLocalVariable = () => {
-			req.file = file;
-			next();
-		};
-
-		file.sharers.length === 1 || file.owner.pk === userPk
-			? handleSetLocalVariable()
+		file
+			? res.json({
+					success: true,
+					data: {
+						url: cloudinary.utils.private_download_url(
+							`${file.folder.id}/${fileId}`,
+							null,
+							{
+								resource_type: file.type,
+								expires_at: Math.floor(Date.now() / 1000) + 60,
+							}
+						),
+					},
+					message: 'Get file download url successfully.',
+			  })
 			: res.status(404).json({
 					success: false,
 					message: 'The file you are looking for could not be found.',
 			  });
-	}),
-	asyncHandler(async (req, res) => {
-		const { fileId } = req.params;
-		const { folder, type } = req.file;
-
-		const url = cloudinary.utils.private_download_url(
-			`${folder.id}/${fileId}`,
-			null,
-			{
-				resource_type: type,
-				expires_at: Math.floor(Date.now() / 1000) + 60,
-			}
-		);
-
-		res.json({
-			success: true,
-			data: { url },
-			message: 'Get file download url successfully.',
-		});
 	}),
 ];
