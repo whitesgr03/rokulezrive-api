@@ -512,22 +512,26 @@ export const getDownloadUrl = [
 		const { fileId } = req.params;
 
 		const file = await prisma.file.findUnique({
-			where: { id: fileId },
+			where: {
+				id: fileId,
+				OR: [
+					{
+						ownerId: userPk,
+					},
+					{
+						sharers: {
+							some: {
+								sharerId: userPk,
+							},
+						},
+					},
+				],
+			},
 			select: {
 				type: true,
-				owner: {
-					select: {
-						pk: true,
-					},
-				},
 				folder: {
 					select: {
 						id: true,
-					},
-				},
-				sharers: {
-					where: {
-						sharerId: userPk,
 					},
 				},
 			},
