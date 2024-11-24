@@ -122,6 +122,58 @@ describe('Public file paths', () => {
 			expect(body.data.type).toBe(otherUserFile.type);
 		});
 	});
+	describe('GET /public/:publicId/download-url', () => {
+		it(`should respond with a 404 status code and message if the public file is not found`, async () => {
+			const { status, body } = await request(app).get(
+				`/api/public/fakeId/download-url`
+			);
+
+			expect(status).toBe(404);
+			expect(body.success).toBe(false);
+			expect(body.message).toBe(
+				'The public file you are looking for could not be found.'
+			);
+		});
+		it(`should response the download URL of public file`, async () => {
+			const userId = '1';
+			const user = await prisma.user.findUnique({
+				where: { id: userId },
+			});
+			const defaultFolder = await prisma.folder.findFirst({
+				where: { name: 'My Drive', ownerId: user.pk },
+			});
+			const file = await prisma.file.create({
+				data: {
+					id: '1',
+					name: 'file',
+					ownerId: user.pk,
+					folderId: defaultFolder.pk,
+					size: 123,
+					type: 'image',
+					public: {
+						create: {
+							createdAt: new Date(),
+						},
+					},
+				},
+				include: { public: true },
+			});
+
+			const mockUrl = 'url';
+
+			cloudinary.utils.private_download_url.mockReturnValueOnce(mockUrl);
+
+			const { status, body } = await request(app).get(
+				`/api/public/${file.public.id}/download-url`
+			);
+
+			expect(status).toBe(200);
+			expect(body.success).toBe(true);
+			expect(body.message).toBe('Get Public file download url successfully.');
+			expect(body.data.url).toBe(mockUrl);
+			expect(cloudinary.utils.private_download_url).toBeCalledTimes(1);
+		});
+	});
 	describe('POST /files/:fileId/public', () => {
 		it(`should respond with a 404 status code and message if the file is not found`, async () => {
 			const userId = '1';
