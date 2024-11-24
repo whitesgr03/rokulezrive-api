@@ -11,15 +11,9 @@ export const getPublicFile = [
 			select: {
 				file: {
 					select: {
-						id: true,
 						name: true,
 						size: true,
 						type: true,
-						folder: {
-							select: {
-								id: true,
-							},
-						},
 						owner: {
 							select: {
 								email: true,
@@ -31,31 +25,15 @@ export const getPublicFile = [
 			},
 		});
 
-		const handleSuccess = () => {
-			const { id, folder, ...file } = publicFile.file;
-
-			const url = cloudinary.utils.private_download_url(
-				`${folder.id}/${id}`,
-				null,
-				{
-					resource_type: file.type,
-					expires_at: Math.floor(Date.now() / 1000) + 60,
-				}
-			);
-
-			res.json({
-				success: true,
-				data: {
-					...file,
-					url,
-					sharedAt: publicFile.createdAt,
-				},
-				message: 'Get public file successfully.',
-			});
-		};
-
 		publicFile
-			? handleSuccess()
+			? res.json({
+					success: true,
+					data: {
+						...publicFile.file,
+						sharedAt: publicFile.createdAt,
+					},
+					message: 'Get public file successfully.',
+			  })
 			: res.status(404).json({
 					success: false,
 					message: 'Public file could not been found.',
