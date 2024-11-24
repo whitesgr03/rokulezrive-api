@@ -10,6 +10,10 @@ import { authorization } from '../middlewares/authorization.js';
 export const apiRouter = express.Router();
 
 apiRouter.get('/public/:publicId', publicFileControllers.getPublicFile);
+apiRouter.get(
+	'/public/:publicId/download-url',
+	publicFileControllers.getDownloadUrl
+);
 
 // authorization
 apiRouter.use(authorization);

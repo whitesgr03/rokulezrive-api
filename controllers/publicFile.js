@@ -41,6 +41,59 @@ export const getPublicFile = [
 	}),
 ];
 
+export const getDownloadUrl = [
+	asyncHandler(async (req, res, next) => {
+		const { publicId } = req.params;
+
+		const publicFile = await prisma.publicFile.findUnique({
+			where: { id: publicId },
+			select: {
+				file: {
+					select: {
+						id: true,
+						type: true,
+						folder: {
+							select: {
+								id: true,
+							},
+						},
+					},
+				},
+			},
+		});
+
+		const handleSetLocalVariable = () => {
+			req.file = publicFile.file;
+			next();
+		};
+
+		publicFile
+			? handleSetLocalVariable()
+			: res.status(404).json({
+					success: false,
+					message: 'The public file you are looking for could not be found.',
+			  });
+	}),
+	(req, res) => {
+		const { folder, id, type } = req.file;
+
+		const url = cloudinary.utils.private_download_url(
+			`${folder.id}/${id}`,
+			null,
+			{
+				resource_type: type,
+				expires_at: Math.floor(Date.now() / 1000) + 60,
+			}
+		);
+
+		res.json({
+			success: true,
+			data: { url },
+			message: 'Get Public file download url successfully.',
+		});
+	},
+];
+
 export const createPublicFile = [
 	asyncHandler(async (req, res, next) => {
 		const { fileId } = req.params;
@@ -152,7 +205,7 @@ export const deletePublicFile = [
 		const { publicId } = req.params;
 		const { pk: userPk } = req.user;
 
-		const publicFile = await prisma.publicFile.findUnique({
+		const publicFile = await prisma.publicFile.findFirst({
 			where: {
 				id: publicId,
 				file: {
