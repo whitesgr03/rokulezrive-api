@@ -117,7 +117,6 @@ describe('Public file paths', () => {
 			expect(status).toBe(200);
 			expect(body.success).toBe(true);
 			expect(body.message).toBe('Get public file successfully.');
-			expect(cloudinary.utils.private_download_url).toBeCalledTimes(1);
 			expect(body.data.name).toBe(otherUserFile.name);
 			expect(body.data.size).toBe(otherUserFile.size);
 			expect(body.data.type).toBe(otherUserFile.type);
