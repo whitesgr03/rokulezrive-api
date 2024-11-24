@@ -102,7 +102,9 @@ describe('File paths', () => {
 
 			expect(status).toBe(404);
 			expect(body.success).toBe(false);
-			expect(body.message).toBe('File could not been found.');
+			expect(body.message).toBe(
+				'The file you are looking for could not be found.'
+			);
 		});
 		it(`should return the download URL of file if authorized user is owner`, async () => {
 			const userId = '1';
