@@ -3,7 +3,7 @@ import { checkSchema } from 'express-validator';
 import { prisma } from '../lib/prisma.js';
 
 // Middlewares
-import { verifyScheme } from '../middlewares/verifyScheme.js';
+import { validationScheme } from '../middlewares/validationScheme.js';
 
 export const listFileSharers = [
 	asyncHandler(async (req, res) => {
@@ -114,7 +114,7 @@ export const createFileSharer = [
 			},
 		},
 	}),
-	verifyScheme,
+	validationScheme,
 	asyncHandler(async (req, res, next) => {
 		const { pk: userPk } = req.user;
 		const { fileId } = req.params;

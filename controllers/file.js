@@ -10,7 +10,7 @@ const upload = multer({
 });
 
 // Middlewares
-import { verifyScheme } from '../middlewares/verifyScheme.js';
+import { validationScheme } from '../middlewares/validationScheme.js';
 
 export const createFile = [
 	upload.single('file'),
@@ -217,7 +217,7 @@ export const updateFile = [
 			},
 		},
 	}),
-	verifyScheme,
+	validationScheme,
 	asyncHandler(async (req, res, next) => {
 		const { pk: userPk } = req.user;
 		const { fileId } = req.params;

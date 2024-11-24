@@ -5,7 +5,7 @@ import { prisma } from '../lib/prisma.js';
 import { cloudinary } from '../lib/cloudinary.js';
 
 // Middlewares
-import { verifyScheme } from '../middlewares/verifyScheme.js';
+import { validationScheme } from '../middlewares/validationScheme.js';
 
 export const listFolders = [
 	asyncHandler(async (req, res) => {
@@ -99,7 +99,7 @@ export const createFolder = [
 			},
 		},
 	}),
-	verifyScheme,
+	validationScheme,
 	asyncHandler(async (req, res, next) => {
 		const { folderId } = req.data;
 		const { pk: userPk } = req.user;
@@ -337,7 +337,7 @@ export const updateFolder = [
 			},
 		},
 	}),
-	verifyScheme,
+	validationScheme,
 	asyncHandler(async (req, res, next) => {
 		const { pk: userPk } = req.user;
 		const { folderId } = req.params;
@@ -504,7 +504,7 @@ export const deleteFolder = [
 			optional: true,
 		},
 	}),
-	verifyScheme,
+	validationScheme,
 	asyncHandler(async (req, res, next) => {
 		const { pk: userPk } = req.user;
 		const { folderId } = req.params;
