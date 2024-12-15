@@ -4,11 +4,11 @@ This is an RESTful API server built with Express. Used to receive requests from 
 
 ## Links
 
-frontend Repository: [https://github.com/whitesgr03/rokulezrive](https://github.com/whitesgr03/rokulezrive)
+Frontend Repository: [https://github.com/whitesgr03/rokulezrive](https://github.com/whitesgr03/rokulezrive)
 
 ## Description:
 
-Rokulezrive API uses Supabase PostgreSQL database to store data, build data models, and query data with Prisma ORM, and also store files with Cloudinary as storage.
+Rokulezrive API build data models and query data with Prisma ORM, uses Supabase PostgreSQL database to store data and also store files with Cloudinary as storage.
 
 ## Technologies:  
 
