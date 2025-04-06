@@ -5,7 +5,7 @@ import { prisma } from '../lib/prisma.js';
 // Middlewares
 import { validationScheme } from '../middlewares/validationScheme.js';
 
-export const listFileSharers = [
+export const listSharedFiles = [
 	asyncHandler(async (req, res) => {
 		const { pk: userPk } = req.user;
 

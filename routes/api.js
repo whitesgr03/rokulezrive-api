@@ -31,7 +31,7 @@ apiRouter.delete('/files/:fileId', fileControllers.deleteFile);
 apiRouter.get('/files/:fileId/download-url', fileControllers.getDownloadUrl);
 
 // File Sharer
-apiRouter.get('/sharedFiles', fileSharerControllers.listFileSharers);
+apiRouter.get('/sharedFiles', fileSharerControllers.listSharedFiles);
 apiRouter.post(
 	'/files/:fileId/sharers',
 	fileSharerControllers.createFileSharer
