@@ -65,7 +65,7 @@ GET /api/sharedFiles
 
 POST /api/files/:fileId/sharers
 
-DELETE /api/files/:fileId/sharers/:sharerId',
+DELETE /api/files/:fileId/sharers/:sharerId
 
 DELETE /api/sharedFiles/:sharedFileId
 ```
